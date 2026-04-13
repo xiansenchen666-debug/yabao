@@ -33,19 +33,19 @@ Deno.serve(async (req) => {
     }
   }
 
+  // 处理跨域 OPTIONS 请求
+  if (req.method === "OPTIONS") {
+    return new Response(null, {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+    });
+  }
+
   // 2. 预留 POST 接口：处理家长的预约信息，并存入 Deno.Kv
   if (req.method === "POST" && url.pathname === "/api/appointment") {
-    // 处理 CORS 预检请求 (如果前端和后端不在同一个域下可能会用到，虽然目前在同一个域名下，但加上更稳妥)
-    if (req.method === "OPTIONS") {
-      return new Response(null, {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type",
-        },
-      });
-    }
-
     try {
       let data;
       try {
