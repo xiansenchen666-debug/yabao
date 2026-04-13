@@ -35,6 +35,17 @@ Deno.serve(async (req) => {
 
   // 2. 预留 POST 接口：处理家长的预约信息，并存入 Deno.Kv
   if (req.method === "POST" && url.pathname === "/api/appointment") {
+    // 处理 CORS 预检请求 (如果前端和后端不在同一个域下可能会用到，虽然目前在同一个域名下，但加上更稳妥)
+    if (req.method === "OPTIONS") {
+      return new Response(null, {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+        },
+      });
+    }
+
     try {
       let data;
       try {
@@ -43,7 +54,7 @@ Deno.serve(async (req) => {
         console.error("解析请求JSON失败:", error);
         return new Response(
           JSON.stringify({ success: false, error: "无效的请求数据格式" }),
-          { status: 400, headers: { "content-type": "application/json" } }
+          { status: 400, headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*" } }
         );
       }
       
@@ -51,12 +62,14 @@ Deno.serve(async (req) => {
       if (!data.name || !data.phone) {
         return new Response(
           JSON.stringify({ success: false, error: "姓名和电话为必填项" }),
-          { status: 400, headers: { "content-type": "application/json" } }
+          { status: 400, headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*" } }
         );
       }
 
-      // 生成唯一预约 ID
-      const appointmentId = crypto.randomUUID();
+      // 生成唯一预约 ID (兼容处理)
+      const appointmentId = (typeof crypto !== 'undefined' && crypto.randomUUID) 
+        ? crypto.randomUUID() 
+        : Date.now().toString(36) + Math.random().toString(36).substring(2);
       
       // 构造要存储的数据结构
       const appointmentRecord = {
@@ -90,14 +103,14 @@ Deno.serve(async (req) => {
         }),
         { 
           status: 201, 
-          headers: { "content-type": "application/json" } 
+          headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*" } 
         }
       );
     } catch (globalError) {
       console.error("POST /api/appointment 发生未捕获的异常:", globalError);
       return new Response(
         JSON.stringify({ success: false, error: "服务器内部错误", details: String(globalError) }),
-        { status: 500, headers: { "content-type": "application/json" } }
+        { status: 500, headers: { "content-type": "application/json", "Access-Control-Allow-Origin": "*" } }
       );
     }
   }
