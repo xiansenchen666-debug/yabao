@@ -94,6 +94,38 @@ Deno.serve(async (req) => {
     );
   }
 
-  // 3. 处理其他未匹配的路由
+  // 3. 新增 GET 接口：用于查看已提交的预约列表 (简单管理员接口)
+  if (req.method === "GET" && url.pathname === "/api/appointments") {
+    if (!kv) {
+      return new Response(
+        JSON.stringify({ success: false, error: "未连接 Deno KV 数据库" }),
+        { status: 500, headers: { "content-type": "application/json" } }
+      );
+    }
+
+    try {
+      const appointments = [];
+      const entries = kv.list({ prefix: ["appointments"] });
+      for await (const entry of entries) {
+        appointments.push(entry.value);
+      }
+      
+      // 按时间倒序排序 (最新的在前面)
+      appointments.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+      return new Response(
+        JSON.stringify({ success: true, data: appointments }),
+        { status: 200, headers: { "content-type": "application/json" } }
+      );
+    } catch (error) {
+      console.error("获取预约列表失败:", error);
+      return new Response(
+        JSON.stringify({ success: false, error: "获取数据失败" }),
+        { status: 500, headers: { "content-type": "application/json" } }
+      );
+    }
+  }
+
+  // 4. 处理其他未匹配的路由
   return new Response("Not Found - 雅宝教育工作室", { status: 404 });
 });
