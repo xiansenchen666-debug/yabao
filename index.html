@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雅宝教育工作室 | Yabao Education Studio</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#FDFBF7', // 米白色底色
+                            primary: '#1A2B3C', // 深藏青
+                            accent: '#C5A059', // 柔和金色
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #FDFBF7;
+            color: #1A2B3C;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        
+        /* 玻璃拟态 (Glassmorphism) */
+        .glass {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+        }
+
+        .glass-dark {
+            background: rgba(26, 43, 60, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        /* 细腻微动效 */
+        .btn-hover {
+            transition: all 0.4s ease;
+        }
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(197, 160, 89, 0.4);
+            background-color: #b59048; /* Slightly darker gold */
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(26, 43, 60, 0.05);
+            box-shadow: none;
+        }
+
+        .card-hover {
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -10px rgba(26, 43, 60, 0.1);
+        }
+
+        /* 滚动入场动画类 */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            will-change: opacity, visibility;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* 老师悬浮窗动画 */
+        .teacher-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            cursor: pointer;
+        }
+        
+        .teacher-overlay {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: all 0.5s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            text-align: center;
+            transform: translateY(20px);
+            z-index: 10;
+        }
+
+        .teacher-card:hover .teacher-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .teacher-card img {
+            transition: transform 0.7s ease;
+            will-change: transform;
+        }
+        
+        .teacher-card:hover img {
+            transform: scale(1.05);
+        }
+        
+        /* 自定义网格非对称布局 */
+        .asymmetric-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 2rem;
+        }
+        
+        /* 预约表单弹出层 */
+        #booking-modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+        #booking-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        #booking-modal .modal-content {
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transform: translateY(20px) scale(0.95);
+        }
+        #booking-modal.active .modal-content {
+            transform: translateY(0) scale(1);
+        }
+    </style>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="font-sans antialiased selection:bg-brand-accent selection:text-white">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 glass py-4 px-6 md:px-12 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto flex justify-between items-center relative z-50">
+            <div class="text-2xl font-serif font-bold text-brand-primary tracking-tight">
+                雅宝<span class="text-brand-accent">.</span>
+            </div>
+            <div class="hidden md:flex space-x-10 text-sm font-medium">
+                <a href="#about" class="hover:text-brand-accent transition-colors">关于我们</a>
+                <a href="#services" class="hover:text-brand-accent transition-colors">核心业务</a>
+                <a href="#team" class="hover:text-brand-accent transition-colors">师资力量</a>
+                <a href="#contact" class="hover:text-brand-accent transition-colors">联系预约</a>
+            </div>
+            <button onclick="openBookingModal()" class="hidden md:inline-flex items-center justify-center px-6 py-2.5 bg-brand-primary text-brand-bg text-sm font-medium rounded-full btn-hover hover:!bg-brand-primary hover:!shadow-lg cursor-pointer border-none outline-none">
+                立即预约
+            </button>
+            <button onclick="toggleMobileMenu()" class="md:hidden text-brand-primary border-none outline-none bg-transparent cursor-pointer relative z-[60]">
+                <i data-lucide="menu" id="mobile-menu-icon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu (Moved outside nav to avoid relative positioning issues) -->
+    <div id="mobile-menu" class="fixed inset-0 w-full h-screen bg-[#FDFBF7] z-[60] transform translate-x-full transition-transform duration-300 flex flex-col items-center justify-center space-y-8 md:hidden">
+        <!-- Close button inside the menu -->
+        <button onclick="toggleMobileMenu()" class="absolute top-6 right-6 text-brand-primary border-none outline-none bg-transparent cursor-pointer p-2">
+            <i data-lucide="x" class="w-8 h-8"></i>
+        </button>
+        <div class="text-3xl font-serif font-bold text-brand-primary tracking-tight mb-8">
+            雅宝<span class="text-brand-accent">.</span>
+        </div>
+        <a href="#about" onclick="toggleMobileMenu()" class="text-2xl font-medium text-brand-primary hover:text-brand-accent transition-colors">关于我们</a>
+        <a href="#services" onclick="toggleMobileMenu()" class="text-2xl font-medium text-brand-primary hover:text-brand-accent transition-colors">核心业务</a>
+        <a href="#team" onclick="toggleMobileMenu()" class="text-2xl font-medium text-brand-primary hover:text-brand-accent transition-colors">师资力量</a>
+        <a href="#contact" onclick="toggleMobileMenu()" class="text-2xl font-medium text-brand-primary hover:text-brand-accent transition-colors">联系预约</a>
+        <button onclick="openBookingModal(); toggleMobileMenu()" class="px-10 py-4 bg-brand-primary text-brand-bg text-lg font-medium rounded-full mt-8 border-none outline-none shadow-lg">
+            立即预约
+        </button>
+    </div>
+
+    <!-- Hero Section: 非对称设计 (关于我们) -->
+    <section id="about" class="relative min-h-screen flex items-center pt-24 pb-12 px-6 md:px-12 overflow-hidden">
+        <!-- 背景装饰圆 -->
+        <div class="absolute top-[-10%] right-[-5%] w-96 h-96 bg-brand-accent/15 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-[10%] left-[-10%] w-[30rem] h-[30rem] bg-brand-primary/5 rounded-full blur-3xl"></div>
+        
+        <div class="max-w-7xl mx-auto w-full asymmetric-grid items-center relative z-10">
+            <!-- 左侧 Slogan (占7列) -->
+            <div class="col-span-12 md:col-span-7 pr-0 md:pr-12 fade-in-section">
+                <div class="inline-block mb-6 px-4 py-1.5 rounded-full border border-brand-accent/30 text-brand-accent text-xs font-semibold tracking-widest uppercase glass">
+                    Yabao Education Studio
+                </div>
+                <h1 class="text-5xl md:text-7xl lg:text-[5rem] font-serif font-bold leading-[1.1] mb-8 text-brand-primary">
+                    赋能成长，<br>
+                    <span class="italic text-brand-accent">语见未来</span>
+                </h1>
+                <p class="text-lg text-brand-primary/70 mb-10 max-w-lg leading-relaxed font-light">
+                    打破传统教学模式。我们为K12学生与成人提供定制化的英语与全科辅导，用专业点亮前程，用语言连接世界。
+                </p>
+                <div class="flex flex-col sm:flex-row gap-5">
+                    <a href="#services" class="inline-flex items-center justify-center px-8 py-4 bg-brand-accent text-white font-medium rounded-full btn-hover group">
+                        探索课程
+                        <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                    <button onclick="openBookingModal()" class="inline-flex items-center justify-center px-8 py-4 bg-transparent border border-brand-primary text-brand-primary font-medium rounded-full btn-hover btn-outline cursor-pointer outline-none">
+                        免费评估
+                    </button>
+                </div>
+            </div>
+
+            <!-- 右侧 图像/抽象 (占5列) - 错位排版 -->
+            <div class="col-span-12 md:col-span-5 relative mt-16 md:mt-0 fade-in-section" style="transition-delay: 0.2s;">
+                <div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl z-10">
+                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Studio learning environment" class="w-full h-full object-cover">
+                </div>
+                <!-- 悬浮装饰卡片 - 玻璃拟态 -->
+                <div class="absolute -bottom-10 -left-16 glass p-6 rounded-2xl z-20 hidden md:block w-64">
+                    <div class="flex items-center gap-4 mb-3">
+                        <div class="w-12 h-12 rounded-full bg-brand-accent/20 flex items-center justify-center text-brand-accent">
+                            <i data-lucide="star" class="fill-current w-6 h-6"></i>
+                        </div>
+                        <div>
+                            <div class="text-3xl font-serif font-bold text-brand-primary">10+</div>
+                            <div class="text-xs text-brand-primary/60 uppercase tracking-widest font-semibold mt-1">Years Exp.</div>
+                        </div>
+                    </div>
+                    <p class="text-sm font-medium text-brand-primary/80">专注个性化精英教育与语言能力提升</p>
+                </div>
+                <!-- 装饰线条 -->
+                <div class="absolute -top-6 -right-6 w-32 h-32 border-t-2 border-r-2 border-brand-accent rounded-tr-3xl z-0"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section: 业务卡片 -->
+    <section id="services" class="py-24 px-6 md:px-12 bg-white relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-20 fade-in-section">
+                <div class="max-w-2xl">
+                    <h2 class="text-4xl md:text-5xl font-serif font-bold text-brand-primary mb-6">
+                        精进学业，<br>重塑<span class="italic text-brand-accent">语言力</span>
+                    </h2>
+                    <p class="text-brand-primary/70 leading-relaxed text-lg">
+                        不论是夯实基础的K12全科，还是提升职场竞争力的成人英语，我们都有系统化的解决方案。
+                    </p>
+                </div>
+                <div class="hidden md:block">
+                    <i data-lucide="book-open" class="w-16 h-16 text-brand-accent/20"></i>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+                <!-- K12 卡片 -->
+                <div class="bg-gradient-to-br from-[#FDFBF7] to-[#FFF8E7] border border-brand-accent/20 rounded-[2rem] p-10 lg:p-14 card-hover relative overflow-hidden group fade-in-section shadow-lg shadow-brand-accent/5">
+                    <!-- 装饰背景图案 -->
+                    <div class="absolute -top-10 -right-10 w-64 h-64 bg-brand-accent opacity-[0.03] rounded-full blur-3xl group-hover:scale-110 transition-transform duration-700"></div>
+                    <div class="absolute -bottom-10 -left-10 w-48 h-48 bg-brand-accent opacity-[0.05] rounded-full blur-2xl group-hover:scale-110 transition-transform duration-700"></div>
+                    
+                    <div class="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 group-hover:rotate-12 transition-all duration-500 transform origin-center">
+                        <i data-lucide="rocket" class="w-40 h-40 text-brand-accent"></i>
+                    </div>
+                    <div class="w-16 h-16 rounded-2xl bg-brand-accent/10 flex items-center justify-center text-brand-accent mb-8 transform group-hover:-translate-y-2 transition-transform duration-500 relative z-10">
+                        <i data-lucide="pen-tool" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-3xl font-serif font-bold mb-5 text-brand-primary relative z-10">K12 全科功课辅导</h3>
+                    <p class="text-brand-primary/80 mb-10 leading-relaxed text-lg relative z-10">
+                        针对中小学生量身定制的学习计划，涵盖语数英等核心科目。注重思维启发与习惯养成，打破题海战术，实现高效提分。
+                    </p>
+                    <ul class="space-y-4 mb-12 relative z-10">
+                        <li class="flex items-center text-base font-medium text-brand-primary/90">
+                            <span class="w-6 h-6 rounded-full bg-brand-accent/20 flex items-center justify-center mr-4">
+                                <i data-lucide="check" class="w-4 h-4 text-brand-accent"></i>
+                            </span>
+                            课后同步辅导与作业答疑
+                        </li>
+                        <li class="flex items-center text-base font-medium text-brand-primary/90">
+                            <span class="w-6 h-6 rounded-full bg-brand-accent/20 flex items-center justify-center mr-4">
+                                <i data-lucide="check" class="w-4 h-4 text-brand-accent"></i>
+                            </span>
+                            考前冲刺与弱科突破
+                        </li>
+                        <li class="flex items-center text-base font-medium text-brand-primary/90">
+                            <span class="w-6 h-6 rounded-full bg-brand-accent/20 flex items-center justify-center mr-4">
+                                <i data-lucide="check" class="w-4 h-4 text-brand-accent"></i>
+                            </span>
+                            学习方法与时间管理指导
+                        </li>
+                    </ul>
+                    <button onclick="openBookingModal('K12全科')" class="relative z-10 inline-flex items-center text-brand-primary font-bold group-hover:text-brand-accent transition-colors bg-brand-bg px-6 py-3 rounded-full border border-brand-accent/30 hover:border-brand-accent shadow-sm cursor-pointer outline-none">
+                        开启活力学习 <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
+
+                <!-- 成人英语 卡片 -->
+                <div class="bg-brand-primary text-brand-bg rounded-[2rem] p-10 lg:p-14 card-hover relative overflow-hidden group fade-in-section" style="transition-delay: 0.2s;">
+                    <div class="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
+                        <i data-lucide="globe" class="w-40 h-40 text-brand-bg"></i>
+                    </div>
+                    <div class="w-16 h-16 rounded-2xl bg-brand-accent flex items-center justify-center text-brand-primary mb-8">
+                        <i data-lucide="message-circle" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="text-3xl font-serif font-bold mb-5">成人英语特训</h3>
+                    <p class="text-brand-bg/70 mb-10 leading-relaxed text-lg">
+                        告别哑巴英语。从零基础发音到高级商务谈判，沉浸式口语训练，让你在职场与生活中都能自信、流利地表达自我。
+                    </p>
+                    <ul class="space-y-4 mb-12">
+                        <li class="flex items-center text-base font-medium text-brand-bg/90">
+                            <span class="w-6 h-6 rounded-full bg-brand-accent/20 flex items-center justify-center mr-4">
+                                <i data-lucide="check" class="w-4 h-4 text-brand-accent"></i>
+                            </span>
+                            商务英语 (邮件、会议、谈判)
+                        </li>
+                        <li class="flex items-center text-base font-medium text-brand-bg/90">
+                            <span class="w-6 h-6 rounded-full bg-brand-accent/20 flex items-center justify-center mr-4">
+                                <i data-lucide="check" class="w-4 h-4 text-brand-accent"></i>
+                            </span>
+                            零基础发音与词汇重塑
+                        </li>
+                        <li class="flex items-center text-base font-medium text-brand-bg/90">
+                            <span class="w-6 h-6 rounded-full bg-brand-accent/20 flex items-center justify-center mr-4">
+                                <i data-lucide="check" class="w-4 h-4 text-brand-accent"></i>
+                            </span>
+                            日常口语流利度强化
+                        </li>
+                    </ul>
+                    <button onclick="openBookingModal('成人英语')" class="relative z-10 inline-flex items-center text-brand-primary font-bold group-hover:text-brand-bg transition-colors bg-brand-accent px-6 py-3 rounded-full hover:bg-brand-accent/80 shadow-sm cursor-pointer outline-none border-none">
+                        提升职场竞争力 <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section: 交互式师资展示 -->
+    <section id="team" class="py-32 px-6 md:px-12 bg-[#FDFBF7]">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-20 fade-in-section">
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-brand-primary mb-6">
+                    遇见你的<span class="italic text-brand-accent">良师</span>
+                </h2>
+                <p class="text-brand-primary/70 max-w-2xl mx-auto text-lg">
+                    每一位导师都经过严格筛选，不仅拥有名校背景，更具备丰富的实战教学经验与教育热忱。
+                </p>
+            </div>
+
+            <!-- 照片墙网格 - 非对称 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 lg:gap-10">
+                
+                <!-- 老师 1 -->
+                <div class="teacher-card aspect-[3/4] md:mt-0 fade-in-section">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Jayu - 校长" class="w-full h-full object-cover">
+                    <!-- 玻璃拟态悬浮窗 -->
+                    <div class="teacher-overlay glass-dark text-white">
+                        <h4 class="text-3xl font-serif font-bold mb-1">Jayu</h4>
+                        <div class="text-brand-accent text-xs font-semibold tracking-widest uppercase mb-5">校长</div>
+                        <div class="w-12 h-px bg-brand-accent/50 mb-6"></div>
+                        <ul class="text-sm text-gray-200 space-y-3 mb-8 text-left w-full px-6">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="award" class="w-4 h-4 text-brand-accent shrink-0 mt-0.5"></i> 
+                                <span>资深教育专家</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="book" class="w-4 h-4 text-brand-accent shrink-0 mt-0.5"></i> 
+                                <span>深耕教育行业多年</span>
+                            </li>
+                        </ul>
+                        <p class="text-sm italic text-gray-400 px-4">"教育的本质意味着：一棵树摇动另一棵树，一朵云推动另一朵云。"</p>
+                    </div>
+                </div>
+
+                <!-- 老师 2 (向下偏移) -->
+                <div class="teacher-card aspect-[3/4] md:mt-16 fade-in-section" style="transition-delay: 0.2s;">
+                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Cary - 副校长" class="w-full h-full object-cover">
+                    <div class="teacher-overlay glass-dark text-white">
+                        <h4 class="text-3xl font-serif font-bold mb-1">Cary</h4>
+                        <div class="text-brand-accent text-xs font-semibold tracking-widest uppercase mb-5">副校长</div>
+                        <div class="w-12 h-px bg-brand-accent/50 mb-6"></div>
+                        <ul class="text-sm text-gray-200 space-y-3 mb-8 text-left w-full px-6">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="award" class="w-4 h-4 text-brand-accent shrink-0 mt-0.5"></i> 
+                                <span>丰富教学管理经验</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="book" class="w-4 h-4 text-brand-accent shrink-0 mt-0.5"></i> 
+                                <span>专注课程体系建设</span>
+                            </li>
+                        </ul>
+                        <p class="text-sm italic text-gray-400 px-4">"用专业的态度做有温度的教育，陪伴每一位学员成长。"</p>
+                    </div>
+                </div>
+
+                <!-- 老师 3 (向下偏移更多) -->
+                <div class="teacher-card aspect-[3/4] md:mt-32 fade-in-section" style="transition-delay: 0.4s;">
+                    <img src="https://images.unsplash.com/photo-1580894732444-8ecded7900cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Eric - 教务" class="w-full h-full object-cover">
+                    <div class="teacher-overlay glass-dark text-white">
+                        <h4 class="text-3xl font-serif font-bold mb-1">Eric</h4>
+                        <div class="text-brand-accent text-xs font-semibold tracking-widest uppercase mb-5">教务</div>
+                        <div class="w-12 h-px bg-brand-accent/50 mb-6"></div>
+                        <ul class="text-sm text-gray-200 space-y-3 mb-8 text-left w-full px-6">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="award" class="w-4 h-4 text-brand-accent shrink-0 mt-0.5"></i> 
+                                <span>高效学情跟踪</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="book" class="w-4 h-4 text-brand-accent shrink-0 mt-0.5"></i> 
+                                <span>个性化学习规划</span>
+                            </li>
+                        </ul>
+                        <p class="text-sm italic text-gray-400 px-4">"做学员最坚实的后盾，让学习之旅畅通无阻。"</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section: 极简联系板块 -->
+    <section id="contact" class="py-32 px-6 md:px-12 bg-white relative">
+        <div class="max-w-4xl mx-auto text-center fade-in-section">
+            <h2 class="text-5xl md:text-7xl font-serif font-bold text-brand-primary mb-8 tracking-tight">
+                开启您的<br><span class="italic text-brand-accent">学习旅程</span>
+            </h2>
+            <p class="text-lg text-brand-primary/60 mb-12 max-w-xl mx-auto font-light leading-relaxed">
+                无论您是为孩子的学业寻求专业指导，还是渴望提升自己的语言能力，我们都随时准备为您提供帮助。
+            </p>
+            
+            <button onclick="openBookingModal()" class="inline-flex items-center justify-center px-10 py-5 bg-brand-primary text-brand-bg text-lg font-medium rounded-full btn-hover shadow-xl mb-24 group hover:!bg-brand-primary border-none outline-none cursor-pointer">
+                预约免费评估
+                <i data-lucide="arrow-up-right" class="ml-2 w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+            </button>
+
+            <!-- 极简地址信息 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-left border-t border-brand-primary/10 pt-16">
+                <div>
+                    <h5 class="text-sm font-bold text-brand-primary uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <i data-lucide="map-pin" class="w-4 h-4 text-brand-accent"></i> Visit Us
+                    </h5>
+                    <p class="text-brand-primary/70 leading-relaxed text-sm">
+                        深圳市宝安区<br>
+                        雅宝教育工作室
+                    </p>
+                </div>
+                <div>
+                    <h5 class="text-sm font-bold text-brand-primary uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <i data-lucide="mail" class="w-4 h-4 text-brand-accent"></i> Contact
+                    </h5>
+                    <p class="text-brand-primary/70 leading-relaxed text-sm">
+                        T: 15660075902<br>
+                        E: hello@yabao.edu.cn<br>
+                        W: WeChat (YabaoEdu)
+                    </p>
+                </div>
+                <div>
+                    <h5 class="text-sm font-bold text-brand-primary uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <i data-lucide="clock" class="w-4 h-4 text-brand-accent"></i> Hours
+                    </h5>
+                    <p class="text-brand-primary/70 leading-relaxed text-sm">
+                        Mon - Fri: 13:00 - 21:00<br>
+                        Sat - Sun: 09:00 - 18:00
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 bg-[#FDFBF7] border-t border-brand-primary/5 text-center px-6">
+        <p class="text-sm text-brand-primary/50">
+            &copy; 2024 雅宝教育工作室 Yabao Education Studio. All rights reserved.
+        </p>
+    </footer>
+
+    <!-- 预约表单 玻璃拟态弹窗 (V2 新增) -->
+    <div id="booking-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <!-- 弹窗背景蒙层 -->
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeBookingModal()"></div>
+        
+        <!-- 弹窗内容 -->
+        <div class="modal-content relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden z-10">
+            <div class="p-8">
+                <button onclick="closeBookingModal()" class="absolute top-6 right-6 text-brand-primary/50 hover:text-brand-primary transition-colors bg-transparent border-none outline-none cursor-pointer">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+                
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-2">预约咨询</h3>
+                <p class="text-sm text-brand-primary/60 mb-6">请留下您的联系方式，我们的顾问老师会尽快与您联系。</p>
+                
+                <form id="booking-form" onsubmit="submitBooking(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">家长/学生姓名</label>
+                        <input type="text" id="book-name" required class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">联系电话</label>
+                        <input type="tel" id="book-phone" required class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">意向课程</label>
+                        <select id="book-course" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary appearance-none">
+                            <option value="K12全科">K12 全科功课辅导</option>
+                            <option value="成人英语">成人英语特训</option>
+                            <option value="其他咨询">其他咨询</option>
+                        </select>
+                    </div>
+                    <button type="submit" id="book-submit-btn" class="w-full mt-4 py-4 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover hover:!bg-brand-primary shadow-lg border-none outline-none cursor-pointer flex justify-center items-center">
+                        <span>提交预约信息</span>
+                    </button>
+                </form>
+                
+                <!-- 成功提示区域 -->
+                <div id="booking-success" class="hidden flex-col items-center justify-center py-8">
+                    <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                        <i data-lucide="check" class="w-8 h-8"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-brand-primary mb-2">预约成功！</h4>
+                    <p class="text-sm text-center text-brand-primary/70">感谢您的信任，我们的教务老师会尽快致电您。</p>
+                    <button onclick="closeBookingModal()" class="mt-6 px-8 py-3 bg-brand-bg border border-brand-primary/20 text-brand-primary font-medium rounded-lg hover:bg-brand-primary/5 transition-colors cursor-pointer">
+                        关闭
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // 初始化 Lucide Icons
+        lucide.createIcons();
+
+        // 导航栏滚动效果 (玻璃拟态增强)
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-sm');
+                navbar.style.background = 'rgba(255, 255, 255, 0.7)';
+                navbar.style.backdropFilter = 'blur(15px)';
+            } else {
+                navbar.classList.remove('shadow-sm');
+                navbar.style.background = 'rgba(255, 255, 255, 0.3)';
+                navbar.style.backdropFilter = 'blur(10px)';
+            }
+        });
+
+        // 导航栏点击平滑滚动 (新增体验优化)
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    // 考虑固定导航栏的高度偏移 (约 80px)
+                    const headerOffset = 80;
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: "smooth"
+                    });
+                }
+            });
+        });
+
+        // 移动端菜单切换逻辑
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuIcon = document.getElementById('mobile-menu-icon');
+        let isMobileMenuOpen = false;
+
+        function toggleMobileMenu() {
+            isMobileMenuOpen = !isMobileMenuOpen;
+            if (isMobileMenuOpen) {
+                mobileMenu.classList.remove('translate-x-full');
+                mobileMenu.classList.add('translate-x-0');
+                document.body.style.overflow = 'hidden'; // 防止背景滚动
+            } else {
+                mobileMenu.classList.remove('translate-x-0');
+                mobileMenu.classList.add('translate-x-full');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // 滚动入场动画 (Intersection Observer)
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target); // 动画只执行一次
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-section').forEach(section => {
+            observer.observe(section);
+        });
+        
+        // 预约弹窗逻辑 (V2 新增)
+        const bookingModal = document.getElementById('booking-modal');
+        const courseSelect = document.getElementById('book-course');
+        
+        function openBookingModal(defaultCourse) {
+            if (defaultCourse) {
+                courseSelect.value = defaultCourse;
+            }
+            bookingModal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // 防止背景滚动
+        }
+        
+        function closeBookingModal() {
+            bookingModal.classList.remove('active');
+            document.body.style.overflow = '';
+            
+            // 重置表单状态
+            setTimeout(() => {
+                document.getElementById('booking-form').reset();
+                document.getElementById('booking-form').style.display = 'block';
+                document.getElementById('booking-success').style.display = 'none';
+                document.getElementById('booking-success').classList.remove('flex');
+            }, 300);
+        }
+        
+        // 提交预约表单
+        async function submitBooking(event) {
+            event.preventDefault();
+            
+            const btn = document.getElementById('book-submit-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> <span class="ml-2">提交中...</span>';
+            lucide.createIcons();
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+            
+            const payload = {
+                name: document.getElementById('book-name').value,
+                phone: document.getElementById('book-phone').value,
+                course: document.getElementById('book-course').value,
+            };
+            
+            try {
+                const response = await fetch('/api/appointment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('booking-form').style.display = 'none';
+                    const successDiv = document.getElementById('booking-success');
+                    successDiv.style.display = 'flex';
+                    successDiv.classList.add('flex');
+                } else {
+                    alert('提交失败，请稍后再试或直接电话联系我们。');
+                }
+            } catch (error) {
+                console.error('Error submitting booking:', error);
+                alert('网络错误，请检查您的连接。');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            }
+        }
+    </script>
+</body>
+</html>
