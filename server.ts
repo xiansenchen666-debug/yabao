@@ -1,6 +1,57 @@
 // server.ts
 // 雅宝教育工作室 V4版本 - Deno Deploy (前后端分离)
 
+const JSON_HEADERS = {
+  "content-type": "application/json; charset=utf-8",
+};
+
+const MOBILE_PHONE_REGEX = /^1\d{10}$/;
+const LANDLINE_PHONE_REGEX = /^0\d{2,3}-?\d{7,8}$/;
+
+function normalizeText(value: unknown) {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function normalizePhone(value: unknown) {
+  return normalizeText(value).replace(/\s+/g, "");
+}
+
+function isValidPhone(phone: string) {
+  return MOBILE_PHONE_REGEX.test(phone) || LANDLINE_PHONE_REGEX.test(phone);
+}
+
+// === 企业微信群机器人通知 ===
+async function sendWeWorkNotification(appointment: {
+  id: string;
+  name: string;
+  phone: string;
+  course: string;
+  createdAt: string;
+}) {
+  const weworkWebhookUrl = Deno.env.get("WEWORK_WEBHOOK_URL");
+  if (!weworkWebhookUrl) {
+    return { sent: false, skipped: true };
+  }
+
+  const payload = {
+    msgtype: "markdown",
+    markdown: {
+      content: `📢 **新家长预约提醒**\n> 👤 姓名：<font color="info">${appointment.name}</font>\n> 📞 电话：<font color="info">${appointment.phone}</font>\n> 📚 课程：${appointment.course}\n> 🕒 时间：${appointment.createdAt}`
+    }
+  };
+
+  const response = await fetch(weworkWebhookUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    throw new Error(`企业微信群通知发送失败: ${response.status}`);
+  }
+  return { sent: true, skipped: false };
+}
+
 let kv: Deno.Kv | null = null;
 try {
   // 检查当前环境是否支持 Deno.openKv
@@ -43,27 +94,45 @@ Deno.serve(async (req) => {
         console.error("解析请求JSON失败:", error);
         return new Response(
           JSON.stringify({ success: false, error: "无效的请求数据格式" }),
-          { status: 400, headers: { "content-type": "application/json" } }
+          { status: 400, headers: JSON_HEADERS }
         );
       }
-      
+
+      const name = normalizeText(data.name);
+      const phone = normalizePhone(data.phone);
+      const course = normalizeText(data.course) || "未指定";
+
       // 简单的数据校验
-      if (!data.name || !data.phone) {
+      if (!name || !phone) {
         return new Response(
           JSON.stringify({ success: false, error: "姓名和电话为必填项" }),
-          { status: 400, headers: { "content-type": "application/json" } }
+          { status: 400, headers: JSON_HEADERS }
+        );
+      }
+
+      if (phone.length < 10 || phone.length > 12) {
+        return new Response(
+          JSON.stringify({ success: false, error: "电话长度不正确，请输入有效的手机号或座机号" }),
+          { status: 400, headers: JSON_HEADERS }
+        );
+      }
+
+      if (!isValidPhone(phone)) {
+        return new Response(
+          JSON.stringify({ success: false, error: "电话格式不正确，请重新输入" }),
+          { status: 400, headers: JSON_HEADERS }
         );
       }
 
       // 生成唯一预约 ID
       const appointmentId = crypto.randomUUID();
-      
+
       // 构造要存储的数据结构
       const appointmentRecord = {
         id: appointmentId,
-        name: data.name,
-        phone: data.phone,
-        course: data.course || "未指定",
+        name,
+        phone,
+        course,
         createdAt: new Date().toISOString(),
         status: "pending" // 初始状态为待处理
       };
@@ -72,13 +141,25 @@ Deno.serve(async (req) => {
       if (kv) {
         try {
           await kv.set(["appointments", appointmentId], appointmentRecord);
-          console.log(`[KV存储成功] 新预约信息: ${data.name} (${data.phone}) - ${data.course}`);
+          console.log(`[KV存储成功] 新预约信息: ${name} (${phone}) - ${course}`);
         } catch (kvError) {
           console.error(`[KV存储失败] 无法写入数据:`, kvError);
-          console.log(`[降级记录] 新预约信息: ${data.name} (${data.phone}) - ${data.course}`);
+          console.log(`[降级记录] 新预约信息: ${name} (${phone}) - ${course}`);
         }
       } else {
-        console.log(`[模拟存储] 新预约信息: ${data.name} (${data.phone}) - ${data.course} (提示：当前环境未连接真实 KV 数据库)`);
+        console.log(`[模拟存储] 新预约信息: ${name} (${phone}) - ${course} (提示：当前环境未连接真实 KV 数据库)`);
+      }
+
+      let weworkSent = false;
+
+      // 尝试发送企业微信群通知
+      try {
+        const weworkResult = await sendWeWorkNotification(appointmentRecord);
+        weworkSent = weworkResult.sent;
+
+        if (weworkSent) console.log(`[通知成功] 企业微信群消息已推送`);
+      } catch (notifyError) {
+        console.error("[通知异常] 发生未捕获的通知错误:", notifyError);
       }
 
       // 返回成功响应
@@ -86,18 +167,19 @@ Deno.serve(async (req) => {
         JSON.stringify({ 
           success: true, 
           message: "预约信息已成功提交！",
-          id: appointmentId
+          id: appointmentId,
+          notifications: { weworkSent }
         }),
         { 
           status: 201, 
-          headers: { "content-type": "application/json" } 
+          headers: JSON_HEADERS 
         }
       );
     } catch (globalError) {
       console.error("POST /api/appointment 发生未捕获的异常:", globalError);
       return new Response(
         JSON.stringify({ success: false, error: "服务器内部错误", details: String(globalError) }),
-        { status: 500, headers: { "content-type": "application/json" } }
+        { status: 500, headers: JSON_HEADERS }
       );
     }
   }
@@ -107,7 +189,7 @@ Deno.serve(async (req) => {
     if (!kv) {
       return new Response(
         JSON.stringify({ success: false, error: "未连接 Deno KV 数据库" }),
-        { status: 500, headers: { "content-type": "application/json" } }
+        { status: 500, headers: JSON_HEADERS }
       );
     }
 
@@ -123,13 +205,13 @@ Deno.serve(async (req) => {
 
       return new Response(
         JSON.stringify({ success: true, data: appointments }),
-        { status: 200, headers: { "content-type": "application/json" } }
+        { status: 200, headers: JSON_HEADERS }
       );
     } catch (error) {
       console.error("获取预约列表失败:", error);
       return new Response(
         JSON.stringify({ success: false, error: "获取数据失败" }),
-        { status: 500, headers: { "content-type": "application/json" } }
+        { status: 500, headers: JSON_HEADERS }
       );
     }
   }
