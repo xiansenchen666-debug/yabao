@@ -151,6 +151,24 @@
         #booking-modal.active .modal-content {
             transform: translateY(0) scale(1);
         }
+        
+        /* 错误提示弹窗 */
+        #error-modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+        }
+        #error-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        #error-modal .modal-content {
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transform: translateY(20px) scale(0.95);
+        }
+        #error-modal.active .modal-content {
+            transform: translateY(0) scale(1);
+        }
     </style>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -540,6 +558,26 @@
         </div>
     </div>
 
+    <!-- 错误提示 玻璃拟态弹窗 -->
+    <div id="error-modal" class="fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <!-- 弹窗背景蒙层 -->
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeErrorModal()"></div>
+        
+        <!-- 弹窗内容 -->
+        <div class="modal-content relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden z-10">
+            <div class="p-8 text-center">
+                <div class="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="alert-circle" class="w-8 h-8"></i>
+                </div>
+                <h3 class="text-xl font-bold text-brand-primary mb-2">提示</h3>
+                <p id="error-modal-message" class="text-sm text-brand-primary/70 mb-6">电话号码格式不正确，请重新输入。</p>
+                <button onclick="closeErrorModal()" class="w-full py-3 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover hover:!bg-brand-primary shadow-lg border-none outline-none cursor-pointer">
+                    我知道了
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script>
         // 初始化 Lucide Icons
@@ -643,6 +681,18 @@
                 document.getElementById('booking-success').classList.remove('flex');
             }, 300);
         }
+
+        // 错误弹窗逻辑
+        const errorModal = document.getElementById('error-modal');
+        function showErrorModal(message) {
+            document.getElementById('error-modal-message').innerText = message;
+            errorModal.classList.add('active');
+            lucide.createIcons(); // 确保新弹窗中的图标也能正确渲染
+        }
+        
+        function closeErrorModal() {
+            errorModal.classList.remove('active');
+        }
         
         // 提交预约表单
         async function submitBooking(event) {
@@ -676,11 +726,16 @@
                     successDiv.style.display = 'flex';
                     successDiv.classList.add('flex');
                 } else {
-                    alert('提交失败，请稍后再试或直接电话联系我们。');
+                    let errorMsg = '提交失败，请稍后再试或直接电话联系我们。';
+                    try {
+                        const result = await response.json();
+                        if (result.error) errorMsg = result.error;
+                    } catch(e) {}
+                    showErrorModal(errorMsg);
                 }
             } catch (error) {
                 console.error('Error submitting booking:', error);
-                alert('网络错误，请检查您的连接。');
+                showErrorModal('网络错误，请检查您的连接。');
             } finally {
                 btn.innerHTML = originalText;
                 btn.disabled = false;
