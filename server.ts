@@ -31,7 +31,7 @@ async function sendWeWorkNotification(appointment: {
   const weworkWebhookUrl = Deno.env.get("WEWORK_WEBHOOK_URL");
   if (!weworkWebhookUrl) {
     console.warn("企业微信群通知已跳过：未配置 WEWORK_WEBHOOK_URL 环境变量。");
-    return { sent: false, skipped: true };
+    return { sent: false, skipped: true, reason: "未配置 WEWORK_WEBHOOK_URL 环境变量" };
   }
 
   const payload = {
@@ -67,7 +67,7 @@ async function sendWeWorkNotification(appointment: {
     );
   }
 
-  return { sent: true, skipped: false, responseData };
+  return { sent: true, skipped: false, responseData, reason: "" };
 }
 
 let kv: Deno.Kv | null = null;
@@ -169,16 +169,22 @@ Deno.serve(async (req) => {
       }
 
       let weworkSent = false;
+      let weworkReason = "";
 
       // 尝试发送企业微信群通知
       try {
+        console.log("[通知开始] 准备发送企业微信群消息");
         const weworkResult = await sendWeWorkNotification(appointmentRecord);
         weworkSent = weworkResult.sent;
+        weworkReason = typeof weworkResult.reason === "string" ? weworkResult.reason : "";
 
         if (weworkSent) {
           console.log("[通知成功] 企业微信群消息已推送", weworkResult.responseData ?? "");
+        } else {
+          console.warn(`[通知跳过] 企业微信群消息未发送: ${weworkReason}`);
         }
       } catch (notifyError) {
+        weworkReason = notifyError instanceof Error ? notifyError.message : String(notifyError);
         console.error("[通知异常] 发生未捕获的通知错误:", notifyError);
       }
 
@@ -188,7 +194,7 @@ Deno.serve(async (req) => {
           success: true, 
           message: "预约信息已成功提交！",
           id: appointmentId,
-          notifications: { weworkSent }
+          notifications: { weworkSent, weworkReason }
         }),
         { 
           status: 201, 
