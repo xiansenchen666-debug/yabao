@@ -53,6 +53,12 @@
         .tab-active { border-bottom: 2px solid #C5A059; color: #C5A059; font-weight: 600; }
         .tab-inactive { border-bottom: 2px solid transparent; color: #1A2B3C; opacity: 0.6; }
         .tab-inactive:hover { opacity: 1; }
+        
+        /* 自定义滚动条 */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(26, 43, 60, 0.1); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(26, 43, 60, 0.2); }
     </style>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -125,28 +131,45 @@
     <!-- 登录注册弹窗 -->
     <div id="login-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeLoginModal()"></div>
-        <div class="modal-content relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden z-10">
-            <div class="p-8">
-                <button onclick="closeLoginModal()" class="absolute top-6 right-6 text-brand-primary/50 hover:text-brand-primary transition-colors bg-transparent border-none outline-none cursor-pointer">
-                    <i data-lucide="x" class="w-6 h-6"></i>
+        <div class="modal-content relative w-full max-w-sm bg-white/90 backdrop-blur-xl border border-white/50 rounded-3xl shadow-2xl overflow-hidden z-10">
+            <!-- 装饰背景 -->
+            <div class="absolute -top-20 -right-20 w-48 h-48 bg-brand-accent/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-20 -left-20 w-48 h-48 bg-brand-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="p-8 relative z-10">
+                <button onclick="closeLoginModal()" class="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-brand-primary/5 text-brand-primary/50 hover:text-brand-primary hover:bg-brand-primary/10 transition-colors border-none outline-none cursor-pointer">
+                    <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
-                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-2">欢迎回来</h3>
-                <p class="text-sm text-brand-primary/60 mb-6">请输入邮箱接收免密登录验证码</p>
                 
-                <form id="login-form" onsubmit="submitLogin(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">邮箱地址</label>
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-brand-primary/5 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="user-circle" class="w-8 h-8 text-brand-primary"></i>
+                    </div>
+                    <h3 class="text-2xl font-serif font-bold text-brand-primary mb-2">欢迎回来</h3>
+                    <p class="text-sm text-brand-primary/60">请输入邮箱接收免密登录验证码</p>
+                </div>
+                
+                <form id="login-form" onsubmit="submitLogin(event)" class="space-y-5">
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">邮箱地址</label>
                         <div class="flex gap-2">
-                            <input type="email" id="login-email" required placeholder="your@email.com" class="flex-grow px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent text-brand-primary">
-                            <button type="button" id="send-code-btn" onclick="sendCode()" class="px-4 py-3 bg-brand-primary/5 text-brand-primary text-sm font-medium rounded-lg hover:bg-brand-primary/10 transition-colors border-none cursor-pointer whitespace-nowrap">获取验证码</button>
+                            <div class="relative flex-grow">
+                                <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                                <input type="email" id="login-email" required placeholder="your@email.com" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all text-sm">
+                            </div>
+                            <button type="button" id="send-code-btn" onclick="sendCode()" class="px-4 py-3 bg-brand-primary/5 text-brand-primary text-sm font-medium rounded-xl hover:bg-brand-primary/10 transition-colors border-none cursor-pointer whitespace-nowrap">获取验证码</button>
                         </div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">验证码</label>
-                        <input type="text" id="login-code" required placeholder="6位数字" maxlength="6" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent text-brand-primary tracking-widest text-center text-lg">
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">验证码</label>
+                        <div class="relative">
+                            <i data-lucide="key" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="text" id="login-code" required placeholder="6位数字" maxlength="6" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary tracking-widest text-center text-lg transition-all">
+                        </div>
                     </div>
-                    <button type="submit" id="login-submit-btn" class="w-full mt-2 py-4 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover shadow-lg border-none outline-none cursor-pointer">
-                        登录 / 注册
+                    <button type="submit" id="login-submit-btn" class="w-full mt-6 py-4 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover shadow-lg shadow-brand-primary/20 border-none outline-none cursor-pointer flex justify-center items-center gap-2">
+                        <span>登录 / 注册</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
                     </button>
                 </form>
             </div>
@@ -156,52 +179,97 @@
     <!-- 发布家教弹窗 -->
     <div id="post-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closePostModal()"></div>
-        <div class="modal-content relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden z-10 max-h-[90vh] overflow-y-auto">
-            <div class="p-8">
-                <button onclick="closePostModal()" class="absolute top-6 right-6 text-brand-primary/50 hover:text-brand-primary transition-colors bg-transparent border-none cursor-pointer">
-                    <i data-lucide="x" class="w-6 h-6"></i>
+        <div class="modal-content relative w-full max-w-2xl bg-white/90 backdrop-blur-xl border border-white/50 rounded-3xl shadow-2xl overflow-hidden z-10 max-h-[90vh] flex flex-col">
+            <!-- 弹窗头部 -->
+            <div class="px-8 py-6 border-b border-brand-primary/10 flex justify-between items-center bg-white/50 sticky top-0 z-20">
+                <div>
+                    <h3 class="text-2xl font-serif font-bold text-brand-primary">发布家教需求</h3>
+                    <p class="text-sm text-brand-primary/60 mt-1">请详细填写您的需求，以便匹配到合适的老师</p>
+                </div>
+                <button onclick="closePostModal()" class="w-10 h-10 flex items-center justify-center rounded-full bg-brand-primary/5 text-brand-primary/50 hover:text-brand-primary hover:bg-brand-primary/10 transition-colors border-none cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
-                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-6">发布家教需求</h3>
-                <form id="post-form" onsubmit="submitPost(event)" class="space-y-4">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-brand-primary/80 uppercase mb-1">地址 *</label>
-                            <input type="text" id="p-address" required placeholder="如: 宝安区棕榈堡花园" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg text-sm focus:border-brand-accent outline-none">
+            </div>
+            
+            <!-- 弹窗表单内容 -->
+            <div class="p-8 overflow-y-auto custom-scrollbar relative">
+                <!-- 装饰背景 -->
+                <div class="absolute top-0 right-0 w-64 h-64 bg-brand-accent/5 rounded-full blur-3xl pointer-events-none -z-10"></div>
+                <div class="absolute bottom-0 left-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-3xl pointer-events-none -z-10"></div>
+
+                <form id="post-form" onsubmit="submitPost(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">地址 <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <i data-lucide="map-pin" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                                <input type="text" id="p-address" required placeholder="如: 宝安区棕榈堡花园" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-brand-primary/80 uppercase mb-1">学生年级 *</label>
-                            <input type="text" id="p-grade" required placeholder="如: 初二女孩" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg text-sm focus:border-brand-accent outline-none">
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">学生年级 <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                                <input type="text" id="p-grade" required placeholder="如: 初二女孩" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
+                            </div>
                         </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-brand-primary/80 uppercase mb-1">科目 *</label>
-                            <input type="text" id="p-subject" required placeholder="如: 物理" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg text-sm focus:border-brand-accent outline-none">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">科目 <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <i data-lucide="book-open" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                                <input type="text" id="p-subject" required placeholder="如: 物理" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-brand-primary/80 uppercase mb-1">费用 *</label>
-                            <input type="text" id="p-fee" required placeholder="如: 220-240/h" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg text-sm focus:border-brand-accent outline-none">
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">费用 <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <i data-lucide="dollar-sign" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                                <input type="text" id="p-fee" required placeholder="如: 220-240/h" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase mb-1">时间 *</label>
-                        <input type="text" id="p-time" required placeholder="如: 一周一次 周六上午" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg text-sm focus:border-brand-accent outline-none">
+                    
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">时间安排 <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <i data-lucide="clock" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="text" id="p-time" required placeholder="如: 一周一次 周六上午" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase mb-1">学生情况</label>
-                        <input type="text" id="p-studentInfo" placeholder="如: 基础中等语法弱一点" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg text-sm focus:border-brand-accent outline-none">
+                    
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">学生情况</label>
+                        <div class="relative">
+                            <i data-lucide="bar-chart" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="text" id="p-studentInfo" placeholder="如: 基础中等语法弱一点" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase mb-1">老师要求 *</label>
-                        <textarea id="p-req" required rows="2" placeholder="如: 女老师，沟通能力强..." class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg text-sm resize-none focus:border-brand-accent outline-none"></textarea>
+                    
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">老师要求 <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <i data-lucide="check-square" class="absolute left-4 top-4 w-4 h-4 text-brand-primary/40"></i>
+                            <textarea id="p-req" required rows="3" placeholder="如: 女老师，沟通能力强，善于互动..." class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm resize-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all"></textarea>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase mb-1">备注</label>
-                        <input type="text" id="p-remark" placeholder="其他补充信息" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg text-sm focus:border-brand-accent outline-none">
+                    
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">备注 <span class="text-brand-primary/40 font-normal">(选填)</span></label>
+                        <div class="relative">
+                            <i data-lucide="info" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="text" id="p-remark" placeholder="其他补充信息" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
+                        </div>
                     </div>
-                    <button type="submit" id="post-submit-btn" class="w-full mt-4 py-4 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover border-none cursor-pointer">
-                        提交发布
-                    </button>
+                    
+                    <div class="pt-4 border-t border-brand-primary/10">
+                        <button type="submit" id="post-submit-btn" class="w-full py-4 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover border-none cursor-pointer flex justify-center items-center gap-2 shadow-lg shadow-brand-primary/20">
+                            <i data-lucide="send" class="w-5 h-5"></i>
+                            确认发布需求
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -210,26 +278,85 @@
     <!-- 接单弹窗 -->
     <div id="apply-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeApplyModal()"></div>
-        <div class="modal-content relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden z-10">
-            <div class="p-8">
-                <button onclick="closeApplyModal()" class="absolute top-6 right-6 text-brand-primary/50 hover:text-brand-primary bg-transparent border-none cursor-pointer">
-                    <i data-lucide="x" class="w-6 h-6"></i>
+        <div class="modal-content relative w-full max-w-md bg-white/90 backdrop-blur-xl border border-white/50 rounded-3xl shadow-2xl overflow-hidden z-10">
+            <!-- 弹窗头部 -->
+            <div class="px-8 py-6 border-b border-brand-primary/10 flex justify-between items-center bg-white/50">
+                <div>
+                    <h3 class="text-2xl font-serif font-bold text-brand-primary">确认接单</h3>
+                    <p class="text-sm text-brand-primary/60 mt-1">留下您的联系方式，教务将与您对接</p>
+                </div>
+                <button onclick="closeApplyModal()" class="w-10 h-10 flex items-center justify-center rounded-full bg-brand-primary/5 text-brand-primary/50 hover:text-brand-primary hover:bg-brand-primary/10 transition-colors border-none cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
-                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-6">确认接单</h3>
-                <form id="apply-form" onsubmit="submitApply(event)" class="space-y-4">
+            </div>
+
+            <!-- 弹窗表单内容 -->
+            <div class="p-8 relative">
+                <!-- 装饰背景 -->
+                <div class="absolute top-0 right-0 w-48 h-48 bg-brand-accent/5 rounded-full blur-3xl pointer-events-none -z-10"></div>
+                
+                <form id="apply-form" onsubmit="submitApply(event)" class="space-y-6">
                     <input type="hidden" id="a-jobId">
-                    <div>
-                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase mb-1">老师姓名 *</label>
-                        <input type="text" id="a-name" required class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:border-brand-accent outline-none">
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">老师姓名 <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="text" id="a-name" required placeholder="您的真实姓名" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase mb-1">联系电话 *</label>
-                        <input type="tel" id="a-phone" required class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:border-brand-accent outline-none">
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">联系电话 <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <i data-lucide="phone" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="tel" id="a-phone" required placeholder="您的手机号码" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
+                        </div>
                     </div>
-                    <button type="submit" id="apply-submit-btn" class="w-full mt-2 py-4 bg-brand-accent text-white font-medium rounded-xl btn-hover border-none cursor-pointer">
-                        确认申请接单
-                    </button>
+                    <div class="pt-4 border-t border-brand-primary/10">
+                        <button type="submit" id="apply-submit-btn" class="w-full py-4 bg-brand-accent text-white font-medium rounded-xl btn-hover border-none cursor-pointer flex justify-center items-center gap-2 shadow-lg shadow-brand-accent/20">
+                            <i data-lucide="check-circle" class="w-5 h-5"></i>
+                            确认申请接单
+                        </button>
+                    </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 错误/提示 弹窗 -->
+    <div id="alert-modal" class="modal fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeAlertModal()"></div>
+        <div class="modal-content relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden z-10">
+            <div class="p-8 text-center">
+                <div id="alert-icon-container" class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i id="alert-icon" data-lucide="info" class="w-8 h-8"></i>
+                </div>
+                <h3 id="alert-title" class="text-xl font-bold text-brand-primary mb-2">提示</h3>
+                <p id="alert-message" class="text-sm text-brand-primary/70 mb-6 leading-relaxed"></p>
+                <button onclick="closeAlertModal()" id="alert-btn" class="w-full py-3 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer">
+                    我知道了
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 确认操作 弹窗 -->
+    <div id="confirm-modal" class="modal fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeConfirmModal()"></div>
+        <div class="modal-content relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden z-10">
+            <div class="p-8 text-center">
+                <div class="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="alert-triangle" class="w-8 h-8"></i>
+                </div>
+                <h3 id="confirm-title" class="text-xl font-bold text-brand-primary mb-2">确认操作</h3>
+                <p id="confirm-message" class="text-sm text-brand-primary/70 mb-6 leading-relaxed"></p>
+                <div class="flex gap-4">
+                    <button onclick="closeConfirmModal()" class="flex-1 py-3 bg-gray-100 text-gray-600 font-medium rounded-xl hover:bg-gray-200 transition-colors border-none cursor-pointer">
+                        取消
+                    </button>
+                    <button id="confirm-btn" class="flex-1 py-3 bg-red-500 text-white font-medium rounded-xl btn-hover hover:bg-red-600 shadow-lg border-none cursor-pointer">
+                        确定
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -241,6 +368,59 @@
         let currentTab = 'open';
         let jobsData = [];
         
+        // 自定义弹窗 API
+        function customAlert(title, message, type = 'info') {
+            const modal = document.getElementById('alert-modal');
+            const iconContainer = document.getElementById('alert-icon-container');
+            const icon = document.getElementById('alert-icon');
+            const btn = document.getElementById('alert-btn');
+            
+            document.getElementById('alert-title').innerText = title;
+            document.getElementById('alert-message').innerHTML = message.replace(/\n/g, '<br>');
+            
+            if (type === 'error') {
+                iconContainer.className = 'w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4';
+                icon.setAttribute('data-lucide', 'x-circle');
+                btn.className = 'w-full py-3 bg-red-500 hover:bg-red-600 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer';
+            } else if (type === 'success') {
+                iconContainer.className = 'w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4';
+                icon.setAttribute('data-lucide', 'check-circle');
+                btn.className = 'w-full py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer';
+            } else {
+                iconContainer.className = 'w-16 h-16 bg-brand-primary/5 text-brand-primary rounded-full flex items-center justify-center mx-auto mb-4';
+                icon.setAttribute('data-lucide', 'info');
+                btn.className = 'w-full py-3 bg-brand-primary hover:bg-brand-primary/90 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer';
+            }
+            
+            lucide.createIcons();
+            modal.classList.add('active');
+        }
+        
+        function closeAlertModal() {
+            document.getElementById('alert-modal').classList.remove('active');
+        }
+
+        function customConfirm(title, message, confirmCallback) {
+            document.getElementById('confirm-title').innerText = title;
+            document.getElementById('confirm-message').innerText = message;
+            
+            const confirmBtn = document.getElementById('confirm-btn');
+            // 移除旧的事件监听器
+            const newBtn = confirmBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+            
+            newBtn.addEventListener('click', () => {
+                closeConfirmModal();
+                confirmCallback();
+            });
+            
+            document.getElementById('confirm-modal').classList.add('active');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').classList.remove('active');
+        }
+
         // 鉴权拦截器
         function getToken() {
             return localStorage.getItem('tutor_token');
@@ -303,7 +483,7 @@
 
         async function sendCode() {
             const email = document.getElementById('login-email').value;
-            if (!email) return alert('请填写邮箱');
+            if (!email) return customAlert('提示', '请填写邮箱', 'error');
             
             const btn = document.getElementById('send-code-btn');
             btn.disabled = true;
@@ -318,11 +498,10 @@
                 const data = await res.json();
                 
                 if (res.ok && data.success) {
-                    // 如果后端发现没有配置邮件服务，会返回 debugCode，直接在弹窗显示方便测试
                     if (data.debugCode) {
-                        alert(`【测试环境提示】您的验证码是: ${data.debugCode}\n(线上环境配好邮件后不会弹出此提示)`);
+                        customAlert('测试环境提示', `您的验证码是: <strong class="text-xl text-brand-accent tracking-widest">${data.debugCode}</strong>\n(线上环境配好邮件后不会弹出此提示)`, 'info');
                     } else {
-                        alert('验证码已发送到您的邮箱，请注意查收。');
+                        customAlert('发送成功', '验证码已发送到您的邮箱，请注意查收。', 'success');
                     }
 
                     let sec = 60;
@@ -336,12 +515,12 @@
                         }
                     }, 1000);
                 } else {
-                    alert(data.error || '发送失败');
+                    customAlert('发送失败', data.error || '无法发送验证码', 'error');
                     btn.innerText = '获取验证码';
                     btn.disabled = false;
                 }
             } catch (e) {
-                alert('网络错误');
+                customAlert('网络错误', '请检查您的网络连接', 'error');
                 btn.innerText = '获取验证码';
                 btn.disabled = false;
             }
@@ -367,11 +546,12 @@
                     closeLoginModal();
                     initUI();
                     fetchJobs();
+                    customAlert('登录成功', `欢迎回来，${data.email}`, 'success');
                 } else {
-                    alert(data.error || '登录失败');
+                    customAlert('登录失败', data.error || '验证码不正确', 'error');
                 }
             } catch (e) {
-                alert('网络错误');
+                customAlert('网络错误', '请检查您的网络连接', 'error');
             } finally {
                 btn.innerText = '登录 / 注册';
             }
@@ -449,8 +629,12 @@
                 }
 
                 const card = `
-                    <div class="bg-white border border-brand-primary/10 rounded-2xl p-8 card-hover flex flex-col h-full">
-                        <div class="flex-grow">
+                    <div class="glass rounded-2xl p-8 card-hover flex flex-col h-full relative overflow-hidden">
+                        <!-- 装饰性背景光晕 -->
+                        <div class="absolute -top-10 -right-10 w-32 h-32 bg-brand-accent/10 rounded-full blur-2xl pointer-events-none"></div>
+                        <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-brand-primary/5 rounded-full blur-2xl pointer-events-none"></div>
+                        
+                        <div class="flex-grow relative z-10">
                             <div class="flex justify-between items-start mb-6">
                                 <h3 class="text-xl font-bold text-brand-primary">${job.subject} - ${job.grade}</h3>
                                 ${badge}
@@ -474,20 +658,20 @@
                                 <div class="flex items-start">
                                     <i data-lucide="dollar-sign" class="w-4 h-4 text-brand-accent mr-3 mt-0.5 shrink-0"></i>
                                     <span class="w-16 font-bold shrink-0">【费用】</span>
-                                    <span class="flex-grow leading-relaxed">${job.fee}</span>
+                                    <span class="flex-grow leading-relaxed font-semibold text-brand-accent">${job.fee}</span>
                                 </div>
-                                <div class="flex items-start bg-brand-primary/5 p-4 rounded-lg mt-4">
+                                <div class="flex items-start bg-white/50 border border-brand-primary/5 p-4 rounded-xl mt-4">
                                     <span class="w-16 font-bold text-brand-primary/90 shrink-0">【要求】</span>
                                     <span class="flex-grow leading-relaxed text-brand-primary/90">${job.requirement}</span>
                                 </div>
                                 ${job.remark ? `
-                                <div class="flex items-start text-gray-400 text-xs mt-2">
+                                <div class="flex items-start text-brand-primary/50 text-xs mt-2">
                                     <span class="w-16 shrink-0">【备注】</span>
                                     <span class="flex-grow leading-relaxed">${job.remark}</span>
                                 </div>` : ''}
                             </div>
                         </div>
-                        <div class="mt-auto pt-4 border-t border-brand-primary/5">
+                        <div class="mt-auto pt-4 border-t border-brand-primary/10 relative z-10">
                             ${actionBtn}
                         </div>
                     </div>
@@ -529,13 +713,15 @@
                 if (res.ok) {
                     closePostModal();
                     document.getElementById('post-form').reset();
-                    alert('发布成功！');
+                    customAlert('发布成功', '您的家教需求已成功发布到大厅。', 'success');
                     if (currentTab === 'published') fetchJobs();
                     else switchTab('published');
                 } else {
-                    alert('发布失败');
+                    customAlert('发布失败', '无法发布您的需求，请稍后再试。', 'error');
                 }
-            } catch (e) {} finally {
+            } catch (e) {
+                customAlert('网络错误', '请检查您的网络连接', 'error');
+            } finally {
                 btn.innerText = '提交发布';
                 btn.disabled = false;
             }
@@ -567,34 +753,50 @@
                 const data = await res.json();
                 if (res.ok) {
                     closeApplyModal();
-                    alert('接单成功！');
+                    customAlert('接单成功', '您已成功接下该家教单，请注意查看企业微信群通知或等待教务联系。', 'success');
                     switchTab('accepted');
                 } else {
-                    alert(data.error || '接单失败');
+                    customAlert('接单失败', data.error || '该岗位可能已被抢走或发生错误。', 'error');
                 }
-            } catch (e) {} finally {
+            } catch (e) {
+                customAlert('网络错误', '请检查您的网络连接', 'error');
+            } finally {
                 btn.innerText = '确认申请接单';
                 btn.disabled = false;
             }
         }
 
         // 删除 & 取消逻辑
-        async function deleteJob(id) {
-            if (!confirm('确定要删除这个岗位吗？')) return;
-            try {
-                const res = await apiFetch('/api/tutor/job/delete', { method: 'POST', body: JSON.stringify({ id }) });
-                if (res.ok) fetchJobs();
-                else alert('删除失败');
-            } catch (e) {}
+        function deleteJob(id) {
+            customConfirm('删除岗位', '确定要永久删除这个家教岗位吗？此操作不可恢复。', async () => {
+                try {
+                    const res = await apiFetch('/api/tutor/job/delete', { method: 'POST', body: JSON.stringify({ id }) });
+                    if (res.ok) {
+                        customAlert('删除成功', '岗位已删除', 'success');
+                        fetchJobs();
+                    } else {
+                        customAlert('删除失败', '无法删除该岗位，请稍后再试', 'error');
+                    }
+                } catch (e) {
+                    customAlert('网络错误', '请检查网络连接', 'error');
+                }
+            });
         }
 
-        async function cancelApply(id) {
-            if (!confirm('确定要取消接单，将其退回大厅吗？')) return;
-            try {
-                const res = await apiFetch('/api/tutor/job/cancel', { method: 'POST', body: JSON.stringify({ id }) });
-                if (res.ok) fetchJobs();
-                else alert('取消失败');
-            } catch (e) {}
+        function cancelApply(id) {
+            customConfirm('取消接单', '确定要放弃这个家教单并将其退回大厅吗？', async () => {
+                try {
+                    const res = await apiFetch('/api/tutor/job/cancel', { method: 'POST', body: JSON.stringify({ id }) });
+                    if (res.ok) {
+                        customAlert('已取消', '该订单已退回大厅', 'success');
+                        fetchJobs();
+                    } else {
+                        customAlert('取消失败', '操作失败，请重试', 'error');
+                    }
+                } catch (e) {
+                    customAlert('网络错误', '请检查网络连接', 'error');
+                }
+            });
         }
 
         // 初始化
