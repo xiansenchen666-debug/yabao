@@ -100,6 +100,40 @@ async function sendWeWorkNotification(appointment: {
   return { sent: true, skipped: false, responseData, reason: "" };
 }
 
+// === 家教兼职专属企业微信机器人通知 ===
+async function sendTutorWeWorkNotification(type: 'post' | 'apply', data: any) {
+  // 使用你新提供的兼职专属 webhook
+  const tutorWebhookUrl = Deno.env.get("TUTOR_WEWORK_WEBHOOK_URL") || "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=079e2b50-fa4d-4e85-9e27-9bd6a8c028a0";
+  
+  let content = "";
+  if (type === 'post') {
+    content = `📢 **新家教需求发布**\n> 📍 地址：<font color="info">${data.address}</font>\n> 🎓 年级：<font color="info">${data.grade}</font>\n> 📚 科目：<font color="info">${data.subject}</font>\n> 💰 费用：<font color="warning">${data.fee}</font>\n> 🕒 时间：${data.time}\n> 👨‍🎓 学生情况：${data.studentInfo}\n> 👩‍🏫 老师要求：${data.requirement}\n> 📝 备注：${data.remark}\n> ⏰ 提交时间：${formatToBeijingTime()}`;
+  } else if (type === 'apply') {
+    content = `🎯 **新老师接单申请**\n> 🏷️ 申请岗位：<font color="info">${data.jobTitle}</font>\n> 👤 老师姓名：<font color="info">${data.name}</font>\n> 📞 联系电话：<font color="warning">${data.phone}</font>\n> ⏰ 申请时间：${formatToBeijingTime()}`;
+  }
+
+  const payload = {
+    msgtype: "markdown",
+    markdown: { content }
+  };
+
+  try {
+    const response = await fetch(tutorWebhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    
+    if (!response.ok) {
+      console.error(`[家教通知异常] HTTP ${response.status} ${await response.text()}`);
+    } else {
+      console.log(`[家教通知成功] ${type === 'post' ? '发布需求' : '接单申请'}已推送到兼职专属企微群`);
+    }
+  } catch (error) {
+    console.error("[家教通知异常] 发生错误:", error);
+  }
+}
+
 let kv: Deno.Kv | null = null;
 try {
   // 检查当前环境是否支持 Deno.openKv
@@ -272,6 +306,61 @@ Deno.serve(async (req) => {
     }
   }
 
-  // 4. 处理其他未匹配的路由
+  // 4. 新增 POST 接口：家教发布
+  if (req.method === "POST" && url.pathname === "/api/tutor/post") {
+    try {
+      const data = await req.json();
+      
+      const id = crypto.randomUUID();
+      const postRecord = {
+        id,
+        ...data,
+        createdAt: new Date().toISOString(),
+        status: "pending"
+      };
+
+      if (kv) await kv.set(["tutor_posts", id], postRecord);
+      
+      // 发送通知
+      await sendTutorWeWorkNotification('post', data);
+
+      return new Response(JSON.stringify({ success: true, message: "发布成功" }), { status: 201, headers: JSON_HEADERS });
+    } catch (e) {
+      return new Response(JSON.stringify({ success: false, error: "服务器内部错误" }), { status: 500, headers: JSON_HEADERS });
+    }
+  }
+
+  // 5. 新增 POST 接口：家教接单
+  if (req.method === "POST" && url.pathname === "/api/tutor/apply") {
+    try {
+      const data = await req.json();
+      const phone = normalizePhone(data.phone);
+
+      if (!isValidPhone(phone)) {
+        return new Response(JSON.stringify({ success: false, error: "电话格式不正确" }), { status: 400, headers: JSON_HEADERS });
+      }
+
+      const id = crypto.randomUUID();
+      const applyRecord = {
+        id,
+        jobId: data.jobId,
+        jobTitle: data.jobTitle,
+        name: normalizeText(data.name),
+        phone,
+        createdAt: new Date().toISOString()
+      };
+
+      if (kv) await kv.set(["tutor_applies", id], applyRecord);
+      
+      // 发送通知
+      await sendTutorWeWorkNotification('apply', applyRecord);
+
+      return new Response(JSON.stringify({ success: true, message: "申请成功" }), { status: 201, headers: JSON_HEADERS });
+    } catch (e) {
+      return new Response(JSON.stringify({ success: false, error: "服务器内部错误" }), { status: 500, headers: JSON_HEADERS });
+    }
+  }
+
+  // 6. 处理其他未匹配的路由
   return new Response("Not Found - 雅宝教育工作室", { status: 404 });
 });

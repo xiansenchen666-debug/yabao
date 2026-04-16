@@ -185,6 +185,7 @@
                 <a href="#about" class="hover:text-brand-accent transition-colors">关于我们</a>
                 <a href="#services" class="hover:text-brand-accent transition-colors">核心业务</a>
                 <a href="#team" class="hover:text-brand-accent transition-colors">师资力量</a>
+                <a href="#tutor" class="hover:text-brand-accent transition-colors">家教兼职</a>
                 <a href="#contact" class="hover:text-brand-accent transition-colors">联系预约</a>
             </div>
             <button onclick="openBookingModal()" class="hidden md:inline-flex items-center justify-center px-6 py-2.5 bg-brand-primary text-brand-bg text-sm font-medium rounded-full btn-hover hover:!bg-brand-primary hover:!shadow-lg cursor-pointer border-none outline-none">
@@ -208,6 +209,7 @@
         <a href="#about" onclick="toggleMobileMenu()" class="text-2xl font-medium text-brand-primary hover:text-brand-accent transition-colors">关于我们</a>
         <a href="#services" onclick="toggleMobileMenu()" class="text-2xl font-medium text-brand-primary hover:text-brand-accent transition-colors">核心业务</a>
         <a href="#team" onclick="toggleMobileMenu()" class="text-2xl font-medium text-brand-primary hover:text-brand-accent transition-colors">师资力量</a>
+        <a href="#tutor" onclick="toggleMobileMenu()" class="text-2xl font-medium text-brand-primary hover:text-brand-accent transition-colors">家教兼职</a>
         <a href="#contact" onclick="toggleMobileMenu()" class="text-2xl font-medium text-brand-primary hover:text-brand-accent transition-colors">联系预约</a>
         <button onclick="openBookingModal(); toggleMobileMenu()" class="px-10 py-4 bg-brand-primary text-brand-bg text-lg font-medium rounded-full mt-8 border-none outline-none shadow-lg">
             立即预约
@@ -450,6 +452,83 @@
         </div>
     </section>
 
+    <!-- Tutor Section: 家教兼职平台 -->
+    <section id="tutor" class="py-32 px-6 md:px-12 bg-white relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 fade-in-section">
+                <div class="max-w-2xl">
+                    <div class="inline-block mb-4 px-4 py-1.5 rounded-full border border-brand-accent/30 text-brand-accent text-xs font-semibold tracking-widest uppercase">
+                        Tutor Matching
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-serif font-bold text-brand-primary mb-6">
+                        家教兼职<span class="italic text-brand-accent">平台</span>
+                    </h2>
+                    <p class="text-brand-primary/70 leading-relaxed text-lg">
+                        连接优质生源与优秀教师。家长免费发布需求，老师轻松在线接单。
+                    </p>
+                </div>
+                <div class="mt-8 md:mt-0 flex gap-4">
+                    <button onclick="openPostTutorModal()" class="inline-flex items-center justify-center px-6 py-3 bg-brand-primary text-brand-bg font-medium rounded-full btn-hover shadow-lg border-none outline-none cursor-pointer">
+                        <i data-lucide="plus" class="w-4 h-4 mr-2"></i> 我要发布家教
+                    </button>
+                </div>
+            </div>
+
+            <!-- 家教列表网格 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+                
+                <!-- 兼职卡片 1 -->
+                <div class="bg-[#FDFBF7] border border-brand-primary/10 rounded-2xl p-8 card-hover relative flex flex-col justify-between fade-in-section">
+                    <div>
+                        <div class="flex justify-between items-start mb-6">
+                            <h3 class="text-2xl font-bold text-brand-primary">深圳家教</h3>
+                            <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">急聘</span>
+                        </div>
+                        <div class="space-y-3 text-sm text-brand-primary/80 mb-8">
+                            <p class="flex items-start"><i data-lucide="map-pin" class="w-4 h-4 text-brand-accent mr-3 mt-0.5 shrink-0"></i> <strong>【地址】:</strong> 宝安区棕榈堡花园</p>
+                            <p class="flex items-start"><i data-lucide="user" class="w-4 h-4 text-brand-accent mr-3 mt-0.5 shrink-0"></i> <strong>【年级】:</strong> 初二女孩</p>
+                            <p class="flex items-start"><i data-lucide="book-open" class="w-4 h-4 text-brand-accent mr-3 mt-0.5 shrink-0"></i> <strong>【科目】:</strong> 物理</p>
+                            <p class="flex items-start"><i data-lucide="bar-chart" class="w-4 h-4 text-brand-accent mr-3 mt-0.5 shrink-0"></i> <strong>【情况】:</strong> 50左右</p>
+                            <p class="flex items-start"><i data-lucide="clock" class="w-4 h-4 text-brand-accent mr-3 mt-0.5 shrink-0"></i> <strong>【时间】:</strong> 一周一次 周六上午</p>
+                            <p class="flex items-start"><i data-lucide="dollar-sign" class="w-4 h-4 text-brand-accent mr-3 mt-0.5 shrink-0"></i> <strong>【费用】:</strong> 220-240/h</p>
+                            <div class="p-4 bg-brand-primary/5 rounded-lg mt-4 text-brand-primary/90">
+                                <strong>【要求】:</strong> 女老师，沟通能力强性格好教学经验丰富，善于跟孩子互动，善于引导孩子。
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="openApplyTutorModal('深圳家教 - 初二物理')" class="w-full py-3 bg-transparent border border-brand-accent text-brand-accent font-medium rounded-xl btn-hover hover:bg-brand-accent hover:text-white transition-colors cursor-pointer outline-none">
+                        我要接单
+                    </button>
+                </div>
+
+                <!-- 兼职卡片 2 -->
+                <div class="bg-[#FDFBF7] border border-brand-primary/10 rounded-2xl p-8 card-hover relative flex flex-col justify-between fade-in-section" style="transition-delay: 0.1s;">
+                    <div>
+                        <div class="flex justify-between items-start mb-6">
+                            <h3 class="text-2xl font-bold text-brand-primary">春蚕家教1004030号</h3>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">新发布</span>
+                        </div>
+                        <div class="space-y-3 text-sm text-brand-primary/80 mb-8">
+                            <p class="flex items-start"><i data-lucide="map-pin" class="w-4 h-4 text-brand-accent mr-3 mt-0.5 shrink-0"></i> <strong>【地址】:</strong> 宝安客运中心地铁站附近</p>
+                            <p class="flex items-start"><i data-lucide="user" class="w-4 h-4 text-brand-accent mr-3 mt-0.5 shrink-0"></i> <strong>【年级】:</strong> 初一、男</p>
+                            <p class="flex items-start"><i data-lucide="book-open" class="w-4 h-4 text-brand-accent mr-3 mt-0.5 shrink-0"></i> <strong>【科目】:</strong> 英语</p>
+                            <p class="flex items-start"><i data-lucide="bar-chart" class="w-4 h-4 text-brand-accent mr-3 mt-0.5 shrink-0"></i> <strong>【情况】:</strong> 基础中等语法弱一点</p>
+                            <p class="flex items-start"><i data-lucide="clock" class="w-4 h-4 text-brand-accent mr-3 mt-0.5 shrink-0"></i> <strong>【时间】:</strong> 每周2次；每次2小时（这周末试课合适五一也需要上）</p>
+                            <p class="flex items-start"><i data-lucide="dollar-sign" class="w-4 h-4 text-brand-accent mr-3 mt-0.5 shrink-0"></i> <strong>【费用】:</strong> 面议</p>
+                            <div class="p-4 bg-brand-primary/5 rounded-lg mt-4 text-brand-primary/90">
+                                <strong>【要求】:</strong> 男女不限，有家教经验，有责任心。一对一老师上门。
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="openApplyTutorModal('春蚕家教1004030号 - 初一英语')" class="w-full py-3 bg-transparent border border-brand-accent text-brand-accent font-medium rounded-xl btn-hover hover:bg-brand-accent hover:text-white transition-colors cursor-pointer outline-none">
+                        我要接单
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
     <!-- Contact Section: 极简联系板块 -->
     <section id="contact" class="py-32 px-6 md:px-12 bg-white relative">
         <div class="max-w-4xl mx-auto text-center fade-in-section">
@@ -574,6 +653,109 @@
                 <button onclick="closeErrorModal()" class="w-full py-3 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover hover:!bg-brand-primary shadow-lg border-none outline-none cursor-pointer">
                     我知道了
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 发布家教弹窗 -->
+    <div id="post-tutor-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4" style="opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;">
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closePostTutorModal()"></div>
+        <div class="modal-content relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden z-10 max-h-[90vh] overflow-y-auto" style="transform: translateY(20px) scale(0.95); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);">
+            <div class="p-8">
+                <button onclick="closePostTutorModal()" class="absolute top-6 right-6 text-brand-primary/50 hover:text-brand-primary transition-colors bg-transparent border-none outline-none cursor-pointer">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-2">发布家教需求</h3>
+                <p class="text-sm text-brand-primary/60 mb-6">请填写家教需求，审核通过后将展示在平台上。</p>
+                
+                <form id="post-tutor-form" onsubmit="submitPostTutor(event)" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">所在区域/地址 *</label>
+                            <input type="text" id="post-address" required placeholder="如: 宝安区棕榈堡花园" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">学生年级 *</label>
+                            <input type="text" id="post-grade" required placeholder="如: 初二女孩" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary text-sm">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">补习科目 *</label>
+                            <input type="text" id="post-subject" required placeholder="如: 物理" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">复习费用 *</label>
+                            <input type="text" id="post-fee" required placeholder="如: 220-240/h" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary text-sm">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">补习时间 *</label>
+                        <input type="text" id="post-time" required placeholder="如: 一周一次 周六上午" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">学生情况</label>
+                        <input type="text" id="post-studentInfo" placeholder="如: 基础中等语法弱一点" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">老师要求 *</label>
+                        <textarea id="post-requirement" required rows="2" placeholder="如: 女老师，沟通能力强..." class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary text-sm resize-none"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">备注信息</label>
+                        <input type="text" id="post-remark" placeholder="其他补充信息" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary text-sm">
+                    </div>
+                    <button type="submit" id="post-tutor-btn" class="w-full mt-4 py-4 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover hover:!bg-brand-primary shadow-lg border-none outline-none cursor-pointer flex justify-center items-center">
+                        <span>提交发布</span>
+                    </button>
+                </form>
+                
+                <div id="post-tutor-success" class="hidden flex-col items-center justify-center py-8">
+                    <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                        <i data-lucide="check" class="w-8 h-8"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-brand-primary mb-2">发布成功！</h4>
+                    <p class="text-sm text-center text-brand-primary/70">需求已提交，审核通过后将展示在兼职大厅。</p>
+                    <button onclick="closePostTutorModal()" class="mt-6 px-8 py-3 bg-brand-bg border border-brand-primary/20 text-brand-primary font-medium rounded-lg hover:bg-brand-primary/5 transition-colors cursor-pointer">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 接单申请弹窗 -->
+    <div id="apply-tutor-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4" style="opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;">
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeApplyTutorModal()"></div>
+        <div class="modal-content relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden z-10" style="transform: translateY(20px) scale(0.95); transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);">
+            <div class="p-8">
+                <button onclick="closeApplyTutorModal()" class="absolute top-6 right-6 text-brand-primary/50 hover:text-brand-primary transition-colors bg-transparent border-none outline-none cursor-pointer">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-2">申请接单</h3>
+                <p class="text-sm text-brand-primary/60 mb-6">正在申请：<strong id="apply-job-title" class="text-brand-accent"></strong></p>
+                
+                <form id="apply-tutor-form" onsubmit="submitApplyTutor(event)" class="space-y-4">
+                    <input type="hidden" id="apply-job-id">
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">老师姓名 *</label>
+                        <input type="text" id="apply-name" required class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">联系电话 *</label>
+                        <input type="tel" id="apply-phone" required class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary">
+                    </div>
+                    <button type="submit" id="apply-tutor-btn" class="w-full mt-4 py-4 bg-brand-accent text-white font-medium rounded-xl btn-hover shadow-lg border-none outline-none cursor-pointer flex justify-center items-center">
+                        <span>提交申请</span>
+                    </button>
+                </form>
+                
+                <div id="apply-tutor-success" class="hidden flex-col items-center justify-center py-8">
+                    <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                        <i data-lucide="check" class="w-8 h-8"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-brand-primary mb-2">申请已提交！</h4>
+                    <p class="text-sm text-center text-brand-primary/70">教务老师会尽快与您联系确认试课事宜。</p>
+                    <button onclick="closeApplyTutorModal()" class="mt-6 px-8 py-3 bg-brand-bg border border-brand-primary/20 text-brand-primary font-medium rounded-lg hover:bg-brand-primary/5 transition-colors cursor-pointer">关闭</button>
+                </div>
             </div>
         </div>
     </div>
@@ -735,6 +917,135 @@
                 }
             } catch (error) {
                 console.error('Error submitting booking:', error);
+                showErrorModal('网络错误，请检查您的连接。');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            }
+        }
+
+        // 家教兼职逻辑 (发布)
+        const postTutorModal = document.getElementById('post-tutor-modal');
+        function openPostTutorModal() {
+            postTutorModal.style.visibility = 'visible';
+            postTutorModal.style.opacity = '1';
+            document.body.style.overflow = 'hidden';
+        }
+        function closePostTutorModal() {
+            postTutorModal.style.opacity = '0';
+            postTutorModal.style.visibility = 'hidden';
+            document.body.style.overflow = '';
+            setTimeout(() => {
+                document.getElementById('post-tutor-form').reset();
+                document.getElementById('post-tutor-form').style.display = 'block';
+                document.getElementById('post-tutor-success').style.display = 'none';
+                document.getElementById('post-tutor-success').classList.remove('flex');
+            }, 300);
+        }
+
+        async function submitPostTutor(event) {
+            event.preventDefault();
+            const btn = document.getElementById('post-tutor-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> <span class="ml-2">发布中...</span>';
+            lucide.createIcons();
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+
+            const payload = {
+                address: document.getElementById('post-address').value,
+                grade: document.getElementById('post-grade').value,
+                subject: document.getElementById('post-subject').value,
+                studentInfo: document.getElementById('post-studentInfo').value,
+                time: document.getElementById('post-time').value,
+                fee: document.getElementById('post-fee').value,
+                requirement: document.getElementById('post-requirement').value,
+                remark: document.getElementById('post-remark').value
+            };
+
+            try {
+                const response = await fetch('/api/tutor/post', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('post-tutor-form').style.display = 'none';
+                    const successDiv = document.getElementById('post-tutor-success');
+                    successDiv.style.display = 'flex';
+                    successDiv.classList.add('flex');
+                } else {
+                    showErrorModal('发布失败，请稍后再试。');
+                }
+            } catch (error) {
+                showErrorModal('网络错误，请检查您的连接。');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            }
+        }
+
+        // 家教兼职逻辑 (接单)
+        const applyTutorModal = document.getElementById('apply-tutor-modal');
+        function openApplyTutorModal(jobTitle) {
+            document.getElementById('apply-job-title').innerText = jobTitle;
+            document.getElementById('apply-job-id').value = jobTitle; // 简单用标题做ID
+            applyTutorModal.style.visibility = 'visible';
+            applyTutorModal.style.opacity = '1';
+            document.body.style.overflow = 'hidden';
+        }
+        function closeApplyTutorModal() {
+            applyTutorModal.style.opacity = '0';
+            applyTutorModal.style.visibility = 'hidden';
+            document.body.style.overflow = '';
+            setTimeout(() => {
+                document.getElementById('apply-tutor-form').reset();
+                document.getElementById('apply-tutor-form').style.display = 'block';
+                document.getElementById('apply-tutor-success').style.display = 'none';
+                document.getElementById('apply-tutor-success').classList.remove('flex');
+            }, 300);
+        }
+
+        async function submitApplyTutor(event) {
+            event.preventDefault();
+            const btn = document.getElementById('apply-tutor-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> <span class="ml-2">提交中...</span>';
+            lucide.createIcons();
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+
+            const payload = {
+                jobId: document.getElementById('apply-job-id').value,
+                jobTitle: document.getElementById('apply-job-title').innerText,
+                name: document.getElementById('apply-name').value,
+                phone: document.getElementById('apply-phone').value
+            };
+
+            try {
+                const response = await fetch('/api/tutor/apply', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('apply-tutor-form').style.display = 'none';
+                    const successDiv = document.getElementById('apply-tutor-success');
+                    successDiv.style.display = 'flex';
+                    successDiv.classList.add('flex');
+                } else {
+                    let errorMsg = '申请失败，请稍后再试。';
+                    try {
+                        const result = await response.json();
+                        if (result.error) errorMsg = result.error;
+                    } catch(e) {}
+                    showErrorModal(errorMsg);
+                }
+            } catch (error) {
                 showErrorModal('网络错误，请检查您的连接。');
             } finally {
                 btn.innerHTML = originalText;
