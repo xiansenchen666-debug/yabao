@@ -20,6 +20,36 @@ function isValidPhone(phone: string) {
   return MOBILE_PHONE_REGEX.test(phone) || LANDLINE_PHONE_REGEX.test(phone);
 }
 
+// 格式化为北京时间 (UTC+8)
+function formatToBeijingTime(dateStr: string | Date = new Date()) {
+  const date = typeof dateStr === 'string' ? new Date(dateStr) : dateStr;
+  return date.toLocaleString('zh-CN', {
+    timeZone: 'Asia/Shanghai',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  }).replace(/\//g, '-');
+}
+
+// 重写 console 方法，为所有日志加上北京时间前缀
+const originalConsoleLog = console.log;
+const originalConsoleWarn = console.warn;
+const originalConsoleError = console.error;
+
+console.log = function (...args) {
+  originalConsoleLog(`[${formatToBeijingTime()}]`, ...args);
+};
+console.warn = function (...args) {
+  originalConsoleWarn(`[${formatToBeijingTime()}]`, ...args);
+};
+console.error = function (...args) {
+  originalConsoleError(`[${formatToBeijingTime()}]`, ...args);
+};
+
 // === 企业微信群机器人通知 ===
 async function sendWeWorkNotification(appointment: {
   id: string;
@@ -37,7 +67,7 @@ async function sendWeWorkNotification(appointment: {
   const payload = {
     msgtype: "markdown",
     markdown: {
-      content: `📢 **新家长预约提醒**\n> 👤 姓名：<font color="info">${appointment.name}</font>\n> 📞 电话：<font color="info">${appointment.phone}</font>\n> 📚 课程：${appointment.course}\n> 🕒 时间：${appointment.createdAt}`
+      content: `📢 **新家长预约提醒**\n> 👤 姓名：<font color="info">${appointment.name}</font>\n> 📞 电话：<font color="info">${appointment.phone}</font>\n> 📚 课程：${appointment.course}\n> 🕒 时间：${formatToBeijingTime(appointment.createdAt)}`
     }
   };
 
