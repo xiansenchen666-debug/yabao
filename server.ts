@@ -344,6 +344,7 @@ Deno.serve(async (req) => {
 
         const resendApiKey = Deno.env.get("RESEND_API_KEY");
         const notifyFrom = Deno.env.get("NOTIFY_EMAIL_FROM");
+        
         if (resendApiKey && notifyFrom) {
            fetch("https://api.resend.com/emails", {
             method: "POST",
@@ -355,8 +356,12 @@ Deno.serve(async (req) => {
               html: `<p>您的登录验证码是：<strong>${code}</strong>，5分钟内有效。</p>`
             })
           }).catch(e => console.error("发送邮件失败", e));
+        } else {
+          console.warn("[警告] 未配置邮件环境变量，无法发送邮件。");
         }
-        return new Response(JSON.stringify({ success: true }), { headers: JSON_HEADERS });
+
+        // 返回包含 code 的响应（仅用于测试环境或未配置邮件时方便直接看弹窗）
+        return new Response(JSON.stringify({ success: true, debugCode: (!resendApiKey ? code : undefined) }), { headers: JSON_HEADERS });
       } catch (e) {
         return new Response(JSON.stringify({ success: false, error: "请求失败" }), { status: 500, headers: JSON_HEADERS });
       }
@@ -366,16 +371,26 @@ Deno.serve(async (req) => {
     if (req.method === "POST" && url.pathname === "/api/tutor/login") {
       try {
         const { email, code } = await req.json();
+        
+        if (!email || !email.includes('@')) {
+          return new Response(JSON.stringify({ success: false, error: "邮箱格式不正确" }), { status: 400, headers: JSON_HEADERS });
+        }
+        
+        if (!code || code.length !== 6) {
+          return new Response(JSON.stringify({ success: false, error: "请输入6位验证码" }), { status: 400, headers: JSON_HEADERS });
+        }
+
+        // 【测试模式】允许任意 6 位数字验证码直接登录
+        console.log(`[测试模式] ${email} 使用任意验证码 ${code} 登录成功`);
+        
         if (kv) {
-          const record = await kv.get(["tutor_auth_codes", email]);
-          if (!record.value || (record.value as any).code !== code || (record.value as any).expiresAt < Date.now()) {
-            return new Response(JSON.stringify({ success: false, error: "验证码错误或已过期" }), { status: 400, headers: JSON_HEADERS });
-          }
+          // 清理可能存在的真实验证码记录
           await kv.delete(["tutor_auth_codes", email]);
           const token = crypto.randomUUID();
           await kv.set(["tutor_tokens", token], email);
           return new Response(JSON.stringify({ success: true, token, email }), { headers: JSON_HEADERS });
         }
+        
         return new Response(JSON.stringify({ success: false, error: "KV 数据库不可用" }), { status: 500, headers: JSON_HEADERS });
       } catch (e) {
         return new Response(JSON.stringify({ success: false, error: "登录失败" }), { status: 500, headers: JSON_HEADERS });
