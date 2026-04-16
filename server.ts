@@ -306,58 +306,185 @@ Deno.serve(async (req) => {
     }
   }
 
-  // 4. 新增 POST 接口：家教发布
-  if (req.method === "POST" && url.pathname === "/api/tutor/post") {
+  // === 兼职平台 Auth 辅助函数 ===
+  async function getUserEmail(req: Request) {
+    const token = req.headers.get("Authorization")?.replace("Bearer ", "");
+    if (!token || !kv) return null;
+    const res = await kv.get(["tutor_tokens", token]);
+    return res.value as string | null;
+  }
+
+  // 4. 返回独立的家教兼职平台页面
+  if (req.method === "GET" && url.pathname === "/tutor") {
     try {
-      const data = await req.json();
-      
-      const id = crypto.randomUUID();
-      const postRecord = {
-        id,
-        ...data,
-        createdAt: new Date().toISOString(),
-        status: "pending"
-      };
-
-      if (kv) await kv.set(["tutor_posts", id], postRecord);
-      
-      // 发送通知
-      await sendTutorWeWorkNotification('post', data);
-
-      return new Response(JSON.stringify({ success: true, message: "发布成功" }), { status: 201, headers: JSON_HEADERS });
-    } catch (e) {
-      return new Response(JSON.stringify({ success: false, error: "服务器内部错误" }), { status: 500, headers: JSON_HEADERS });
+      const htmlContent = await Deno.readTextFile("./tutor.html");
+      return new Response(htmlContent, { headers: { "content-type": "text/html; charset=utf-8" } });
+    } catch (error) {
+      return new Response("Error: tutor.html not found.", { status: 500 });
     }
   }
 
-  // 5. 新增 POST 接口：家教接单
-  if (req.method === "POST" && url.pathname === "/api/tutor/apply") {
-    try {
-      const data = await req.json();
-      const phone = normalizePhone(data.phone);
+  // 5. 兼职平台核心 API
+  if (url.pathname.startsWith("/api/tutor/")) {
+    
+    // 发送验证码
+    if (req.method === "POST" && url.pathname === "/api/tutor/send-code") {
+      try {
+        const { email } = await req.json();
+        if (!email || !email.includes('@')) return new Response(JSON.stringify({ success: false, error: "邮箱格式不正确" }), { status: 400, headers: JSON_HEADERS });
+        
+        const code = Math.floor(100000 + Math.random() * 900000).toString();
+        if (kv) {
+          await kv.set(["tutor_auth_codes", email], { code, expiresAt: Date.now() + 5 * 60 * 1000 });
+        }
+        
+        console.log(`\n========================================`);
+        console.log(`[验证码] 发送给 ${email} 的验证码是: ${code}`);
+        console.log(`========================================\n`);
 
-      if (!isValidPhone(phone)) {
-        return new Response(JSON.stringify({ success: false, error: "电话格式不正确" }), { status: 400, headers: JSON_HEADERS });
+        const resendApiKey = Deno.env.get("RESEND_API_KEY");
+        const notifyFrom = Deno.env.get("NOTIFY_EMAIL_FROM");
+        if (resendApiKey && notifyFrom) {
+           fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: { "Authorization": `Bearer ${resendApiKey}`, "Content-Type": "application/json" },
+            body: JSON.stringify({
+              from: notifyFrom,
+              to: [email],
+              subject: "雅宝家教兼职平台 - 登录验证码",
+              html: `<p>您的登录验证码是：<strong>${code}</strong>，5分钟内有效。</p>`
+            })
+          }).catch(e => console.error("发送邮件失败", e));
+        }
+        return new Response(JSON.stringify({ success: true }), { headers: JSON_HEADERS });
+      } catch (e) {
+        return new Response(JSON.stringify({ success: false, error: "请求失败" }), { status: 500, headers: JSON_HEADERS });
       }
+    }
 
-      const id = crypto.randomUUID();
-      const applyRecord = {
-        id,
-        jobId: data.jobId,
-        jobTitle: data.jobTitle,
-        name: normalizeText(data.name),
-        phone,
-        createdAt: new Date().toISOString()
-      };
+    // 登录并换取 Token
+    if (req.method === "POST" && url.pathname === "/api/tutor/login") {
+      try {
+        const { email, code } = await req.json();
+        if (kv) {
+          const record = await kv.get(["tutor_auth_codes", email]);
+          if (!record.value || (record.value as any).code !== code || (record.value as any).expiresAt < Date.now()) {
+            return new Response(JSON.stringify({ success: false, error: "验证码错误或已过期" }), { status: 400, headers: JSON_HEADERS });
+          }
+          await kv.delete(["tutor_auth_codes", email]);
+          const token = crypto.randomUUID();
+          await kv.set(["tutor_tokens", token], email);
+          return new Response(JSON.stringify({ success: true, token, email }), { headers: JSON_HEADERS });
+        }
+        return new Response(JSON.stringify({ success: false, error: "KV 数据库不可用" }), { status: 500, headers: JSON_HEADERS });
+      } catch (e) {
+        return new Response(JSON.stringify({ success: false, error: "登录失败" }), { status: 500, headers: JSON_HEADERS });
+      }
+    }
 
-      if (kv) await kv.set(["tutor_applies", id], applyRecord);
+    // 获取工作列表 (大厅 open / 我发布的 published / 我接单的 accepted)
+    if (req.method === "GET" && url.pathname === "/api/tutor/jobs") {
+      const type = url.searchParams.get("type") || "open"; 
+      const userEmail = await getUserEmail(req);
       
-      // 发送通知
-      await sendTutorWeWorkNotification('apply', applyRecord);
+      if ((type === "published" || type === "accepted") && !userEmail) {
+        return new Response(JSON.stringify({ success: false, error: "未登录" }), { status: 401, headers: JSON_HEADERS });
+      }
+      if (!kv) return new Response(JSON.stringify({ success: false, error: "KV不可用" }), { status: 500, headers: JSON_HEADERS });
 
-      return new Response(JSON.stringify({ success: true, message: "申请成功" }), { status: 201, headers: JSON_HEADERS });
-    } catch (e) {
-      return new Response(JSON.stringify({ success: false, error: "服务器内部错误" }), { status: 500, headers: JSON_HEADERS });
+      const jobs = [];
+      for await (const entry of kv.list({ prefix: ["tutor_jobs"] })) {
+        const job = entry.value as any;
+        if (type === "open" && job.status === "open") jobs.push(job);
+        if (type === "published" && job.publisherEmail === userEmail) jobs.push(job);
+        if (type === "accepted" && job.status === "accepted" && job.acceptedByEmail === userEmail) jobs.push(job);
+      }
+      jobs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      return new Response(JSON.stringify({ success: true, data: jobs }), { headers: JSON_HEADERS });
+    }
+
+    // ------------------------------------------
+    // 以下接口必须鉴权
+    // ------------------------------------------
+    const userEmail = await getUserEmail(req);
+    if (!userEmail) {
+      return new Response(JSON.stringify({ success: false, error: "未登录或登录已过期" }), { status: 401, headers: JSON_HEADERS });
+    }
+
+    // 发布岗位
+    if (req.method === "POST" && url.pathname === "/api/tutor/job/post") {
+      try {
+        const data = await req.json();
+        const id = crypto.randomUUID();
+        const job = { id, publisherEmail: userEmail, ...data, status: "open", acceptedByEmail: null, createdAt: new Date().toISOString() };
+        if (kv) await kv.set(["tutor_jobs", id], job);
+        sendTutorWeWorkNotification("post", job);
+        return new Response(JSON.stringify({ success: true }), { headers: JSON_HEADERS });
+      } catch (e) {
+        return new Response(JSON.stringify({ success: false, error: "发布失败" }), { status: 500, headers: JSON_HEADERS });
+      }
+    }
+
+    // 删除岗位
+    if (req.method === "POST" && url.pathname === "/api/tutor/job/delete") {
+      try {
+        const { id } = await req.json();
+        if (kv) {
+          const jobRes = await kv.get(["tutor_jobs", id]);
+          if (jobRes.value && (jobRes.value as any).publisherEmail === userEmail) {
+            await kv.delete(["tutor_jobs", id]);
+            return new Response(JSON.stringify({ success: true }), { headers: JSON_HEADERS });
+          }
+        }
+        return new Response(JSON.stringify({ success: false, error: "无权删除或岗位不存在" }), { status: 403, headers: JSON_HEADERS });
+      } catch (e) {
+        return new Response(JSON.stringify({ success: false, error: "删除失败" }), { status: 500, headers: JSON_HEADERS });
+      }
+    }
+
+    // 接单
+    if (req.method === "POST" && url.pathname === "/api/tutor/job/accept") {
+      try {
+        const { id, name, phone } = await req.json();
+        if (kv) {
+          const jobRes = await kv.get(["tutor_jobs", id]);
+          const job = jobRes.value as any;
+          if (job && job.status === "open") {
+            job.status = "accepted";
+            job.acceptedByEmail = userEmail;
+            job.acceptedByName = name;
+            job.acceptedByPhone = phone;
+            await kv.set(["tutor_jobs", id], job);
+            sendTutorWeWorkNotification("apply", { jobTitle: job.subject, name, phone });
+            return new Response(JSON.stringify({ success: true }), { headers: JSON_HEADERS });
+          }
+        }
+        return new Response(JSON.stringify({ success: false, error: "岗位已被接单或不存在" }), { status: 400, headers: JSON_HEADERS });
+      } catch (e) {
+        return new Response(JSON.stringify({ success: false, error: "接单失败" }), { status: 500, headers: JSON_HEADERS });
+      }
+    }
+
+    // 取消接单 (退回大厅)
+    if (req.method === "POST" && url.pathname === "/api/tutor/job/cancel") {
+      try {
+        const { id } = await req.json();
+        if (kv) {
+          const jobRes = await kv.get(["tutor_jobs", id]);
+          const job = jobRes.value as any;
+          if (job && job.status === "accepted" && job.acceptedByEmail === userEmail) {
+            job.status = "open";
+            job.acceptedByEmail = null;
+            job.acceptedByName = null;
+            job.acceptedByPhone = null;
+            await kv.set(["tutor_jobs", id], job);
+            return new Response(JSON.stringify({ success: true }), { headers: JSON_HEADERS });
+          }
+        }
+        return new Response(JSON.stringify({ success: false, error: "操作失败" }), { status: 400, headers: JSON_HEADERS });
+      } catch (e) {
+        return new Response(JSON.stringify({ success: false, error: "取消失败" }), { status: 500, headers: JSON_HEADERS });
+      }
     }
   }
 
