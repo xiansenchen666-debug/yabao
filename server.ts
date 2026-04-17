@@ -101,15 +101,19 @@ async function sendWeWorkNotification(appointment: {
 }
 
 // === 家教兼职专属企业微信机器人通知 ===
-async function sendTutorWeWorkNotification(type: 'post' | 'apply', data: any) {
+async function sendTutorWeWorkNotification(type: 'post' | 'apply' | 'delete' | 'cancel_apply', data: any) {
   // 使用你新提供的兼职专属 webhook
-  const tutorWebhookUrl = Deno.env.get("TUTOR_WEWORK_WEBHOOK_URL") || "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=079e2b50-fa4d-4e85-9e27-9bd6a8c028a0";
+  const tutorWebhookUrl = Deno.env.get("TUTOR_WEWORK_WEBHOOK_URL") || "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=bc4c1d9b-864f-453b-be51-4ee023880a06";
   
   let content = "";
   if (type === 'post') {
     content = `📢 **新家教需求发布**\n> 📍 地址：<font color="info">${data.address}</font>\n> 🎓 年级：<font color="info">${data.grade}</font>\n> 📚 科目：<font color="info">${data.subject}</font>\n> 💰 费用：<font color="warning">${data.fee}</font>\n> 🕒 时间：${data.time}\n> 👨‍🎓 学生情况：${data.studentInfo}\n> 👩‍🏫 老师要求：${data.requirement}\n> 📝 备注：${data.remark}\n> ⏰ 提交时间：${formatToBeijingTime()}`;
   } else if (type === 'apply') {
     content = `🎯 **新老师接单申请**\n> 🏷️ 申请岗位：<font color="info">${data.jobTitle}</font>\n> 👤 老师姓名：<font color="info">${data.name}</font>\n> 📞 联系电话：<font color="warning">${data.phone}</font>\n> ⏰ 申请时间：${formatToBeijingTime()}`;
+  } else if (type === 'delete') {
+    content = `🗑️ **家教需求已取消/删除**\n> 📍 地址：<font color="comment">${data.address}</font>\n> 🎓 年级：<font color="comment">${data.grade}</font>\n> 📚 科目：<font color="comment">${data.subject}</font>\n> ⏰ 取消时间：${formatToBeijingTime()}`;
+  } else if (type === 'cancel_apply') {
+    content = `🔙 **老师已取消接单**\n> 🏷️ 释放岗位：<font color="info">${data.jobTitle}</font>\n> 👤 老师姓名：<font color="comment">${data.name}</font>\n> 📞 联系电话：<font color="comment">${data.phone}</font>\n> ⏰ 取消时间：${formatToBeijingTime()}\n> ℹ️ *该岗位已重新退回大厅*`;
   }
 
   const payload = {
@@ -127,7 +131,8 @@ async function sendTutorWeWorkNotification(type: 'post' | 'apply', data: any) {
     if (!response.ok) {
       console.error(`[家教通知异常] HTTP ${response.status} ${await response.text()}`);
     } else {
-      console.log(`[家教通知成功] ${type === 'post' ? '发布需求' : '接单申请'}已推送到兼职专属企微群`);
+      const typeStr = { post: '发布需求', apply: '接单申请', delete: '删除需求', cancel_apply: '取消接单' }[type];
+      console.log(`[家教通知成功] ${typeStr} 已推送到兼职专属企微群`);
     }
   } catch (error) {
     console.error("[家教通知异常] 发生错误:", error);
@@ -580,6 +585,7 @@ Deno.serve(async (req) => {
           const job = jobRes.value as any;
           if (job && (job.publisherEmail === userEmail || isAdmin)) {
             await kv.delete(["tutor_jobs", id]);
+            sendTutorWeWorkNotification("delete", job);
             return new Response(JSON.stringify({ success: true }), { headers: JSON_HEADERS });
           }
         }
@@ -621,10 +627,13 @@ Deno.serve(async (req) => {
           const job = jobRes.value as any;
           if (job && job.status === "accepted" && job.acceptedByEmail === userEmail) {
             job.status = "open";
+            const acceptedByName = job.acceptedByName;
+            const acceptedByPhone = job.acceptedByPhone;
             job.acceptedByEmail = null;
             job.acceptedByName = null;
             job.acceptedByPhone = null;
             await kv.set(["tutor_jobs", id], job);
+            sendTutorWeWorkNotification("cancel_apply", { jobTitle: job.subject, name: acceptedByName, phone: acceptedByPhone });
             return new Response(JSON.stringify({ success: true }), { headers: JSON_HEADERS });
           }
         }
