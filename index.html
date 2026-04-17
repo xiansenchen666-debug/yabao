@@ -598,11 +598,12 @@
 
                 <!-- 登录注册 Tab -->
                 <div class="flex border-b border-brand-primary/10 mb-6">
-                    <button onclick="switchAuthTab('login')" id="auth-tab-login" class="flex-1 py-3 text-sm font-bold border-b-2 border-brand-accent text-brand-accent transition-colors outline-none cursor-pointer bg-transparent">快捷登录</button>
-                    <button onclick="switchAuthTab('register')" id="auth-tab-register" class="flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-primary/50 hover:text-brand-primary transition-colors outline-none cursor-pointer bg-transparent">免费注册</button>
+                    <button type="button" onclick="switchAuthTab('login')" id="auth-tab-login" class="flex-1 py-3 text-sm font-bold border-b-2 border-brand-accent text-brand-accent transition-colors outline-none cursor-pointer bg-transparent">账号登录</button>
+                    <button type="button" onclick="switchAuthTab('register')" id="auth-tab-register" class="flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-primary/50 hover:text-brand-primary transition-colors outline-none cursor-pointer bg-transparent">免费注册</button>
                 </div>
                 
-                <form id="auth-form" onsubmit="submitAuth(event)" class="space-y-5">
+                <form id="auth-form" onsubmit="submitAuth(event)" class="space-y-4">
+                    <!-- 通用：邮箱地址 -->
                     <div class="space-y-1">
                         <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">邮箱地址</label>
                         <div class="flex gap-2">
@@ -610,19 +611,56 @@
                                 <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
                                 <input type="email" id="auth-email" required placeholder="your@email.com" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all text-sm">
                             </div>
-                            <button type="button" id="auth-send-btn" onclick="sendAuthCode()" class="px-4 py-3 bg-brand-primary/5 text-brand-primary text-sm font-medium rounded-xl hover:bg-brand-primary/10 transition-colors border-none cursor-pointer whitespace-nowrap">获取验证码</button>
+                            <button type="button" id="auth-send-btn" onclick="sendAuthCode()" class="hidden px-4 py-3 bg-brand-primary/5 text-brand-primary text-sm font-medium rounded-xl hover:bg-brand-primary/10 transition-colors border-none cursor-pointer whitespace-nowrap">获取验证码</button>
                         </div>
                     </div>
-                    <div class="space-y-1">
+                    
+                    <!-- 注册/找回密码特有：验证码 -->
+                    <div id="auth-code-group" class="space-y-1 hidden">
                         <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">验证码</label>
                         <div class="relative">
                             <i data-lucide="key" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
-                            <input type="text" id="auth-code" required placeholder="6位数字" maxlength="6" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary tracking-widest text-center text-lg transition-all">
+                            <input type="text" id="auth-code" placeholder="6位数字" maxlength="6" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary tracking-widest text-center text-lg transition-all">
                         </div>
                     </div>
+
+                    <!-- 通用：密码 -->
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">密码</label>
+                        <div class="relative">
+                            <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="password" id="auth-password" required placeholder="请输入密码" class="w-full pl-11 pr-12 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all text-sm">
+                            <button type="button" onclick="togglePasswordVisibility('auth-password', 'eye-icon-1')" class="absolute right-4 top-1/2 -translate-y-1/2 text-brand-primary/40 hover:text-brand-primary cursor-pointer border-none bg-transparent outline-none">
+                                <i data-lucide="eye" id="eye-icon-1" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 注册/找回密码特有：确认密码 -->
+                    <div id="auth-confirm-group" class="space-y-1 hidden">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">确认密码</label>
+                        <div class="relative">
+                            <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="password" id="auth-confirm-password" placeholder="再次输入密码" class="w-full pl-11 pr-12 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all text-sm">
+                            <button type="button" onclick="togglePasswordVisibility('auth-confirm-password', 'eye-icon-2')" class="absolute right-4 top-1/2 -translate-y-1/2 text-brand-primary/40 hover:text-brand-primary cursor-pointer border-none bg-transparent outline-none">
+                                <i data-lucide="eye" id="eye-icon-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 登录特有：忘记密码 -->
+                    <div id="auth-forgot-group" class="text-right">
+                        <button type="button" onclick="switchAuthTab('forgot')" class="text-xs text-brand-primary/60 hover:text-brand-accent transition-colors bg-transparent border-none cursor-pointer outline-none">忘记密码？</button>
+                    </div>
+
                     <button type="submit" id="auth-submit-btn" class="w-full mt-6 py-4 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover shadow-lg shadow-brand-primary/20 border-none outline-none cursor-pointer flex justify-center items-center gap-2">
                         <span id="auth-btn-text">确认登录</span>
                         <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                    
+                    <!-- 返回登录按钮 (仅在忘记密码时显示) -->
+                    <button type="button" id="auth-back-login" onclick="switchAuthTab('login')" class="hidden w-full py-3 bg-transparent text-brand-primary/60 text-sm hover:text-brand-primary font-medium rounded-xl transition-colors border-none outline-none cursor-pointer text-center">
+                        返回登录
                     </button>
                 </form>
             </div>
@@ -711,22 +749,77 @@
             modal.classList.remove('opacity-100');
         }
 
+        let currentAuthMode = 'login';
+
+        function togglePasswordVisibility(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                input.type = 'password';
+                icon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        }
+
         function switchAuthTab(tab) {
+            currentAuthMode = tab;
             const loginTab = document.getElementById('auth-tab-login');
             const registerTab = document.getElementById('auth-tab-register');
             const authTitle = document.getElementById('auth-title');
             const authBtnText = document.getElementById('auth-btn-text');
+            
+            const codeGroup = document.getElementById('auth-code-group');
+            const codeInput = document.getElementById('auth-code');
+            const sendBtn = document.getElementById('auth-send-btn');
+            const confirmGroup = document.getElementById('auth-confirm-group');
+            const confirmInput = document.getElementById('auth-confirm-password');
+            const forgotGroup = document.getElementById('auth-forgot-group');
+            const backLoginBtn = document.getElementById('auth-back-login');
+
+            // Reset forms & visuals
+            document.getElementById('auth-form').reset();
+            loginTab.parentElement.style.display = tab === 'forgot' ? 'none' : 'flex';
 
             if (tab === 'login') {
                 loginTab.className = "flex-1 py-3 text-sm font-bold border-b-2 border-brand-accent text-brand-accent transition-colors outline-none cursor-pointer bg-transparent";
                 registerTab.className = "flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-primary/50 hover:text-brand-primary transition-colors outline-none cursor-pointer bg-transparent";
                 authTitle.innerText = "欢迎回到雅宝";
                 authBtnText.innerText = "确认登录";
-            } else {
+                
+                codeGroup.classList.add('hidden');
+                codeInput.required = false;
+                sendBtn.classList.add('hidden');
+                confirmGroup.classList.add('hidden');
+                confirmInput.required = false;
+                forgotGroup.classList.remove('hidden');
+                backLoginBtn.classList.add('hidden');
+            } else if (tab === 'register') {
                 registerTab.className = "flex-1 py-3 text-sm font-bold border-b-2 border-brand-accent text-brand-accent transition-colors outline-none cursor-pointer bg-transparent";
                 loginTab.className = "flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-primary/50 hover:text-brand-primary transition-colors outline-none cursor-pointer bg-transparent";
                 authTitle.innerText = "注册雅宝通行证";
                 authBtnText.innerText = "免费注册";
+                
+                codeGroup.classList.remove('hidden');
+                codeInput.required = true;
+                sendBtn.classList.remove('hidden');
+                confirmGroup.classList.remove('hidden');
+                confirmInput.required = true;
+                forgotGroup.classList.add('hidden');
+                backLoginBtn.classList.add('hidden');
+            } else if (tab === 'forgot') {
+                authTitle.innerText = "找回密码";
+                authBtnText.innerText = "重置密码";
+                
+                codeGroup.classList.remove('hidden');
+                codeInput.required = true;
+                sendBtn.classList.remove('hidden');
+                confirmGroup.classList.remove('hidden');
+                confirmInput.required = true;
+                forgotGroup.classList.add('hidden');
+                backLoginBtn.classList.remove('hidden');
             }
         }
 
@@ -778,33 +871,60 @@
         async function submitAuth(e) {
             e.preventDefault();
             const email = document.getElementById('auth-email').value;
-            const code = document.getElementById('auth-code').value;
+            const password = document.getElementById('auth-password').value;
             const btn = document.getElementById('auth-submit-btn');
-            const isLogin = document.getElementById('auth-tab-login').classList.contains('border-brand-accent');
             
-            btn.innerHTML = `<span>${isLogin ? '登录中...' : '注册中...'}</span><i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>`;
+            // 表单校验
+            if (currentAuthMode !== 'login') {
+                const confirmPassword = document.getElementById('auth-confirm-password').value;
+                if (password !== confirmPassword) {
+                    return customAlert('提示', '两次输入的密码不一致', 'error');
+                }
+                if (password.length < 6) {
+                    return customAlert('提示', '密码长度不能少于6位', 'error');
+                }
+            }
+
+            const code = document.getElementById('auth-code').value;
+            
+            let btnTextMap = { 'login': '登录中...', 'register': '注册中...', 'forgot': '重置中...' };
+            btn.innerHTML = `<span>${btnTextMap[currentAuthMode]}</span><i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>`;
             lucide.createIcons();
             
             try {
-                const res = await fetch('/api/tutor/login', {
+                let url = '/api/tutor/login'; // default login
+                if (currentAuthMode === 'register') url = '/api/tutor/register';
+                if (currentAuthMode === 'forgot') url = '/api/tutor/reset-password';
+
+                const payload = { email, password };
+                if (currentAuthMode !== 'login') payload.code = code;
+
+                const res = await fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, code })
+                    body: JSON.stringify(payload)
                 });
+                
                 const data = await res.json();
-                if (res.ok) {
-                    localStorage.setItem('tutor_token', data.token);
-                    localStorage.setItem('tutor_email', data.email);
-                    closeAuthModal();
-                    initAuthUI();
-                    customAlert(isLogin ? '登录成功' : '注册成功', `欢迎来到雅宝，${data.email}`, 'success');
+                if (res.ok && data.success) {
+                    if (currentAuthMode === 'forgot') {
+                        customAlert('重置成功', '密码已重置，请使用新密码登录', 'success');
+                        switchAuthTab('login');
+                    } else {
+                        localStorage.setItem('tutor_token', data.token);
+                        localStorage.setItem('tutor_email', data.email);
+                        closeAuthModal();
+                        initAuthUI();
+                        customAlert(currentAuthMode === 'login' ? '登录成功' : '注册成功', `欢迎来到雅宝，${data.email}`, 'success');
+                    }
                 } else {
-                    customAlert('操作失败', data.error || '验证码不正确', 'error');
+                    customAlert('操作失败', data.error || '验证码或密码不正确', 'error');
                 }
             } catch (e) {
                 customAlert('网络错误', '请检查您的网络连接', 'error');
             } finally {
-                btn.innerHTML = `<span id="auth-btn-text">${isLogin ? '确认登录' : '免费注册'}</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+                let btnTextMapRevert = { 'login': '确认登录', 'register': '免费注册', 'forgot': '重置密码' };
+                btn.innerHTML = `<span id="auth-btn-text">${btnTextMapRevert[currentAuthMode]}</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
                 lucide.createIcons();
             }
         }

@@ -377,25 +377,110 @@ Deno.serve(async (req) => {
       }
     }
 
-    // 登录并换取 Token
+    // 注册账号
+    if (req.method === "POST" && url.pathname === "/api/tutor/register") {
+      try {
+        const { email, code, password } = await req.json();
+        
+        if (!email || !email.includes('@')) return new Response(JSON.stringify({ success: false, error: "邮箱格式不正确" }), { status: 400, headers: JSON_HEADERS });
+        if (!code || code.length !== 6) return new Response(JSON.stringify({ success: false, error: "请输入6位验证码" }), { status: 400, headers: JSON_HEADERS });
+        if (!password || password.length < 6) return new Response(JSON.stringify({ success: false, error: "密码长度不能少于6位" }), { status: 400, headers: JSON_HEADERS });
+
+        if (kv) {
+          // 校验验证码 (测试模式允许直接通过)
+          const savedCodeRes = await kv.get(["tutor_auth_codes", email]);
+          const savedCode = savedCodeRes.value as any;
+          const isTestMode = true; // 保持你之前的测试模式逻辑
+          
+          if (!isTestMode && (!savedCode || savedCode.code !== code || savedCode.expiresAt < Date.now())) {
+             return new Response(JSON.stringify({ success: false, error: "验证码无效或已过期" }), { status: 400, headers: JSON_HEADERS });
+          }
+
+          // 检查是否已注册
+          const existingUser = await kv.get(["tutor_users", email]);
+          if (existingUser.value) {
+             return new Response(JSON.stringify({ success: false, error: "该邮箱已注册，请直接登录" }), { status: 400, headers: JSON_HEADERS });
+          }
+
+          // 存储用户和密码 (实际生产应使用 bcrypt/argon2，这里简单演示直接存)
+          await kv.set(["tutor_users", email], { password, createdAt: Date.now() });
+          
+          // 清理验证码记录
+          await kv.delete(["tutor_auth_codes", email]);
+          
+          // 自动登录
+          const token = crypto.randomUUID();
+          await kv.set(["tutor_tokens", token], email);
+          return new Response(JSON.stringify({ success: true, token, email }), { headers: JSON_HEADERS });
+        }
+        return new Response(JSON.stringify({ success: false, error: "KV 数据库不可用" }), { status: 500, headers: JSON_HEADERS });
+      } catch (e) {
+        return new Response(JSON.stringify({ success: false, error: "注册失败" }), { status: 500, headers: JSON_HEADERS });
+      }
+    }
+
+    // 重置密码
+    if (req.method === "POST" && url.pathname === "/api/tutor/reset-password") {
+      try {
+        const { email, code, password } = await req.json();
+        
+        if (!email || !email.includes('@')) return new Response(JSON.stringify({ success: false, error: "邮箱格式不正确" }), { status: 400, headers: JSON_HEADERS });
+        if (!code || code.length !== 6) return new Response(JSON.stringify({ success: false, error: "请输入6位验证码" }), { status: 400, headers: JSON_HEADERS });
+        if (!password || password.length < 6) return new Response(JSON.stringify({ success: false, error: "密码长度不能少于6位" }), { status: 400, headers: JSON_HEADERS });
+
+        if (kv) {
+          const savedCodeRes = await kv.get(["tutor_auth_codes", email]);
+          const savedCode = savedCodeRes.value as any;
+          const isTestMode = true; 
+          
+          if (!isTestMode && (!savedCode || savedCode.code !== code || savedCode.expiresAt < Date.now())) {
+             return new Response(JSON.stringify({ success: false, error: "验证码无效或已过期" }), { status: 400, headers: JSON_HEADERS });
+          }
+
+          const existingUser = await kv.get(["tutor_users", email]);
+          if (!existingUser.value) {
+             return new Response(JSON.stringify({ success: false, error: "该邮箱尚未注册" }), { status: 400, headers: JSON_HEADERS });
+          }
+
+          // 更新密码
+          await kv.set(["tutor_users", email], { ...existingUser.value, password });
+          await kv.delete(["tutor_auth_codes", email]);
+          
+          return new Response(JSON.stringify({ success: true }), { headers: JSON_HEADERS });
+        }
+        return new Response(JSON.stringify({ success: false, error: "KV 数据库不可用" }), { status: 500, headers: JSON_HEADERS });
+      } catch (e) {
+        return new Response(JSON.stringify({ success: false, error: "重置失败" }), { status: 500, headers: JSON_HEADERS });
+      }
+    }
+
+    // 账号密码登录
     if (req.method === "POST" && url.pathname === "/api/tutor/login") {
       try {
-        const { email, code } = await req.json();
+        const { email, password } = await req.json();
         
         if (!email || !email.includes('@')) {
           return new Response(JSON.stringify({ success: false, error: "邮箱格式不正确" }), { status: 400, headers: JSON_HEADERS });
         }
         
-        if (!code || code.length !== 6) {
-          return new Response(JSON.stringify({ success: false, error: "请输入6位验证码" }), { status: 400, headers: JSON_HEADERS });
+        if (!password) {
+          return new Response(JSON.stringify({ success: false, error: "请输入密码" }), { status: 400, headers: JSON_HEADERS });
         }
 
-        // 【测试模式】允许任意 6 位数字验证码直接登录
-        console.log(`[测试模式] ${email} 使用任意验证码 ${code} 登录成功`);
-        
+        // 测试模式：允许超级管理员免密或特定密码 (可选)
+        // 验证密码
         if (kv) {
-          // 清理可能存在的真实验证码记录
-          await kv.delete(["tutor_auth_codes", email]);
+          const userRes = await kv.get(["tutor_users", email]);
+          const user = userRes.value as any;
+          
+          if (!user) {
+              return new Response(JSON.stringify({ success: false, error: "账号不存在，请先注册" }), { status: 400, headers: JSON_HEADERS });
+          }
+          
+          if (user.password !== password) {
+              return new Response(JSON.stringify({ success: false, error: "密码错误" }), { status: 400, headers: JSON_HEADERS });
+          }
+
           const token = crypto.randomUUID();
           await kv.set(["tutor_tokens", token], email);
           return new Response(JSON.stringify({ success: true, token, email }), { headers: JSON_HEADERS });
