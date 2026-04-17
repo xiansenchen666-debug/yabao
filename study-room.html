@@ -49,6 +49,62 @@
         .modal.active { opacity: 1; visibility: visible; pointer-events: auto; }
         .modal .modal-content { transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); transform: translateY(20px) scale(0.95); }
         .modal.active .modal-content { transform: translateY(0) scale(1); }
+
+        /* 预约网格样式 */
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: 80px repeat(7, minmax(120px, 1fr));
+            gap: 1px;
+            background-color: rgba(26, 43, 60, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: inset 0 0 0 1px rgba(26, 43, 60, 0.1);
+        }
+        .schedule-cell {
+            background-color: #fff;
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+        .schedule-header {
+            background-color: #FDFBF7;
+            font-weight: bold;
+            color: #1A2B3C;
+            padding: 16px 8px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .schedule-time {
+            background-color: #FDFBF7;
+            font-weight: 500;
+            color: #1A2B3C;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cell-available {
+            cursor: pointer;
+        }
+        .cell-available:hover {
+            background-color: rgba(197, 160, 89, 0.1);
+        }
+        .cell-booked {
+            background-color: rgba(26, 43, 60, 0.05);
+            cursor: not-allowed;
+        }
+        .cell-my-booked {
+            background-color: rgba(197, 160, 89, 0.15);
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            cursor: not-allowed;
+        }
+        
+        /* 自定义滚动条 */
+        .custom-scrollbar::-webkit-scrollbar { height: 8px; width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(26, 43, 60, 0.1); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(26, 43, 60, 0.2); }
     </style>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -72,8 +128,8 @@
     </nav>
 
     <!-- 主体内容区 -->
-    <main class="flex-grow pt-12 pb-24 px-6 md:px-12">
-        <div class="max-w-7xl mx-auto text-center">
+    <main class="flex-grow pt-12 pb-24 px-6 md:px-12 max-w-screen-2xl mx-auto w-full">
+        <div class="text-center">
             
             <div class="inline-flex items-center justify-center p-4 bg-brand-primary/5 rounded-full mb-8">
                 <i data-lucide="book-open" class="w-12 h-12 text-brand-accent"></i>
@@ -82,46 +138,68 @@
                 沉浸式<span class="italic text-brand-accent">自习空间</span>
             </h1>
             <p class="text-brand-primary/70 text-lg max-w-2xl mx-auto mb-12 leading-relaxed">
-                为您提供安静、舒适、专注的学习环境。配备人体工学座椅、护眼台灯及高速网络，助您高效备考。
+                为您提供安静、舒适、专注的学习环境。点击下方时间格进行预约。
             </p>
 
-            <div class="glass rounded-3xl p-8 md:p-12 max-w-2xl mx-auto relative overflow-hidden">
-                <div class="absolute -top-20 -right-20 w-64 h-64 bg-brand-accent/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-brand-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+            <!-- 网格预约视图 -->
+            <div class="bg-white rounded-3xl p-6 shadow-xl shadow-brand-primary/5 border border-brand-primary/10 overflow-hidden relative">
                 
-                <h3 class="text-2xl font-bold text-brand-primary mb-8 relative z-10">预约席位</h3>
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-4 text-sm font-medium">
+                        <div class="flex items-center gap-2"><div class="w-4 h-4 bg-white border border-gray-200 rounded"></div>可预约</div>
+                        <div class="flex items-center gap-2"><div class="w-4 h-4 bg-brand-primary/5 border border-gray-200 rounded"></div>已被定</div>
+                        <div class="flex items-center gap-2"><div class="w-4 h-4 bg-brand-accent/15 border border-brand-accent/30 rounded"></div>我定的</div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="changeWeek(-1)" class="p-2 bg-brand-primary/5 hover:bg-brand-primary/10 rounded-lg text-brand-primary transition-colors border-none outline-none cursor-pointer"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                        <button onclick="changeWeek(1)" class="p-2 bg-brand-primary/5 hover:bg-brand-primary/10 rounded-lg text-brand-primary transition-colors border-none outline-none cursor-pointer"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                        <button onclick="fetchReservations()" class="ml-2 px-4 py-2 bg-brand-primary text-white text-sm font-medium rounded-lg btn-hover border-none outline-none cursor-pointer flex items-center gap-2">
+                            <i data-lucide="refresh-cw" class="w-4 h-4"></i> 刷新状态
+                        </button>
+                    </div>
+                </div>
+
+                <div id="loading-spinner" class="py-20 text-center text-brand-primary/50 absolute inset-0 bg-white/80 backdrop-blur-sm z-20 flex flex-col items-center justify-center">
+                    <i data-lucide="loader-2" class="w-10 h-10 mx-auto animate-spin mb-4 text-brand-accent"></i>
+                    <p class="font-medium text-lg">加载实时数据中...</p>
+                </div>
+
+                <div class="overflow-x-auto custom-scrollbar pb-4">
+                    <div id="schedule-grid" class="schedule-grid min-w-[900px]">
+                        <!-- JS 将在这里渲染网格 -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- 预定表单弹窗 -->
+    <div id="reserve-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeReserveModal()"></div>
+        <div class="modal-content relative w-full max-w-md bg-white/90 backdrop-blur-xl border border-white/50 rounded-3xl shadow-2xl overflow-hidden z-10">
+            <div class="px-8 py-6 border-b border-brand-primary/10 flex justify-between items-center bg-white/50">
+                <div>
+                    <h3 class="text-2xl font-serif font-bold text-brand-primary">确认预约</h3>
+                    <p class="text-sm text-brand-primary/60 mt-1" id="reserve-time-label">请确认您的预约时间</p>
+                </div>
+                <button onclick="closeReserveModal()" class="w-10 h-10 flex items-center justify-center rounded-full bg-brand-primary/5 text-brand-primary/50 hover:text-brand-primary hover:bg-brand-primary/10 transition-colors border-none cursor-pointer outline-none">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="p-8 relative">
+                <div class="absolute top-0 right-0 w-48 h-48 bg-brand-accent/5 rounded-full blur-3xl pointer-events-none -z-10"></div>
                 
-                <form id="study-room-form" onsubmit="submitReservation(event)" class="space-y-6 relative z-10 text-left">
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">预约日期 <span class="text-red-500">*</span></label>
-                        <div class="relative">
-                            <i data-lucide="calendar" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
-                            <input type="date" id="r-date" required class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all">
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-6">
-                        <div class="space-y-1">
-                            <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">开始时间 <span class="text-red-500">*</span></label>
-                            <div class="relative">
-                                <i data-lucide="clock" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
-                                <input type="time" id="r-start" required class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all">
-                            </div>
-                        </div>
-                        <div class="space-y-1">
-                            <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">结束时间 <span class="text-red-500">*</span></label>
-                            <div class="relative">
-                                <i data-lucide="clock" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
-                                <input type="time" id="r-end" required class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all">
-                            </div>
-                        </div>
-                    </div>
+                <form id="study-room-form" onsubmit="submitReservation(event)" class="space-y-6">
+                    <input type="hidden" id="r-date">
+                    <input type="hidden" id="r-timeslot">
 
                     <div class="space-y-1">
                         <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">预约人姓名 <span class="text-red-500">*</span></label>
                         <div class="relative">
                             <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
-                            <input type="text" id="r-name" required placeholder="您的姓名" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all">
+                            <input type="text" id="r-name" required placeholder="您的姓名" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all text-sm">
                         </div>
                     </div>
                     
@@ -129,47 +207,20 @@
                         <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">联系电话 <span class="text-red-500">*</span></label>
                         <div class="relative">
                             <i data-lucide="phone" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
-                            <input type="tel" id="r-phone" required placeholder="您的手机号" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all">
+                            <input type="tel" id="r-phone" required placeholder="您的手机号" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all text-sm">
                         </div>
                     </div>
 
-                    <div class="pt-4">
-                        <button type="submit" id="submit-btn" class="w-full py-4 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover shadow-lg shadow-brand-primary/20 border-none outline-none cursor-pointer flex justify-center items-center gap-2">
+                    <div class="pt-4 border-t border-brand-primary/10">
+                        <button type="submit" id="submit-btn" class="w-full py-4 bg-brand-accent text-white font-medium rounded-xl btn-hover border-none cursor-pointer flex justify-center items-center gap-2 shadow-lg shadow-brand-accent/20">
                             <i data-lucide="calendar-check" class="w-5 h-5"></i>
-                            <span>确认预约</span>
+                            <span>确认预约当前时段</span>
                         </button>
                     </div>
                 </form>
             </div>
-
-            <!-- 当前预定列表 -->
-            <div class="mt-16 text-left max-w-4xl mx-auto">
-                <div class="flex justify-between items-center mb-8">
-                    <h3 class="text-2xl font-serif font-bold text-brand-primary flex items-center gap-2">
-                        <i data-lucide="users" class="w-6 h-6 text-brand-accent"></i>
-                        实时预定情况
-                    </h3>
-                    <button onclick="fetchReservations()" class="text-sm text-brand-primary/60 hover:text-brand-accent transition-colors flex items-center gap-1 bg-transparent border-none cursor-pointer outline-none">
-                        <i data-lucide="refresh-cw" class="w-4 h-4"></i> 刷新
-                    </button>
-                </div>
-                
-                <div id="loading-spinner" class="py-12 text-center text-brand-primary/50 hidden">
-                    <i data-lucide="loader-2" class="w-8 h-8 mx-auto animate-spin mb-4"></i>
-                    <p>加载中...</p>
-                </div>
-                
-                <div id="empty-state" class="py-12 text-center text-brand-primary/50 hidden bg-brand-primary/5 rounded-3xl border border-brand-primary/10">
-                    <i data-lucide="calendar" class="w-12 h-12 mx-auto mb-4 opacity-50"></i>
-                    <p>当前暂无预定，快来抢占自习室 C 位吧！</p>
-                </div>
-
-                <div id="reservations-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- JS 动态渲染预定卡片 -->
-                </div>
-            </div>
         </div>
-    </main>
+    </div>
 
     <!-- 提示弹窗 -->
     <div id="alert-modal" class="modal fixed inset-0 z-[110] flex items-center justify-center p-4">
@@ -262,15 +313,46 @@
             initUI();
         }
 
+        let currentWeekOffset = 0;
+        let reservationsData = [];
+        
+        const timeSlots = [
+            "08:00-09:00", "09:00-10:00", "10:00-11:00", "11:00-12:00",
+            "12:00-13:00", "13:00-14:00", "14:00-15:00", "15:00-16:00",
+            "16:00-17:00", "17:00-18:00", "18:00-19:00", "19:00-20:00",
+            "20:00-21:00", "21:00-22:00"
+        ];
+
+        function getDatesForWeek(offset) {
+            const dates = [];
+            const today = new Date();
+            // Start from today + offset weeks
+            const startDay = new Date(today);
+            startDay.setDate(today.getDate() + (offset * 7));
+            
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(startDay);
+                d.setDate(startDay.getDate() + i);
+                dates.push(d);
+            }
+            return dates;
+        }
+
+        function formatDate(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        function changeWeek(delta) {
+            // 不允许查看过去的周
+            if (currentWeekOffset + delta < 0) return;
+            currentWeekOffset += delta;
+            renderGrid();
+        }
+
         // 限制日期只能选今天及以后
         document.addEventListener('DOMContentLoaded', () => {
-            const dateInput = document.getElementById('r-date');
-            if(dateInput) {
-                const today = new Date().toISOString().split('T')[0];
-                dateInput.setAttribute('min', today);
-            }
             initUI();
-            fetchReservations(); // 加载预定列表
+            fetchReservations(); // 加载预定列表并渲染网格
         });
 
         // 统一 Fetch 方法 (处理未登录)
@@ -290,82 +372,91 @@
 
         // 获取并渲染预定列表
         async function fetchReservations() {
-            document.getElementById('reservations-container').innerHTML = '';
-            document.getElementById('loading-spinner').style.display = 'block';
-            document.getElementById('empty-state').style.display = 'none';
+            document.getElementById('loading-spinner').style.display = 'flex';
+            document.getElementById('schedule-grid').innerHTML = '';
             
             try {
-                // 这个接口不需要鉴权
                 const res = await fetch('/api/study-room/reservations');
                 const data = await res.json();
                 
                 document.getElementById('loading-spinner').style.display = 'none';
                 
-                if (!res.ok || !data.success || data.data.length === 0) {
-                    document.getElementById('empty-state').style.display = 'block';
+                if (res.ok && data.success) {
+                    reservationsData = data.data;
                 } else {
-                    renderReservations(data.data);
+                    reservationsData = [];
                 }
+                renderGrid();
             } catch (e) {
                 document.getElementById('loading-spinner').style.display = 'none';
                 console.error("加载预定失败", e);
+                renderGrid(); // Render empty grid on error
             }
         }
 
-        function renderReservations(reservations) {
-            const container = document.getElementById('reservations-container');
-            const today = new Date().toISOString().split('T')[0];
+        function renderGrid() {
+            const grid = document.getElementById('schedule-grid');
+            const dates = getDatesForWeek(currentWeekOffset);
+            const currentUserEmail = getEmail();
             
-            reservations.forEach(r => {
-                // 简单过滤掉过去的日期（仅前端过滤显示，不严谨但够用）
-                if (r.date < today) return;
-
-                const isToday = r.date === today;
-                const dateLabel = isToday ? '<span class="text-red-500 font-bold">今天</span>' : r.date;
-                const statusBadge = isToday 
-                    ? `<span class="px-2 py-1 bg-red-50 text-red-600 text-[10px] font-bold rounded-md uppercase tracking-wider border border-red-100">Hot</span>`
-                    : `<span class="px-2 py-1 bg-brand-primary/5 text-brand-primary/60 text-[10px] font-bold rounded-md uppercase tracking-wider">Scheduled</span>`;
-
-                const card = `
-                    <div class="glass rounded-2xl p-5 flex items-center gap-4 card-hover relative overflow-hidden">
-                        <!-- 装饰发光 -->
-                        ${isToday ? `<div class="absolute -top-6 -right-6 w-16 h-16 bg-red-400/10 rounded-full blur-xl pointer-events-none"></div>` : ''}
-                        
-                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shrink-0 shadow-sm border border-brand-primary/5">
-                            <i data-lucide="user" class="w-5 h-5 text-brand-accent"></i>
-                        </div>
-                        <div class="flex-grow min-w-0">
-                            <div class="flex justify-between items-center mb-1">
-                                <h4 class="font-bold text-brand-primary truncate pr-2">${r.name}</h4>
-                                ${statusBadge}
-                            </div>
-                            <div class="text-xs text-brand-primary/60 flex items-center gap-3">
-                                <span class="flex items-center gap-1">
-                                    <i data-lucide="calendar" class="w-3 h-3"></i>
-                                    ${dateLabel}
-                                </span>
-                                <span class="flex items-center gap-1">
-                                    <i data-lucide="clock" class="w-3 h-3 text-brand-accent"></i>
-                                    <span class="font-medium text-brand-primary/80">${r.start} - ${r.end}</span>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                container.insertAdjacentHTML('beforeend', card);
+            const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+            
+            let html = `
+                <div class="schedule-header">时间</div>
+            `;
+            
+            dates.forEach(d => {
+                html += `<div class="schedule-header text-center">
+                    <div class="text-xs text-brand-primary/60 mb-1">${formatDate(d).slice(5)}</div>
+                    <div>${days[d.getDay()]}</div>
+                </div>`;
             });
-            lucide.createIcons();
 
-            // 如果过滤后全为空，显示空状态
-            if (container.children.length === 0) {
-                document.getElementById('empty-state').style.display = 'block';
+            timeSlots.forEach(slot => {
+                // Time column
+                html += `<div class="schedule-time">${slot.split('-')[0]}</div>`;
+                
+                // Days columns
+                dates.forEach(d => {
+                    const dateStr = formatDate(d);
+                    const res = reservationsData.find(r => r.date === dateStr && r.timeSlot === slot);
+                    
+                    if (res) {
+                        const isMyBooked = res.userEmail === currentUserEmail;
+                        const cellClass = isMyBooked ? 'cell-my-booked' : 'cell-booked';
+                        const displayText = isMyBooked ? '我定的' : res.name;
+                        html += `<div class="schedule-cell ${cellClass} flex items-center justify-center text-xs font-medium" title="已被 ${res.name} 预定">
+                            ${displayText}
+                        </div>`;
+                    } else {
+                        html += `<div class="schedule-cell cell-available" onclick="openReserveModal('${dateStr}', '${slot}')">
+                            <span class="opacity-0 hover:opacity-100 transition-opacity text-brand-accent font-medium text-xs">可预约</span>
+                        </div>`;
+                    }
+                });
+            });
+
+            grid.innerHTML = html;
+        }
+
+        function openReserveModal(dateStr, timeSlot) {
+            if (!getToken()) {
+                return customAlert('提示', '请先登录后再进行预约', 'info');
             }
+            document.getElementById('r-date').value = dateStr;
+            document.getElementById('r-timeslot').value = timeSlot;
+            document.getElementById('reserve-time-label').innerText = `预约时间: ${dateStr} ${timeSlot}`;
+            document.getElementById('reserve-modal').classList.add('active');
+        }
+
+        function closeReserveModal() {
+            document.getElementById('reserve-modal').classList.remove('active');
         }
 
         async function submitReservation(e) {
             e.preventDefault();
             if (!getToken()) {
-                return customAlert('提示', '请先登录后再进行预约', 'info');
+                return goToLogin();
             }
 
             const btn = document.getElementById('submit-btn');
@@ -376,19 +467,10 @@
 
             const payload = {
                 date: document.getElementById('r-date').value,
-                start: document.getElementById('r-start').value,
-                end: document.getElementById('r-end').value,
+                timeSlot: document.getElementById('r-timeslot').value,
                 name: document.getElementById('r-name').value,
                 phone: document.getElementById('r-phone').value,
             };
-
-            // 简单校验开始时间是否早于结束时间
-            if (payload.start >= payload.end) {
-                btn.innerHTML = originalHtml;
-                lucide.createIcons();
-                btn.disabled = false;
-                return customAlert('时间错误', '开始时间必须早于结束时间', 'error');
-            }
 
             try {
                 const res = await apiFetch('/api/study-room/reserve', {
@@ -398,9 +480,10 @@
                 
                 const data = await res.json();
                 if (res.ok && data.success) {
+                    closeReserveModal();
                     customAlert('预约成功', '您的自习室预约已提交，请准时前往。', 'success');
                     document.getElementById('study-room-form').reset();
-                    fetchReservations(); // 刷新列表
+                    fetchReservations(); // 刷新网格
                 } else {
                     customAlert('预约失败', data.error || '无法提交预约，请稍后再试。', 'error');
                 }

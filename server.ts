@@ -555,23 +555,22 @@ Deno.serve(async (req) => {
         // 获取所有预定记录
         for await (const entry of kv.list({ prefix: ["study_room_reservations"] })) {
           const res = entry.value as any;
-          // 只返回未来的或今天的预定，过去的可以过滤掉
-          // 简单处理，这里返回所有记录让前端根据日期过滤，或者在这里过滤
           reservations.push(res);
         }
         
-        // 排序：按预约日期和开始时间
+        // 排序：按预约日期和时间段
         reservations.sort((a, b) => {
           if (a.date !== b.date) return a.date.localeCompare(b.date);
-          return a.start.localeCompare(b.start);
+          if (a.timeSlot !== b.timeSlot) return a.timeSlot.localeCompare(b.timeSlot);
+          return 0;
         });
 
         // 脱敏处理，保护隐私
         const publicReservations = reservations.map(r => ({
           id: r.id,
           date: r.date,
-          start: r.start,
-          end: r.end,
+          timeSlot: r.timeSlot,
+          userEmail: r.userEmail,
           // 将姓名处理为 "张**" 或 "张老师" 格式
           name: r.name.length > 1 ? r.name.charAt(0) + '*'.repeat(r.name.length - 1) : r.name
         }));
@@ -591,25 +590,38 @@ Deno.serve(async (req) => {
 
       try {
         const data = await req.json();
-        const { date, start, end, name, phone } = data;
+        const { date, timeSlot, name, phone } = data;
         
-        if (!date || !start || !end || !name || !phone) {
+        if (!date || !timeSlot || !name || !phone) {
            return new Response(JSON.stringify({ success: false, error: "请填写完整预定信息" }), { status: 400, headers: JSON_HEADERS });
         }
 
-        const id = crypto.randomUUID();
-        const reservation = {
-          id,
-          userEmail,
-          date,
-          start,
-          end,
-          name,
-          phone,
-          createdAt: new Date().toISOString()
-        };
-
         if (kv) {
+          // 检查该时间段是否已被预定
+          let isConflict = false;
+          for await (const entry of kv.list({ prefix: ["study_room_reservations"] })) {
+             const existing = entry.value as any;
+             if (existing.date === date && existing.timeSlot === timeSlot) {
+                isConflict = true;
+                break;
+             }
+          }
+
+          if (isConflict) {
+             return new Response(JSON.stringify({ success: false, error: "该时间段已被预定，请选择其他时间" }), { status: 409, headers: JSON_HEADERS });
+          }
+
+          const id = crypto.randomUUID();
+          const reservation = {
+            id,
+            userEmail,
+            date,
+            timeSlot,
+            name,
+            phone,
+            createdAt: new Date().toISOString()
+          };
+
           await kv.set(["study_room_reservations", id], reservation);
           
           // 借用主页预约的企微通知
@@ -618,7 +630,7 @@ Deno.serve(async (req) => {
                 id,
                 name,
                 phone,
-                course: `【自习室预约】 日期：${date} 时间：${start} - ${end}`,
+                course: `【自习室预约】 日期：${date} 时间段：${timeSlot}`,
                 createdAt: reservation.createdAt
              });
           } catch(e) {
