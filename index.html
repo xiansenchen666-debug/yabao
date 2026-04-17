@@ -172,15 +172,15 @@
         /* 欢迎提示 Toast 样式 */
         #welcome-toast {
             position: fixed;
-            top: -100px;
+            bottom: -100px;
             left: 50%;
             transform: translateX(-50%);
-            transition: top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+            transition: bottom 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
             opacity: 0;
             z-index: 9999;
         }
         #welcome-toast.show {
-            top: 24px;
+            bottom: 32px;
             opacity: 1;
         }
     </style>
