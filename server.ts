@@ -543,6 +543,97 @@ Deno.serve(async (req) => {
     }
   }
 
-  // 6. 处理其他未匹配的路由
+  // 6. 自习室 API
+  if (url.pathname.startsWith("/api/study-room/")) {
+    
+    // 获取当前有效的预定记录
+    if (req.method === "GET" && url.pathname === "/api/study-room/reservations") {
+      if (!kv) return new Response(JSON.stringify({ success: false, error: "KV不可用" }), { status: 500, headers: JSON_HEADERS });
+
+      try {
+        const reservations = [];
+        // 获取所有预定记录
+        for await (const entry of kv.list({ prefix: ["study_room_reservations"] })) {
+          const res = entry.value as any;
+          // 只返回未来的或今天的预定，过去的可以过滤掉
+          // 简单处理，这里返回所有记录让前端根据日期过滤，或者在这里过滤
+          reservations.push(res);
+        }
+        
+        // 排序：按预约日期和开始时间
+        reservations.sort((a, b) => {
+          if (a.date !== b.date) return a.date.localeCompare(b.date);
+          return a.start.localeCompare(b.start);
+        });
+
+        // 脱敏处理，保护隐私
+        const publicReservations = reservations.map(r => ({
+          id: r.id,
+          date: r.date,
+          start: r.start,
+          end: r.end,
+          // 将姓名处理为 "张**" 或 "张老师" 格式
+          name: r.name.length > 1 ? r.name.charAt(0) + '*'.repeat(r.name.length - 1) : r.name
+        }));
+
+        return new Response(JSON.stringify({ success: true, data: publicReservations }), { headers: JSON_HEADERS });
+      } catch (e) {
+        return new Response(JSON.stringify({ success: false, error: "获取预定数据失败" }), { status: 500, headers: JSON_HEADERS });
+      }
+    }
+
+    // 提交新的预定
+    if (req.method === "POST" && url.pathname === "/api/study-room/reserve") {
+      const userEmail = await getUserEmail(req);
+      if (!userEmail) {
+        return new Response(JSON.stringify({ success: false, error: "未登录" }), { status: 401, headers: JSON_HEADERS });
+      }
+
+      try {
+        const data = await req.json();
+        const { date, start, end, name, phone } = data;
+        
+        if (!date || !start || !end || !name || !phone) {
+           return new Response(JSON.stringify({ success: false, error: "请填写完整预定信息" }), { status: 400, headers: JSON_HEADERS });
+        }
+
+        const id = crypto.randomUUID();
+        const reservation = {
+          id,
+          userEmail,
+          date,
+          start,
+          end,
+          name,
+          phone,
+          createdAt: new Date().toISOString()
+        };
+
+        if (kv) {
+          await kv.set(["study_room_reservations", id], reservation);
+          
+          // 借用主页预约的企微通知
+          try {
+             await sendWeWorkNotification({
+                id,
+                name,
+                phone,
+                course: `【自习室预约】 日期：${date} 时间：${start} - ${end}`,
+                createdAt: reservation.createdAt
+             });
+          } catch(e) {
+             console.error("自习室预定通知发送失败:", e);
+          }
+          
+          return new Response(JSON.stringify({ success: true }), { headers: JSON_HEADERS });
+        }
+        return new Response(JSON.stringify({ success: false, error: "KV不可用" }), { status: 500, headers: JSON_HEADERS });
+      } catch (e) {
+        return new Response(JSON.stringify({ success: false, error: "预定失败" }), { status: 500, headers: JSON_HEADERS });
+      }
+    }
+  }
+
+  // 7. 处理其他未匹配的路由
   return new Response("Not Found - 雅宝教育工作室", { status: 404 });
 });
