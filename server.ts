@@ -727,17 +727,14 @@ Deno.serve(async (req) => {
                 createdAt
               };
               await kv.set(["study_room_reservations", id], reservation);
-              timeSlotsStr += `\n> - ${slot.date} ${slot.timeSlot}`;
+              timeSlotsStr += `> - <font color="info">${slot.date}</font> ${slot.timeSlot}\n`;
           }
           
-          // 借用主页预约的企微通知
           try {
-             await sendWeWorkNotification({
-                id: crypto.randomUUID(), // fake id for notification
+             await sendStudyRoomWeWorkNotification('reserve', {
                 name,
                 phone,
-                course: `【自习室批量预约】 预定了 ${selectedSlots.length} 个时段：${timeSlotsStr}`,
-                createdAt
+                timeSlotsStr
              });
           } catch(e) {
              console.error("自习室预定通知发送失败:", e);
@@ -748,6 +745,50 @@ Deno.serve(async (req) => {
         return new Response(JSON.stringify({ success: false, error: "KV不可用" }), { status: 500, headers: JSON_HEADERS });
       } catch (e) {
         return new Response(JSON.stringify({ success: false, error: "预定失败" }), { status: 500, headers: JSON_HEADERS });
+      }
+    }
+
+    // 取消预定
+    if (req.method === "POST" && url.pathname === "/api/study-room/cancel") {
+      const userEmail = await getUserEmail(req);
+      if (!userEmail) {
+        return new Response(JSON.stringify({ success: false, error: "未登录" }), { status: 401, headers: JSON_HEADERS });
+      }
+
+      try {
+        const { id } = await req.json();
+        
+        if (kv) {
+          const res = await kv.get(["study_room_reservations", id]);
+          const reservation = res.value as any;
+          
+          if (!reservation) {
+            return new Response(JSON.stringify({ success: false, error: "预定记录不存在" }), { status: 404, headers: JSON_HEADERS });
+          }
+
+          if (reservation.userEmail !== userEmail) {
+            return new Response(JSON.stringify({ success: false, error: "无权取消他人的预定" }), { status: 403, headers: JSON_HEADERS });
+          }
+
+          await kv.delete(["study_room_reservations", id]);
+          
+          const timeSlotsStr = `> - <font color="warning">${reservation.date}</font> ${reservation.timeSlot}\n`;
+          
+          try {
+             await sendStudyRoomWeWorkNotification('cancel', {
+                name: reservation.name,
+                phone: reservation.phone,
+                timeSlotsStr
+             });
+          } catch(e) {
+             console.error("自习室取消通知发送失败:", e);
+          }
+
+          return new Response(JSON.stringify({ success: true }), { headers: JSON_HEADERS });
+        }
+        return new Response(JSON.stringify({ success: false, error: "KV不可用" }), { status: 500, headers: JSON_HEADERS });
+      } catch (e) {
+        return new Response(JSON.stringify({ success: false, error: "取消失败" }), { status: 500, headers: JSON_HEADERS });
       }
     }
   }
