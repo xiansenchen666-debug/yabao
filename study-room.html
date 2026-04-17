@@ -94,10 +94,10 @@
             background-color: rgba(26, 43, 60, 0.05);
             cursor: not-allowed;
         }
-        .cell-my-booked {
-            background-color: rgba(197, 160, 89, 0.15);
-            border: 1px solid rgba(197, 160, 89, 0.3);
-            cursor: not-allowed;
+        .cell-selected {
+            background-color: rgba(197, 160, 89, 0.4);
+            border: 1px solid rgba(197, 160, 89, 0.8);
+            cursor: pointer;
         }
         
         /* 自定义滚动条 */
@@ -148,11 +148,14 @@
                     <div class="flex items-center gap-4 text-sm font-medium">
                         <div class="flex items-center gap-2"><div class="w-4 h-4 bg-white border border-gray-200 rounded"></div>可预约</div>
                         <div class="flex items-center gap-2"><div class="w-4 h-4 bg-brand-primary/5 border border-gray-200 rounded"></div>已被定</div>
-                        <div class="flex items-center gap-2"><div class="w-4 h-4 bg-brand-accent/15 border border-brand-accent/30 rounded"></div>我定的</div>
+                        <div class="flex items-center gap-2"><div class="w-4 h-4 bg-brand-accent/40 border border-brand-accent/80 rounded"></div>已选中</div>
                     </div>
                     <div class="flex gap-2">
                         <button onclick="changeWeek(-1)" class="p-2 bg-brand-primary/5 hover:bg-brand-primary/10 rounded-lg text-brand-primary transition-colors border-none outline-none cursor-pointer"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
                         <button onclick="changeWeek(1)" class="p-2 bg-brand-primary/5 hover:bg-brand-primary/10 rounded-lg text-brand-primary transition-colors border-none outline-none cursor-pointer"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                        <button onclick="openReserveModal()" id="batch-reserve-btn" class="ml-2 px-4 py-2 bg-brand-accent text-white text-sm font-medium rounded-lg btn-hover border-none outline-none cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none" disabled>
+                            <i data-lucide="check-square" class="w-4 h-4"></i> 预约所选 (<span id="selected-count">0</span>)
+                        </button>
                         <button onclick="fetchReservations()" class="ml-2 px-4 py-2 bg-brand-primary text-white text-sm font-medium rounded-lg btn-hover border-none outline-none cursor-pointer flex items-center gap-2">
                             <i data-lucide="refresh-cw" class="w-4 h-4"></i> 刷新状态
                         </button>
@@ -192,8 +195,11 @@
                 <div class="absolute top-0 right-0 w-48 h-48 bg-brand-accent/5 rounded-full blur-3xl pointer-events-none -z-10"></div>
                 
                 <form id="study-room-form" onsubmit="submitReservation(event)" class="space-y-6">
-                    <input type="hidden" id="r-date">
-                    <input type="hidden" id="r-timeslot">
+                    <input type="hidden" id="r-selected-slots">
+
+                    <div class="bg-brand-primary/5 rounded-xl p-4 max-h-32 overflow-y-auto custom-scrollbar text-sm text-brand-primary/80 mb-6" id="selected-slots-display">
+                        <!-- JS 渲染选中的时间段 -->
+                    </div>
 
                     <div class="space-y-1">
                         <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">预约人姓名 <span class="text-red-500">*</span></label>
@@ -214,7 +220,7 @@
                     <div class="pt-4 border-t border-brand-primary/10">
                         <button type="submit" id="submit-btn" class="w-full py-4 bg-brand-accent text-white font-medium rounded-xl btn-hover border-none cursor-pointer flex justify-center items-center gap-2 shadow-lg shadow-brand-accent/20">
                             <i data-lucide="calendar-check" class="w-5 h-5"></i>
-                            <span>确认预约当前时段</span>
+                            <span>确认预约</span>
                         </button>
                     </div>
                 </form>
@@ -315,6 +321,7 @@
 
         let currentWeekOffset = 0;
         let reservationsData = [];
+        let selectedCells = []; // 存储选中的单元格信息 {date, timeSlot}
         
         const timeSlots = [
             "08:00-09:00", "09:00-10:00", "10:00-11:00", "11:00-12:00",
@@ -326,9 +333,11 @@
         function getDatesForWeek(offset) {
             const dates = [];
             const today = new Date();
-            // Start from today + offset weeks
+            // Get the day of the week (0-6), where 0 is Sunday. Convert to 1-7 (Monday-Sunday)
+            const dayOfWeek = today.getDay() === 0 ? 7 : today.getDay();
+            // Calculate Monday of the current week
             const startDay = new Date(today);
-            startDay.setDate(today.getDate() + (offset * 7));
+            startDay.setDate(today.getDate() - dayOfWeek + 1 + (offset * 7));
             
             for (let i = 0; i < 7; i++) {
                 const d = new Date(startDay);
@@ -429,23 +438,67 @@
                             ${displayText}
                         </div>`;
                     } else {
-                        html += `<div class="schedule-cell cell-available" onclick="openReserveModal('${dateStr}', '${slot}')">
-                            <span class="opacity-0 hover:opacity-100 transition-opacity text-brand-accent font-medium text-xs">可预约</span>
+                        // 检查是否已被选中
+                        const isSelected = selectedCells.some(c => c.date === dateStr && c.timeSlot === slot);
+                        const cellClass = isSelected ? 'cell-selected' : 'cell-available';
+                        const content = isSelected ? '<i data-lucide="check" class="w-4 h-4 text-brand-accent"></i>' : '<span class="opacity-0 hover:opacity-100 transition-opacity text-brand-accent font-medium text-xs">可预约</span>';
+                        
+                        html += `<div class="schedule-cell ${cellClass} flex items-center justify-center" onclick="toggleCellSelection('${dateStr}', '${slot}')">
+                            ${content}
                         </div>`;
                     }
                 });
             });
 
             grid.innerHTML = html;
+            updateBatchButton();
+            lucide.createIcons();
         }
 
-        function openReserveModal(dateStr, timeSlot) {
+        function toggleCellSelection(dateStr, timeSlot) {
+            const index = selectedCells.findIndex(c => c.date === dateStr && c.timeSlot === timeSlot);
+            if (index > -1) {
+                // Deselect
+                selectedCells.splice(index, 1);
+            } else {
+                // Select
+                selectedCells.push({ date: dateStr, timeSlot });
+            }
+            renderGrid(); // Re-render to update UI
+        }
+
+        function updateBatchButton() {
+            const btn = document.getElementById('batch-reserve-btn');
+            const countSpan = document.getElementById('selected-count');
+            countSpan.innerText = selectedCells.length;
+            btn.disabled = selectedCells.length === 0;
+        }
+
+        function openReserveModal() {
             if (!getToken()) {
                 return customAlert('提示', '请先登录后再进行预约', 'info');
             }
-            document.getElementById('r-date').value = dateStr;
-            document.getElementById('r-timeslot').value = timeSlot;
-            document.getElementById('reserve-time-label').innerText = `预约时间: ${dateStr} ${timeSlot}`;
+            if (selectedCells.length === 0) return;
+
+            // 排序选中的时间段，方便展示
+            const sortedCells = [...selectedCells].sort((a, b) => {
+                if (a.date !== b.date) return a.date.localeCompare(b.date);
+                return a.timeSlot.localeCompare(b.timeSlot);
+            });
+
+            document.getElementById('r-selected-slots').value = JSON.stringify(sortedCells);
+            document.getElementById('reserve-time-label').innerText = `已选择 ${sortedCells.length} 个时间段`;
+            
+            // 渲染选中的时间段到展示区域
+            const displayArea = document.getElementById('selected-slots-display');
+            let displayHtml = '<ul class="space-y-2">';
+            sortedCells.forEach(cell => {
+                displayHtml += `<li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-brand-accent"></i> ${cell.date} ${cell.timeSlot}</li>`;
+            });
+            displayHtml += '</ul>';
+            displayArea.innerHTML = displayHtml;
+            
+            lucide.createIcons();
             document.getElementById('reserve-modal').classList.add('active');
         }
 
@@ -466,8 +519,7 @@
             btn.disabled = true;
 
             const payload = {
-                date: document.getElementById('r-date').value,
-                timeSlot: document.getElementById('r-timeslot').value,
+                selectedSlots: JSON.parse(document.getElementById('r-selected-slots').value),
                 name: document.getElementById('r-name').value,
                 phone: document.getElementById('r-phone').value,
             };
@@ -483,6 +535,7 @@
                     closeReserveModal();
                     customAlert('预约成功', '您的自习室预约已提交，请准时前往。', 'success');
                     document.getElementById('study-room-form').reset();
+                    selectedCells = []; // 清空选中状态
                     fetchReservations(); // 刷新网格
                 } else {
                     customAlert('预约失败', data.error || '无法提交预约，请稍后再试。', 'error');

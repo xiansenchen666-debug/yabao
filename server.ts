@@ -682,48 +682,62 @@ Deno.serve(async (req) => {
 
       try {
         const data = await req.json();
-        const { date, timeSlot, name, phone } = data;
+        const { selectedSlots, name, phone } = data;
         
-        if (!date || !timeSlot || !name || !phone) {
-           return new Response(JSON.stringify({ success: false, error: "请填写完整预定信息" }), { status: 400, headers: JSON_HEADERS });
+        if (!selectedSlots || !Array.isArray(selectedSlots) || selectedSlots.length === 0 || !name || !phone) {
+           return new Response(JSON.stringify({ success: false, error: "请选择时间并填写完整预定信息" }), { status: 400, headers: JSON_HEADERS });
         }
 
         if (kv) {
-          // 检查该时间段是否已被预定
+          // 检查时间段是否已被预定
           let isConflict = false;
+          let conflictMsg = "";
+          
+          const existingReservations = [];
           for await (const entry of kv.list({ prefix: ["study_room_reservations"] })) {
-             const existing = entry.value as any;
-             if (existing.date === date && existing.timeSlot === timeSlot) {
-                isConflict = true;
-                break;
-             }
+             existingReservations.push(entry.value as any);
+          }
+
+          for (const slot of selectedSlots) {
+              const conflict = existingReservations.find(r => r.date === slot.date && r.timeSlot === slot.timeSlot);
+              if (conflict) {
+                  isConflict = true;
+                  conflictMsg = `${slot.date} 的 ${slot.timeSlot}`;
+                  break;
+              }
           }
 
           if (isConflict) {
-             return new Response(JSON.stringify({ success: false, error: "该时间段已被预定，请选择其他时间" }), { status: 409, headers: JSON_HEADERS });
+             return new Response(JSON.stringify({ success: false, error: `${conflictMsg} 已被预定，请重新选择` }), { status: 409, headers: JSON_HEADERS });
           }
 
-          const id = crypto.randomUUID();
-          const reservation = {
-            id,
-            userEmail,
-            date,
-            timeSlot,
-            name,
-            phone,
-            createdAt: new Date().toISOString()
-          };
+          // 批量存储
+          const createdAt = new Date().toISOString();
+          let timeSlotsStr = "";
 
-          await kv.set(["study_room_reservations", id], reservation);
+          for (const slot of selectedSlots) {
+              const id = crypto.randomUUID();
+              const reservation = {
+                id,
+                userEmail,
+                date: slot.date,
+                timeSlot: slot.timeSlot,
+                name,
+                phone,
+                createdAt
+              };
+              await kv.set(["study_room_reservations", id], reservation);
+              timeSlotsStr += `\n> - ${slot.date} ${slot.timeSlot}`;
+          }
           
           // 借用主页预约的企微通知
           try {
              await sendWeWorkNotification({
-                id,
+                id: crypto.randomUUID(), // fake id for notification
                 name,
                 phone,
-                course: `【自习室预约】 日期：${date} 时间段：${timeSlot}`,
-                createdAt: reservation.createdAt
+                course: `【自习室批量预约】 预定了 ${selectedSlots.length} 个时段：${timeSlotsStr}`,
+                createdAt
              });
           } catch(e) {
              console.error("自习室预定通知发送失败:", e);
