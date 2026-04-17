@@ -467,7 +467,14 @@ Deno.serve(async (req) => {
           return new Response(JSON.stringify({ success: false, error: "请输入密码" }), { status: 400, headers: JSON_HEADERS });
         }
 
-        // 测试模式：允许超级管理员免密或特定密码 (可选)
+        // 测试模式：允许超级管理员直接登录
+        if (email === "admin@yabao.com" && password === "admin123") {
+          console.log(`[测试模式] 超级管理员 admin@yabao.com 登录成功`);
+          const token = crypto.randomUUID();
+          if (kv) await kv.set(["tutor_tokens", token], email);
+          return new Response(JSON.stringify({ success: true, token, email }), { headers: JSON_HEADERS });
+        }
+
         // 验证密码
         if (kv) {
           const userRes = await kv.get(["tutor_users", email]);
