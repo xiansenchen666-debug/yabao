@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雅宝自习室预定 | Yabao Study Room</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#FDFBF7',
+                            primary: '#1A2B3C',
+                            accent: '#C5A059',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Custom CSS -->
+    <style>
+        body { background-color: #FDFBF7; color: #1A2B3C; }
+        .glass {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+        }
+        .btn-hover { transition: all 0.3s ease; }
+        .btn-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(197, 160, 89, 0.4); }
+        .card-hover { transition: all 0.4s ease; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -10px rgba(26, 43, 60, 0.1); }
+        
+        /* 弹窗通用样式 */
+        .modal { transition: opacity 0.3s ease, visibility 0.3s ease; opacity: 0; visibility: hidden; pointer-events: none; }
+        .modal.active { opacity: 1; visibility: visible; pointer-events: auto; }
+        .modal .modal-content { transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); transform: translateY(20px) scale(0.95); }
+        .modal.active .modal-content { transform: translateY(0) scale(1); }
+    </style>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="font-sans antialiased selection:bg-brand-accent selection:text-white min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="w-full z-50 glass py-4 px-6 md:px-12 sticky top-0">
+        <div class="max-w-7xl mx-auto flex justify-between items-center relative z-50">
+            <a href="/" class="text-2xl font-serif font-bold text-brand-primary tracking-tight flex items-center gap-2">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                雅宝<span class="text-brand-accent">自习室</span>
+            </a>
+            <div class="flex items-center gap-4">
+                <span id="user-info" class="text-sm font-medium text-brand-primary/80 hidden"></span>
+                <button id="auth-btn" onclick="goToLogin()" class="px-6 py-2 bg-brand-primary text-brand-bg text-sm font-medium rounded-full btn-hover cursor-pointer border-none outline-none">
+                    登录 / 注册
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主体内容区 -->
+    <main class="flex-grow pt-12 pb-24 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto text-center">
+            
+            <div class="inline-flex items-center justify-center p-4 bg-brand-primary/5 rounded-full mb-8">
+                <i data-lucide="book-open" class="w-12 h-12 text-brand-accent"></i>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-serif font-bold text-brand-primary mb-6">
+                沉浸式<span class="italic text-brand-accent">自习空间</span>
+            </h1>
+            <p class="text-brand-primary/70 text-lg max-w-2xl mx-auto mb-12 leading-relaxed">
+                为您提供安静、舒适、专注的学习环境。配备人体工学座椅、护眼台灯及高速网络，助您高效备考。
+            </p>
+
+            <div class="glass rounded-3xl p-8 md:p-12 max-w-2xl mx-auto relative overflow-hidden">
+                <div class="absolute -top-20 -right-20 w-64 h-64 bg-brand-accent/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-brand-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <h3 class="text-2xl font-bold text-brand-primary mb-8 relative z-10">预约席位</h3>
+                
+                <form id="study-room-form" onsubmit="submitReservation(event)" class="space-y-6 relative z-10 text-left">
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">预约日期 <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <i data-lucide="calendar" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="date" id="r-date" required class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-6">
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">开始时间 <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <i data-lucide="clock" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                                <input type="time" id="r-start" required class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all">
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">结束时间 <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <i data-lucide="clock" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                                <input type="time" id="r-end" required class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">预约人姓名 <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="text" id="r-name" required placeholder="您的姓名" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all">
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">联系电话 <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <i data-lucide="phone" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
+                            <input type="tel" id="r-phone" required placeholder="您的手机号" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all">
+                        </div>
+                    </div>
+
+                    <div class="pt-4">
+                        <button type="submit" id="submit-btn" class="w-full py-4 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover shadow-lg shadow-brand-primary/20 border-none outline-none cursor-pointer flex justify-center items-center gap-2">
+                            <i data-lucide="calendar-check" class="w-5 h-5"></i>
+                            <span>确认预约</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- 提示弹窗 -->
+    <div id="alert-modal" class="modal fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeAlertModal()"></div>
+        <div class="modal-content relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden z-10">
+            <div class="p-8 text-center">
+                <div id="alert-icon-container" class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i id="alert-icon" data-lucide="info" class="w-8 h-8"></i>
+                </div>
+                <h3 id="alert-title" class="text-xl font-bold text-brand-primary mb-2">提示</h3>
+                <p id="alert-message" class="text-sm text-brand-primary/70 mb-6 leading-relaxed"></p>
+                <button onclick="closeAlertModal()" id="alert-btn" class="w-full py-3 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer">
+                    我知道了
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // 自定义弹窗 API
+        function customAlert(title, message, type = 'info') {
+            const modal = document.getElementById('alert-modal');
+            const iconContainer = document.getElementById('alert-icon-container');
+            const icon = document.getElementById('alert-icon');
+            const btn = document.getElementById('alert-btn');
+            
+            document.getElementById('alert-title').innerText = title;
+            document.getElementById('alert-message').innerHTML = message.replace(/\n/g, '<br>');
+            
+            if (type === 'error') {
+                iconContainer.className = 'w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4';
+                icon.setAttribute('data-lucide', 'x-circle');
+                btn.className = 'w-full py-3 bg-red-500 hover:bg-red-600 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer';
+            } else if (type === 'success') {
+                iconContainer.className = 'w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4';
+                icon.setAttribute('data-lucide', 'check-circle');
+                btn.className = 'w-full py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer';
+            } else {
+                iconContainer.className = 'w-16 h-16 bg-brand-primary/5 text-brand-primary rounded-full flex items-center justify-center mx-auto mb-4';
+                icon.setAttribute('data-lucide', 'info');
+                btn.className = 'w-full py-3 bg-brand-primary hover:bg-brand-primary/90 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer';
+            }
+            
+            lucide.createIcons();
+            modal.classList.add('active');
+        }
+        
+        function closeAlertModal() {
+            document.getElementById('alert-modal').classList.remove('active');
+        }
+
+        // 鉴权拦截器
+        function getToken() { return localStorage.getItem('tutor_token'); }
+        function getEmail() { return localStorage.getItem('tutor_email'); }
+        
+        function initUI() {
+            const token = getToken();
+            const email = getEmail();
+            const authBtn = document.getElementById('auth-btn');
+            const userInfo = document.getElementById('user-info');
+            
+            if (token && email) {
+                userInfo.innerText = email;
+                userInfo.style.display = 'block';
+                authBtn.innerText = '退出登录';
+                authBtn.onclick = logout;
+                authBtn.classList.replace('bg-brand-primary', 'bg-transparent');
+                authBtn.classList.replace('text-brand-bg', 'text-brand-primary');
+                authBtn.classList.add('border', 'border-brand-primary/20');
+            } else {
+                userInfo.style.display = 'none';
+                authBtn.innerText = '登录 / 注册';
+                authBtn.onclick = goToLogin;
+                authBtn.classList.replace('bg-transparent', 'bg-brand-primary');
+                authBtn.classList.replace('text-brand-primary', 'text-brand-bg');
+                authBtn.classList.remove('border', 'border-brand-primary/20');
+            }
+        }
+
+        function goToLogin() {
+            // 跳转回主页并可能通过 hash 触发登录弹窗
+            window.location.href = '/#login';
+        }
+
+        function logout() {
+            localStorage.removeItem('tutor_token');
+            localStorage.removeItem('tutor_email');
+            initUI();
+        }
+
+        // 限制日期只能选今天及以后
+        document.addEventListener('DOMContentLoaded', () => {
+            const dateInput = document.getElementById('r-date');
+            if(dateInput) {
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.setAttribute('min', today);
+            }
+            initUI();
+        });
+
+        async function submitReservation(e) {
+            e.preventDefault();
+            if (!getToken()) {
+                return customAlert('提示', '请先登录后再进行预约', 'info');
+            }
+
+            const btn = document.getElementById('submit-btn');
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i><span>提交中...</span>';
+            lucide.createIcons();
+            btn.disabled = true;
+
+            // 这里由于暂无真实自习室预约API，我们借用一下主页的预约API
+            const payload = {
+                name: document.getElementById('r-name').value,
+                phone: document.getElementById('r-phone').value,
+                course: `【自习室预约】 日期：${document.getElementById('r-date').value} 时间：${document.getElementById('r-start').value} - ${document.getElementById('r-end').value}`
+            };
+
+            try {
+                const res = await fetch('/api/appointment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    customAlert('预约成功', '您的自习室预约已提交，请准时前往。', 'success');
+                    document.getElementById('study-room-form').reset();
+                } else {
+                    customAlert('预约失败', data.error || '无法提交预约，请稍后再试。', 'error');
+                }
+            } catch (e) {
+                customAlert('网络错误', '请检查您的网络连接', 'error');
+            } finally {
+                btn.innerHTML = originalHtml;
+                lucide.createIcons();
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

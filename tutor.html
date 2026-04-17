@@ -128,62 +128,14 @@
         </div>
     </main>
 
-    <!-- 登录注册弹窗 -->
-    <div id="login-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeLoginModal()"></div>
-        <div class="modal-content relative w-full max-w-sm bg-white/90 backdrop-blur-xl border border-white/50 rounded-3xl shadow-2xl overflow-hidden z-10">
-            <!-- 装饰背景 -->
-            <div class="absolute -top-20 -right-20 w-48 h-48 bg-brand-accent/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -bottom-20 -left-20 w-48 h-48 bg-brand-primary/5 rounded-full blur-3xl pointer-events-none"></div>
-
-            <div class="p-8 relative z-10">
-                <button onclick="closeLoginModal()" class="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-full bg-brand-primary/5 text-brand-primary/50 hover:text-brand-primary hover:bg-brand-primary/10 transition-colors border-none outline-none cursor-pointer">
-                    <i data-lucide="x" class="w-4 h-4"></i>
-                </button>
-                
-                <div class="text-center mb-8">
-                    <div class="w-16 h-16 bg-brand-primary/5 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i data-lucide="user-circle" class="w-8 h-8 text-brand-primary"></i>
-                    </div>
-                    <h3 class="text-2xl font-serif font-bold text-brand-primary mb-2">欢迎回来</h3>
-                    <p class="text-sm text-brand-primary/60">请输入邮箱接收免密登录验证码</p>
-                </div>
-                
-                <form id="login-form" onsubmit="submitLogin(event)" class="space-y-5">
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">邮箱地址</label>
-                        <div class="flex gap-2">
-                            <div class="relative flex-grow">
-                                <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
-                                <input type="email" id="login-email" required placeholder="your@email.com" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all text-sm">
-                            </div>
-                            <button type="button" id="send-code-btn" onclick="sendCode()" class="px-4 py-3 bg-brand-primary/5 text-brand-primary text-sm font-medium rounded-xl hover:bg-brand-primary/10 transition-colors border-none cursor-pointer whitespace-nowrap">获取验证码</button>
-                        </div>
-                    </div>
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">验证码</label>
-                        <div class="relative">
-                            <i data-lucide="key" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
-                            <input type="text" id="login-code" required placeholder="6位数字" maxlength="6" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary tracking-widest text-center text-lg transition-all">
-                        </div>
-                    </div>
-                    <button type="submit" id="login-submit-btn" class="w-full mt-6 py-4 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover shadow-lg shadow-brand-primary/20 border-none outline-none cursor-pointer flex justify-center items-center gap-2">
-                        <span>登录 / 注册</span>
-                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- 发布家教弹窗 -->
+    <!-- 发布/编辑家教弹窗 -->
     <div id="post-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closePostModal()"></div>
         <div class="modal-content relative w-full max-w-2xl bg-white/90 backdrop-blur-xl border border-white/50 rounded-3xl shadow-2xl overflow-hidden z-10 max-h-[90vh] flex flex-col">
             <!-- 弹窗头部 -->
             <div class="px-8 py-6 border-b border-brand-primary/10 flex justify-between items-center bg-white/50 sticky top-0 z-20">
                 <div>
-                    <h3 class="text-2xl font-serif font-bold text-brand-primary">发布家教需求</h3>
+                    <h3 id="post-modal-title" class="text-2xl font-serif font-bold text-brand-primary">发布家教需求</h3>
                     <p class="text-sm text-brand-primary/60 mt-1">请详细填写您的需求，以便匹配到合适的老师</p>
                 </div>
                 <button onclick="closePostModal()" class="w-10 h-10 flex items-center justify-center rounded-full bg-brand-primary/5 text-brand-primary/50 hover:text-brand-primary hover:bg-brand-primary/10 transition-colors border-none cursor-pointer">
@@ -198,6 +150,7 @@
                 <div class="absolute bottom-0 left-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-3xl pointer-events-none -z-10"></div>
 
                 <form id="post-form" onsubmit="submitPost(event)" class="space-y-6">
+                    <input type="hidden" id="p-jobId">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-1">
                             <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">地址 <span class="text-red-500">*</span></label>
@@ -267,7 +220,7 @@
                     <div class="pt-4 border-t border-brand-primary/10">
                         <button type="submit" id="post-submit-btn" class="w-full py-4 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover border-none cursor-pointer flex justify-center items-center gap-2 shadow-lg shadow-brand-primary/20">
                             <i data-lucide="send" class="w-5 h-5"></i>
-                            确认发布需求
+                            <span id="post-submit-text">确认发布需求</span>
                         </button>
                     </div>
                 </form>
@@ -447,11 +400,15 @@
             } else {
                 userInfo.style.display = 'none';
                 authBtn.innerText = '登录 / 注册';
-                authBtn.onclick = openLoginModal;
+                authBtn.onclick = goToLogin;
                 authBtn.classList.replace('bg-transparent', 'bg-brand-primary');
                 authBtn.classList.replace('text-brand-primary', 'text-brand-bg');
                 authBtn.classList.remove('border', 'border-brand-primary/20');
             }
+        }
+
+        function goToLogin() {
+            window.location.href = '/#login';
         }
 
         function logout() {
@@ -471,7 +428,7 @@
             const response = await fetch(url, { ...options, headers });
             if (response.status === 401) {
                 logout();
-                openLoginModal();
+                goToLogin();
                 throw new Error('Unauthorized');
             }
             return response;
@@ -560,7 +517,7 @@
         // Tab 切换
         function switchTab(tab) {
             if ((tab === 'published' || tab === 'accepted') && !getToken()) {
-                return openLoginModal();
+                return goToLogin();
             }
             
             ['open', 'published', 'accepted'].forEach(t => {
@@ -590,6 +547,7 @@
                     document.getElementById('empty-message').innerText = currentTab === 'open' ? '大厅暂无开放接单的家教' : '暂无数据';
                     document.getElementById('empty-state').style.display = 'block';
                 } else {
+                    jobsData = data.data; // Store globally for editing
                     renderJobs(data.data);
                 }
             } catch (e) {
@@ -607,20 +565,32 @@
 
                 if (currentTab === 'open') {
                     badge = `<span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">可接单</span>`;
+                    
+                    let editBtnHtml = '';
+                    if (job.canEdit) {
+                        editBtnHtml = `<button onclick="openEditModal('${job.id}')" class="w-full mt-2 py-3 bg-blue-50 text-blue-600 font-medium rounded-xl btn-hover hover:bg-blue-100 transition-colors cursor-pointer border-none outline-none">编辑信息</button>`;
+                    }
+
                     if (job.publisherEmail === currentUser) {
-                        actionBtn = `<button disabled class="w-full py-3 bg-gray-100 text-gray-400 font-medium rounded-xl border-none cursor-not-allowed">这是你发布的岗位</button>`;
+                        actionBtn = `<button disabled class="w-full py-3 bg-gray-100 text-gray-400 font-medium rounded-xl border-none cursor-not-allowed">这是你发布的岗位</button>${editBtnHtml}`;
                     } else {
-                        actionBtn = `<button onclick="openApplyModal('${job.id}')" class="w-full py-3 bg-transparent border border-brand-accent text-brand-accent font-medium rounded-xl btn-hover hover:bg-brand-accent hover:text-white transition-colors cursor-pointer outline-none">我要接单</button>`;
+                        actionBtn = `<button onclick="openApplyModal('${job.id}')" class="w-full py-3 bg-transparent border border-brand-accent text-brand-accent font-medium rounded-xl btn-hover hover:bg-brand-accent hover:text-white transition-colors cursor-pointer outline-none">我要接单</button>${editBtnHtml}`;
                     }
                 } 
                 else if (currentTab === 'published') {
+                    let editBtnHtml = '';
+                    if (job.canEdit) {
+                        editBtnHtml = `<button onclick="openEditModal('${job.id}')" class="w-full mb-2 py-3 bg-blue-50 text-blue-600 font-medium rounded-xl btn-hover hover:bg-blue-100 transition-colors cursor-pointer border-none outline-none">编辑信息</button>`;
+                    }
+
                     if (job.status === 'open') {
                         badge = `<span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">等待接单</span>`;
-                        actionBtn = `<button onclick="deleteJob('${job.id}')" class="w-full py-3 bg-red-50 text-red-600 font-medium rounded-xl btn-hover hover:bg-red-100 transition-colors cursor-pointer border-none outline-none">删除此岗位</button>`;
+                        actionBtn = `${editBtnHtml}<button onclick="deleteJob('${job.id}')" class="w-full py-3 bg-red-50 text-red-600 font-medium rounded-xl btn-hover hover:bg-red-100 transition-colors cursor-pointer border-none outline-none">删除此岗位</button>`;
                     } else {
                         badge = `<span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-bold rounded-full">已被接单</span>`;
-                        actionBtn = `<div class="p-3 bg-gray-50 rounded-xl text-sm text-center text-gray-600">接单人: ${job.acceptedByName} (${job.acceptedByPhone})</div>
-                                     <button onclick="deleteJob('${job.id}')" class="w-full mt-2 py-2 bg-transparent text-red-500 text-sm font-medium rounded-lg hover:underline cursor-pointer border-none outline-none">强制删除</button>`;
+                        actionBtn = `<div class="p-3 bg-gray-50 rounded-xl text-sm text-center text-gray-600 mb-2">接单人: ${job.acceptedByName} (${job.acceptedByPhone})</div>
+                                     ${editBtnHtml}
+                                     <button onclick="deleteJob('${job.id}')" class="w-full py-2 bg-transparent text-red-500 text-sm font-medium rounded-lg hover:underline cursor-pointer border-none outline-none">强制删除</button>`;
                     }
                 }
                 else if (currentTab === 'accepted') {
@@ -681,18 +651,48 @@
             lucide.createIcons();
         }
 
-        // 发布逻辑
+        // 发布/编辑逻辑
         function checkAuthAndPost() {
-            if (!getToken()) return openLoginModal();
+            if (!getToken()) return goToLogin();
+            document.getElementById('post-form').reset();
+            document.getElementById('p-jobId').value = '';
+            document.getElementById('post-modal-title').innerText = '发布家教需求';
+            document.getElementById('post-submit-text').innerText = '确认发布需求';
             document.getElementById('post-modal').classList.add('active');
         }
+
+        function openEditModal(id) {
+            const job = jobsData.find(j => j.id === id);
+            if (!job) return;
+            
+            document.getElementById('p-jobId').value = job.id;
+            document.getElementById('p-address').value = job.address;
+            document.getElementById('p-grade').value = job.grade;
+            document.getElementById('p-subject').value = job.subject;
+            document.getElementById('p-fee').value = job.fee;
+            document.getElementById('p-time').value = job.time;
+            document.getElementById('p-studentInfo').value = job.studentInfo || '';
+            document.getElementById('p-req').value = job.requirement;
+            document.getElementById('p-remark').value = job.remark || '';
+
+            document.getElementById('post-modal-title').innerText = '编辑家教需求';
+            document.getElementById('post-submit-text').innerText = '保存修改';
+            document.getElementById('post-modal').classList.add('active');
+        }
+
         function closePostModal() { document.getElementById('post-modal').classList.remove('active'); }
 
         async function submitPost(e) {
             e.preventDefault();
+            const btnText = document.getElementById('post-submit-text');
+            const originalText = btnText.innerText;
             const btn = document.getElementById('post-submit-btn');
-            btn.innerText = '发布中...';
+            
+            btnText.innerText = '提交中...';
             btn.disabled = true;
+
+            const jobId = document.getElementById('p-jobId').value;
+            const isEdit = !!jobId;
 
             const payload = {
                 address: document.getElementById('p-address').value,
@@ -705,31 +705,34 @@
                 remark: document.getElementById('p-remark').value
             };
 
+            if (isEdit) payload.id = jobId;
+
             try {
-                const res = await apiFetch('/api/tutor/job/post', {
+                const res = await apiFetch(isEdit ? '/api/tutor/job/edit' : '/api/tutor/job/post', {
                     method: 'POST',
                     body: JSON.stringify(payload)
                 });
                 if (res.ok) {
                     closePostModal();
                     document.getElementById('post-form').reset();
-                    customAlert('发布成功', '您的家教需求已成功发布到大厅。', 'success');
-                    if (currentTab === 'published') fetchJobs();
+                    customAlert(isEdit ? '保存成功' : '发布成功', isEdit ? '家教需求已更新。' : '您的家教需求已成功发布到大厅。', 'success');
+                    if (currentTab === 'published' || currentTab === 'open') fetchJobs();
                     else switchTab('published');
                 } else {
-                    customAlert('发布失败', '无法发布您的需求，请稍后再试。', 'error');
+                    const data = await res.json();
+                    customAlert(isEdit ? '保存失败' : '发布失败', data.error || '无法提交，请稍后再试。', 'error');
                 }
             } catch (e) {
                 customAlert('网络错误', '请检查您的网络连接', 'error');
             } finally {
-                btn.innerText = '提交发布';
+                btnText.innerText = originalText;
                 btn.disabled = false;
             }
         }
 
         // 接单逻辑
         function openApplyModal(id) {
-            if (!getToken()) return openLoginModal();
+            if (!getToken()) return goToLogin();
             document.getElementById('a-jobId').value = id;
             document.getElementById('apply-modal').classList.add('active');
         }
@@ -768,6 +771,7 @@
 
         // 删除 & 取消逻辑
         function deleteJob(id) {
+            if (!getToken()) return goToLogin();
             customConfirm('删除岗位', '确定要永久删除这个家教岗位吗？此操作不可恢复。', async () => {
                 try {
                     const res = await apiFetch('/api/tutor/job/delete', { method: 'POST', body: JSON.stringify({ id }) });
@@ -784,6 +788,7 @@
         }
 
         function cancelApply(id) {
+            if (!getToken()) return goToLogin();
             customConfirm('取消接单', '确定要放弃这个家教单并将其退回大厅吗？', async () => {
                 try {
                     const res = await apiFetch('/api/tutor/job/cancel', { method: 'POST', body: JSON.stringify({ id }) });

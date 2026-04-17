@@ -324,6 +324,16 @@ Deno.serve(async (req) => {
     }
   }
 
+  // 4.1 返回独立的自习室预定页面
+  if (req.method === "GET" && url.pathname === "/study-room.html") {
+    try {
+      const htmlContent = await Deno.readTextFile("./study-room.html");
+      return new Response(htmlContent, { headers: { "content-type": "text/html; charset=utf-8" } });
+    } catch (error) {
+      return new Response("Error: study-room.html not found.", { status: 500 });
+    }
+  }
+
   // 5. 兼职平台核心 API
   if (url.pathname.startsWith("/api/tutor/")) {
     
@@ -401,6 +411,7 @@ Deno.serve(async (req) => {
     if (req.method === "GET" && url.pathname === "/api/tutor/jobs") {
       const type = url.searchParams.get("type") || "open"; 
       const userEmail = await getUserEmail(req);
+      const isAdmin = userEmail === "admin@yabao.com";
       
       if ((type === "published" || type === "accepted") && !userEmail) {
         return new Response(JSON.stringify({ success: false, error: "未登录" }), { status: 401, headers: JSON_HEADERS });
@@ -410,18 +421,27 @@ Deno.serve(async (req) => {
       const jobs = [];
       for await (const entry of kv.list({ prefix: ["tutor_jobs"] })) {
         const job = entry.value as any;
+        
+        // 附加一个标识，告诉前端当前用户是否有权限编辑该岗位
+        const canEdit = isAdmin || job.publisherEmail === userEmail;
+        job.canEdit = canEdit;
+
         if (type === "open" && job.status === "open") jobs.push(job);
         if (type === "published" && job.publisherEmail === userEmail) jobs.push(job);
         if (type === "accepted" && job.status === "accepted" && job.acceptedByEmail === userEmail) jobs.push(job);
+        
+        // 管理员在“我发布的”可以看所有发布的帖子（可选，看需求，这里先保持原来逻辑，但允许编辑所有）
       }
       jobs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      return new Response(JSON.stringify({ success: true, data: jobs }), { headers: JSON_HEADERS });
+      return new Response(JSON.stringify({ success: true, data: jobs, isAdmin }), { headers: JSON_HEADERS });
     }
 
     // ------------------------------------------
     // 以下接口必须鉴权
     // ------------------------------------------
     const userEmail = await getUserEmail(req);
+    const isAdmin = userEmail === "admin@yabao.com";
+
     if (!userEmail) {
       return new Response(JSON.stringify({ success: false, error: "未登录或登录已过期" }), { status: 401, headers: JSON_HEADERS });
     }
@@ -440,13 +460,33 @@ Deno.serve(async (req) => {
       }
     }
 
+    // 编辑岗位
+    if (req.method === "POST" && url.pathname === "/api/tutor/job/edit") {
+      try {
+        const data = await req.json();
+        if (kv) {
+          const jobRes = await kv.get(["tutor_jobs", data.id]);
+          const existingJob = jobRes.value as any;
+          if (existingJob && (existingJob.publisherEmail === userEmail || isAdmin)) {
+            const updatedJob = { ...existingJob, ...data };
+            await kv.set(["tutor_jobs", data.id], updatedJob);
+            return new Response(JSON.stringify({ success: true }), { headers: JSON_HEADERS });
+          }
+        }
+        return new Response(JSON.stringify({ success: false, error: "无权编辑或岗位不存在" }), { status: 403, headers: JSON_HEADERS });
+      } catch (e) {
+        return new Response(JSON.stringify({ success: false, error: "编辑失败" }), { status: 500, headers: JSON_HEADERS });
+      }
+    }
+
     // 删除岗位
     if (req.method === "POST" && url.pathname === "/api/tutor/job/delete") {
       try {
         const { id } = await req.json();
         if (kv) {
           const jobRes = await kv.get(["tutor_jobs", id]);
-          if (jobRes.value && (jobRes.value as any).publisherEmail === userEmail) {
+          const job = jobRes.value as any;
+          if (job && (job.publisherEmail === userEmail || isAdmin)) {
             await kv.delete(["tutor_jobs", id]);
             return new Response(JSON.stringify({ success: true }), { headers: JSON_HEADERS });
           }
