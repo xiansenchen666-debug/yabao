@@ -169,6 +169,20 @@
         #error-modal.active .modal-content {
             transform: translateY(0) scale(1);
         }
+        /* 欢迎提示 Toast 样式 */
+        #welcome-toast {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+            opacity: 0;
+            z-index: 9999;
+        }
+        #welcome-toast.show {
+            top: 24px;
+            opacity: 1;
+        }
     </style>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -575,6 +589,17 @@
         </div>
     </div>
 
+    <!-- 温馨的欢迎回来 Toast 提示 -->
+    <div id="welcome-toast" class="glass-dark rounded-full py-3 px-6 shadow-2xl flex items-center gap-4">
+        <div class="w-10 h-10 bg-brand-accent/20 rounded-full flex items-center justify-center shrink-0">
+            <i data-lucide="sparkles" class="w-5 h-5 text-brand-accent"></i>
+        </div>
+        <div class="flex flex-col pr-2">
+            <span class="text-white font-bold text-sm tracking-wide">欢迎回来！</span>
+            <span id="welcome-toast-msg" class="text-white/70 text-xs mt-0.5">很高兴再次见到您</span>
+        </div>
+    </div>
+
     <!-- 主页统一登录/注册弹窗 -->
     <div id="auth-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none">
         <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeAuthModal()"></div>
@@ -868,6 +893,21 @@
             }
         }
 
+        // 专门的欢迎 Toast 函数
+        function showWelcomeToast(email) {
+            const toast = document.getElementById('welcome-toast');
+            const msg = document.getElementById('welcome-toast-msg');
+            msg.innerText = email ? `很高兴再次见到您，${email}` : '很高兴再次见到您';
+            
+            // 播放入场动画
+            toast.classList.add('show');
+            
+            // 3.5秒后自动收起
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3500);
+        }
+
         async function submitAuth(e) {
             e.preventDefault();
             const email = document.getElementById('auth-email').value;
@@ -915,7 +955,12 @@
                         localStorage.setItem('tutor_email', data.email);
                         closeAuthModal();
                         initAuthUI();
-                        customAlert(currentAuthMode === 'login' ? '登录成功' : '注册成功', `欢迎来到雅宝，${data.email}`, 'success');
+                        
+                        if (currentAuthMode === 'login') {
+                            showWelcomeToast(data.email);
+                        } else {
+                            customAlert('注册成功', `欢迎来到雅宝，${data.email}`, 'success');
+                        }
                     }
                 } else {
                     customAlert('操作失败', data.error || '验证码或密码不正确', 'error');
