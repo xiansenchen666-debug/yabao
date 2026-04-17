@@ -423,11 +423,13 @@
         }
 
         function logout() {
-            localStorage.removeItem('tutor_token');
-            localStorage.removeItem('tutor_email');
-            initUI();
-            if (currentTab !== 'open') switchTab('open');
-            else fetchJobs();
+            customConfirm('退出登录', '您确定要退出当前账号吗？', () => {
+                localStorage.removeItem('tutor_token');
+                localStorage.removeItem('tutor_email');
+                initUI();
+                if (currentTab !== 'open') switchTab('open');
+                else fetchJobs();
+            });
         }
 
         // Fetch 带 Token

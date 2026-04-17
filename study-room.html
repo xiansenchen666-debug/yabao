@@ -394,9 +394,14 @@
         }
 
         function logout() {
-            localStorage.removeItem('tutor_token');
-            localStorage.removeItem('tutor_email');
-            initUI();
+            customConfirm('退出登录', '您确定要退出当前账号吗？', () => {
+                localStorage.removeItem('tutor_token');
+                localStorage.removeItem('tutor_email');
+                initUI();
+                // 退出登录后清空选中状态并重新渲染
+                selectedCells = [];
+                fetchReservations();
+            });
         }
 
         let currentWeekOffset = 0;
