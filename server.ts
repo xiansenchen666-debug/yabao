@@ -339,6 +339,16 @@ Deno.serve(async (req) => {
     }
   }
 
+  // 4.2 返回独立的智能评估页面
+  if (req.method === "GET" && url.pathname === "/student-eval.html") {
+    try {
+      const htmlContent = await Deno.readTextFile("./student-eval.html");
+      return new Response(htmlContent, { headers: { "content-type": "text/html; charset=utf-8" } });
+    } catch (error) {
+      return new Response("Error: student-eval.html not found.", { status: 500 });
+    }
+  }
+
   // 5. 兼职平台核心 API
   if (url.pathname.startsWith("/api/tutor/")) {
     
