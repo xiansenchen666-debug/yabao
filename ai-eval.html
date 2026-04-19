@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI评估 | 雅宝教育 Yabao Education</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#FDFBF7',
+                            primary: '#1A2B3C',
+                            accent: '#C5A059',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #FDFBF7; color: #1A2B3C; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.5); }
+        .card-hover { transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -10px rgba(26, 43, 60, 0.1); }
+        .fade-in-section { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(30px); }
+        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+    </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="font-sans antialiased selection:bg-brand-accent selection:text-white">
+    <nav class="fixed w-full z-50 glass py-4 px-6 md:px-12 border-b border-brand-primary/5">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="/" class="text-2xl font-serif font-bold text-brand-primary tracking-tight decoration-transparent">
+                雅宝<span class="text-brand-accent">.</span>
+            </a>
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium text-brand-primary/70">
+                <a href="/k12.html" class="hover:text-brand-accent transition-colors decoration-transparent">K12教育</a>
+                <a href="/adult-education.html" class="hover:text-brand-accent transition-colors decoration-transparent">成人教育</a>
+                <a href="/services.html" class="hover:text-brand-accent transition-colors decoration-transparent">核心业务</a>
+            </div>
+            <a href="/services.html" class="flex items-center gap-2 text-sm font-medium text-brand-primary/60 hover:text-brand-accent transition-colors decoration-transparent">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> 返回核心业务
+            </a>
+        </div>
+    </nav>
+
+    <section class="pt-32 pb-16 px-6 md:px-12 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-[40rem] h-[40rem] bg-brand-accent/10 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="fade-in-section">
+                <div class="inline-block mb-4 px-4 py-1.5 rounded-full border border-brand-accent/30 text-brand-accent text-xs font-semibold tracking-widest uppercase">
+                    AI Evaluation
+                </div>
+                <h1 class="text-5xl md:text-6xl font-serif font-bold text-brand-primary mb-6">
+                    AI 评估，<span class="italic text-brand-accent">让成绩看得更清楚</span>
+                </h1>
+                <p class="text-lg text-brand-primary/65 leading-relaxed max-w-xl mb-8">
+                    从老师端录入成绩，到家长端查看分析，再到学员成长追踪，AI 评估页承担“展示、绑定、协同”三件事，帮助家长真正看懂孩子的学习状态。
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="/student-bind.html" class="inline-flex items-center justify-center px-7 py-3.5 bg-brand-primary text-white font-medium rounded-full hover:bg-brand-accent transition-colors decoration-transparent">
+                        家长绑定入口
+                    </a>
+                    <a href="/teacher-dashboard.html" class="inline-flex items-center justify-center px-7 py-3.5 border border-brand-primary/15 text-brand-primary font-medium rounded-full hover:bg-white transition-colors decoration-transparent">
+                        教务后台演示
+                    </a>
+                </div>
+            </div>
+            <div class="fade-in-section" style="animation-delay: 0.15s;">
+                <div class="bg-white rounded-[2rem] p-8 md:p-10 shadow-xl border border-brand-primary/5">
+                    <div class="space-y-4">
+                        <div class="rounded-2xl bg-brand-bg border border-brand-primary/5 p-5 flex items-center justify-between">
+                            <div>
+                                <div class="text-lg font-bold text-brand-primary">成绩录入</div>
+                                <div class="mt-1 text-sm text-brand-primary/55">老师端上传学员成绩</div>
+                            </div>
+                            <i data-lucide="database" class="w-6 h-6 text-brand-accent"></i>
+                        </div>
+                        <div class="rounded-2xl bg-brand-accent/10 border border-brand-accent/10 p-5 flex items-center justify-between">
+                            <div>
+                                <div class="text-lg font-bold text-brand-primary">智能分析</div>
+                                <div class="mt-1 text-sm text-brand-primary/55">知识点薄弱项与趋势判断</div>
+                            </div>
+                            <i data-lucide="cpu" class="w-6 h-6 text-brand-accent"></i>
+                        </div>
+                        <div class="rounded-2xl bg-white border border-brand-primary/5 p-5 flex items-center justify-between">
+                            <div>
+                                <div class="text-lg font-bold text-brand-primary">家长查看</div>
+                                <div class="mt-1 text-sm text-brand-primary/55">邀请码绑定后查看报告</div>
+                            </div>
+                            <i data-lucide="scan-search" class="w-6 h-6 text-brand-accent"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pb-24 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-[2rem] p-8 border border-brand-primary/5 card-hover fade-in-section">
+                <div class="w-14 h-14 rounded-2xl bg-brand-accent/10 text-brand-accent flex items-center justify-center mb-6">
+                    <i data-lucide="school" class="w-7 h-7"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-4">机构端</h3>
+                <p class="text-sm leading-relaxed text-brand-primary/70">教务录入成绩、管理学生档案、生成绑定邀请码，并持续输出阶段学习报告。</p>
+            </div>
+            <div class="bg-white rounded-[2rem] p-8 border border-brand-primary/5 card-hover fade-in-section" style="animation-delay: 0.1s;">
+                <div class="w-14 h-14 rounded-2xl bg-brand-accent/10 text-brand-accent flex items-center justify-center mb-6">
+                    <i data-lucide="users" class="w-7 h-7"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-4">家长端</h3>
+                <p class="text-sm leading-relaxed text-brand-primary/70">输入邀请码绑定学员后，即可查看成绩变化、学科短板、老师建议和阶段总结。</p>
+            </div>
+            <div class="bg-white rounded-[2rem] p-8 border border-brand-primary/5 card-hover fade-in-section" style="animation-delay: 0.2s;">
+                <div class="w-14 h-14 rounded-2xl bg-brand-accent/10 text-brand-accent flex items-center justify-center mb-6">
+                    <i data-lucide="line-chart" class="w-7 h-7"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-4">AI能力</h3>
+                <p class="text-sm leading-relaxed text-brand-primary/70">自动标记薄弱知识点、判断提分空间、输出更清晰的学习路径与阶段目标。</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="pb-32 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+            <a href="/student-bind.html" class="bg-brand-primary text-white rounded-[2rem] p-10 md:p-12 card-hover decoration-transparent">
+                <div class="w-14 h-14 rounded-2xl bg-brand-accent text-brand-primary flex items-center justify-center mb-6">
+                    <i data-lucide="link-2" class="w-7 h-7"></i>
+                </div>
+                <h2 class="text-3xl font-serif font-bold mb-4">家长绑定入口</h2>
+                <p class="text-sm leading-relaxed text-white/75 mb-6">家长输入教务老师提供的邀请码后，即可绑定对应学生并查看 AI 分析结果。</p>
+                <span class="inline-flex items-center text-sm font-bold text-brand-accent">立即进入 <i data-lucide="arrow-right" class="ml-2 w-4 h-4"></i></span>
+            </a>
+            <a href="/teacher-dashboard.html" class="bg-white rounded-[2rem] p-10 md:p-12 border border-brand-primary/5 card-hover decoration-transparent">
+                <div class="w-14 h-14 rounded-2xl bg-brand-accent/10 text-brand-accent flex items-center justify-center mb-6">
+                    <i data-lucide="settings" class="w-7 h-7"></i>
+                </div>
+                <h2 class="text-3xl font-serif font-bold text-brand-primary mb-4">教务后台演示</h2>
+                <p class="text-sm leading-relaxed text-brand-primary/70 mb-6">适用于机构老师管理学生、录入分数、生成邀请码和对接家长查看权限。</p>
+                <span class="inline-flex items-center text-sm font-bold text-brand-primary">查看演示 <i data-lucide="arrow-right" class="ml-2 w-4 h-4"></i></span>
+            </a>
+        </div>
+    </section>
+
+    <footer class="py-10 bg-[#FDFBF7] border-t border-brand-primary/5 text-center px-6">
+        <p class="text-sm text-brand-primary/50">&copy; 2024 雅宝教育工作室 Yabao Education Studio. All rights reserved.</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

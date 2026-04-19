@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成人教育 | 雅宝教育 Yabao Education</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#FDFBF7',
+                            primary: '#1A2B3C',
+                            accent: '#C5A059',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #FDFBF7; color: #1A2B3C; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.5); }
+        .card-hover { transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -10px rgba(26, 43, 60, 0.1); }
+        .fade-in-section { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(30px); }
+        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+    </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="font-sans antialiased selection:bg-brand-accent selection:text-white">
+    <nav class="fixed w-full z-50 glass py-4 px-6 md:px-12 border-b border-brand-primary/5">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="/" class="text-2xl font-serif font-bold text-brand-primary tracking-tight decoration-transparent">
+                雅宝<span class="text-brand-accent">.</span>
+            </a>
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium text-brand-primary/70">
+                <a href="/services.html" class="hover:text-brand-accent transition-colors decoration-transparent">核心业务</a>
+                <a href="/k12.html" class="hover:text-brand-accent transition-colors decoration-transparent">K12教育</a>
+                <a href="/ai-eval.html" class="hover:text-brand-accent transition-colors decoration-transparent">AI评估</a>
+            </div>
+            <a href="/services.html" class="flex items-center gap-2 text-sm font-medium text-brand-primary/60 hover:text-brand-accent transition-colors decoration-transparent">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> 返回核心业务
+            </a>
+        </div>
+    </nav>
+
+    <section class="pt-32 pb-16 px-6 md:px-12 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-[36rem] h-[36rem] bg-brand-primary/5 rounded-full blur-3xl pointer-events-none -translate-y-1/2 -translate-x-1/3"></div>
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="fade-in-section">
+                <div class="inline-block mb-4 px-4 py-1.5 rounded-full border border-brand-accent/30 text-brand-accent text-xs font-semibold tracking-widest uppercase">
+                    Adult Education
+                </div>
+                <h1 class="text-5xl md:text-6xl font-serif font-bold text-brand-primary mb-6">
+                    成人教育，<span class="italic text-brand-accent">从敢开口开始</span>
+                </h1>
+                <p class="text-lg text-brand-primary/65 leading-relaxed max-w-xl mb-8">
+                    面向职场人士、留学备考、零基础英语提升和商务场景训练，雅宝成人教育更注重表达能力、实际应用和学习成就感。
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="/#contact" class="inline-flex items-center justify-center px-7 py-3.5 bg-brand-primary text-white font-medium rounded-full hover:bg-brand-accent transition-colors decoration-transparent">
+                        获取课程建议
+                    </a>
+                    <a href="/services.html" class="inline-flex items-center justify-center px-7 py-3.5 border border-brand-primary/15 text-brand-primary font-medium rounded-full hover:bg-white transition-colors decoration-transparent">
+                        返回业务总览
+                    </a>
+                </div>
+            </div>
+            <div class="fade-in-section" style="animation-delay: 0.15s;">
+                <div class="bg-brand-primary text-white rounded-[2rem] p-8 md:p-10 shadow-xl">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="rounded-2xl bg-white/10 border border-white/10 p-5">
+                            <div class="text-3xl font-serif font-bold">口语</div>
+                            <div class="mt-2 text-sm text-white/65">从开口到流利</div>
+                        </div>
+                        <div class="rounded-2xl bg-brand-accent text-brand-primary p-5">
+                            <div class="text-3xl font-serif font-bold">商务</div>
+                            <div class="mt-2 text-sm text-brand-primary/70">邮件会议演讲</div>
+                        </div>
+                        <div class="rounded-2xl bg-white/10 border border-white/10 p-5">
+                            <div class="text-3xl font-serif font-bold">雅思</div>
+                            <div class="mt-2 text-sm text-white/65">备考与突破</div>
+                        </div>
+                        <div class="rounded-2xl bg-white/10 border border-white/10 p-5">
+                            <div class="text-3xl font-serif font-bold">面试</div>
+                            <div class="mt-2 text-sm text-white/65">外企求职表达</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pb-24 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-[2rem] p-8 border border-brand-primary/5 card-hover fade-in-section">
+                <div class="w-14 h-14 rounded-2xl bg-brand-accent/10 text-brand-accent flex items-center justify-center mb-6">
+                    <i data-lucide="mic" class="w-7 h-7"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-4">口语表达</h3>
+                <p class="text-sm leading-relaxed text-brand-primary/70">从发音纠正到情景表达，帮助学员摆脱“会背不会说”，真正建立表达信心。</p>
+            </div>
+            <div class="bg-white rounded-[2rem] p-8 border border-brand-primary/5 card-hover fade-in-section" style="animation-delay: 0.1s;">
+                <div class="w-14 h-14 rounded-2xl bg-brand-accent/10 text-brand-accent flex items-center justify-center mb-6">
+                    <i data-lucide="briefcase-business" class="w-7 h-7"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-4">职场英语</h3>
+                <p class="text-sm leading-relaxed text-brand-primary/70">适用于外企面试、邮件写作、跨国会议、述职汇报等真实商务场景。</p>
+            </div>
+            <div class="bg-white rounded-[2rem] p-8 border border-brand-primary/5 card-hover fade-in-section" style="animation-delay: 0.2s;">
+                <div class="w-14 h-14 rounded-2xl bg-brand-accent/10 text-brand-accent flex items-center justify-center mb-6">
+                    <i data-lucide="graduation-cap" class="w-7 h-7"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-4">考试进阶</h3>
+                <p class="text-sm leading-relaxed text-brand-primary/70">面向雅思、托福、考研英语等目标，兼顾技巧训练和语言能力提升。</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="pb-32 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto bg-white rounded-[2rem] p-10 md:p-14 border border-brand-primary/5">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                <div>
+                    <div class="text-[11px] font-bold tracking-[0.25em] uppercase text-brand-accent mb-3">Who Is It For</div>
+                    <h2 class="text-4xl font-serif font-bold text-brand-primary mb-6">适合这些学习目标</h2>
+                    <ul class="space-y-4 text-sm text-brand-primary/75">
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-accent shrink-0"></i> 想提升英语口语，但长期“听得懂说不出”</li>
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-accent shrink-0"></i> 准备外企面试、晋升汇报或海外沟通场景</li>
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-accent shrink-0"></i> 有明确考试目标，需要更高效的备考规划</li>
+                    </ul>
+                </div>
+                <div class="bg-brand-bg rounded-[1.5rem] p-8 border border-brand-primary/5">
+                    <div class="text-sm uppercase tracking-[0.25em] text-brand-accent mb-3">Personal Plan</div>
+                    <div class="text-3xl font-serif font-bold text-brand-primary mb-4">先确定你的学习场景</div>
+                    <p class="text-sm text-brand-primary/65 leading-relaxed mb-6">是为了升职、考试、留学还是生活表达？目标不同，路径也应该不同。</p>
+                    <a href="/#contact" class="inline-flex items-center px-6 py-3 bg-brand-accent text-white text-sm font-medium rounded-xl hover:bg-brand-primary transition-colors decoration-transparent">
+                        预约试听沟通
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-10 bg-[#FDFBF7] border-t border-brand-primary/5 text-center px-6">
+        <p class="text-sm text-brand-primary/50">&copy; 2024 雅宝教育工作室 Yabao Education Studio. All rights reserved.</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

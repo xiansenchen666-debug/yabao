@@ -379,6 +379,36 @@ Deno.serve(async (req) => {
     }
   }
 
+  // 4.6 返回 K12 独立页面
+  if (req.method === "GET" && url.pathname === "/k12.html") {
+    try {
+      const htmlContent = await Deno.readTextFile("./k12.html");
+      return new Response(htmlContent, { headers: { "content-type": "text/html; charset=utf-8" } });
+    } catch (error) {
+      return new Response("Error: k12.html not found.", { status: 500 });
+    }
+  }
+
+  // 4.7 返回成人教育独立页面
+  if (req.method === "GET" && url.pathname === "/adult-education.html") {
+    try {
+      const htmlContent = await Deno.readTextFile("./adult-education.html");
+      return new Response(htmlContent, { headers: { "content-type": "text/html; charset=utf-8" } });
+    } catch (error) {
+      return new Response("Error: adult-education.html not found.", { status: 500 });
+    }
+  }
+
+  // 4.8 返回 AI 评估独立页面
+  if (req.method === "GET" && url.pathname === "/ai-eval.html") {
+    try {
+      const htmlContent = await Deno.readTextFile("./ai-eval.html");
+      return new Response(htmlContent, { headers: { "content-type": "text/html; charset=utf-8" } });
+    } catch (error) {
+      return new Response("Error: ai-eval.html not found.", { status: 500 });
+    }
+  }
+
   // 5. 兼职平台核心 API
   if (url.pathname.startsWith("/api/tutor/")) {
     
