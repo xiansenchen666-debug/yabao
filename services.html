@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>核心业务 | 雅宝教育 Yabao Education</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#FDFBF7',
+                            primary: '#1A2B3C',
+                            accent: '#C5A059',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #FDFBF7; color: #1A2B3C; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.5); }
+        .card-hover { transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -10px rgba(26, 43, 60, 0.1); }
+        .fade-in-section { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(30px); }
+        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+    </style>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="font-sans antialiased selection:bg-brand-accent selection:text-white">
+
+    <!-- Navbar (Simplified for subpage) -->
+    <nav class="fixed w-full z-50 glass py-4 px-6 md:px-12 border-b border-brand-primary/5">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="/" class="text-2xl font-serif font-bold text-brand-primary tracking-tight decoration-transparent">
+                雅宝<span class="text-brand-accent">.</span>
+            </a>
+            <a href="/" class="flex items-center gap-2 text-sm font-medium text-brand-primary/60 hover:text-brand-accent transition-colors decoration-transparent">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> 返回主页
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-16 px-6 md:px-12 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-[40rem] h-[40rem] bg-brand-accent/5 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
+        <div class="max-w-7xl mx-auto text-center fade-in-section">
+            <div class="inline-block mb-4 px-4 py-1.5 rounded-full border border-brand-accent/30 text-brand-accent text-xs font-semibold tracking-widest uppercase">
+                Our Core Services
+            </div>
+            <h1 class="text-5xl md:text-6xl font-serif font-bold text-brand-primary mb-6">
+                全维赋能，<span class="italic text-brand-accent">构建学习生态</span>
+            </h1>
+            <p class="text-brand-primary/60 max-w-2xl mx-auto text-lg">
+                从基础辅导到高端智学，从自习空间到师资匹配。雅宝教育为您提供一站式、全链路的教育解决方案。
+            </p>
+        </div>
+    </section>
+
+    <!-- Services Grid -->
+    <section class="pb-32 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- 1. K12 全科辅导 -->
+                <div class="bg-white rounded-[2rem] p-10 border border-brand-primary/5 card-hover relative overflow-hidden group fade-in-section" style="animation-delay: 0.1s;">
+                    <div class="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 group-hover:rotate-12 transition-all duration-500">
+                        <i data-lucide="rocket" class="w-32 h-32 text-brand-accent"></i>
+                    </div>
+                    <div class="w-14 h-14 rounded-2xl bg-brand-accent/10 flex items-center justify-center text-brand-accent mb-6 relative z-10">
+                        <i data-lucide="pen-tool" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-2xl font-serif font-bold mb-4 text-brand-primary relative z-10">K12 全科辅导</h3>
+                    <p class="text-brand-primary/70 mb-8 text-sm leading-relaxed relative z-10">
+                        涵盖小初高语数英及理综文综。拒绝题海战术，清北名师团队精准把脉，主打思维启发与中高考提分冲刺。
+                    </p>
+                    <ul class="space-y-3 mb-8 relative z-10 text-sm text-brand-primary/80">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-accent"></i> 课后同步答疑与弱科突破</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-accent"></i> 中高考冲刺与强基计划</li>
+                    </ul>
+                    <a href="/#contact" class="inline-flex items-center text-brand-primary font-bold text-sm group-hover:text-brand-accent transition-colors relative z-10 decoration-transparent">
+                        了解详情 <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
+
+                <!-- 2. 成人教育 -->
+                <div class="bg-brand-primary text-white rounded-[2rem] p-10 border border-brand-primary card-hover relative overflow-hidden group fade-in-section" style="animation-delay: 0.2s;">
+                    <div class="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 group-hover:-rotate-12 transition-all duration-500">
+                        <i data-lucide="globe" class="w-32 h-32 text-white"></i>
+                    </div>
+                    <div class="w-14 h-14 rounded-2xl bg-brand-accent flex items-center justify-center text-brand-primary mb-6 relative z-10">
+                        <i data-lucide="message-circle" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-2xl font-serif font-bold mb-4 relative z-10">成人英语特训</h3>
+                    <p class="text-white/70 mb-8 text-sm leading-relaxed relative z-10">
+                        专为职场精英打造。从零基础发音纠正到高阶商务谈判模拟，沉浸式口语环境，助您突破职场语言瓶颈。
+                    </p>
+                    <ul class="space-y-3 mb-8 relative z-10 text-sm text-white/80">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-accent"></i> 商务邮件与会议全英汇报</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-accent"></i> 外企面试通关与雅思托福</li>
+                    </ul>
+                    <a href="/#contact" class="inline-flex items-center text-white font-bold text-sm group-hover:text-brand-accent transition-colors relative z-10 decoration-transparent">
+                        提升职场力 <i data-lucide="arrow-right" class="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                </div>
+
+                <!-- 3. 家教兼职平台 -->
+                <div class="bg-white rounded-[2rem] p-10 border border-brand-primary/5 card-hover relative overflow-hidden group fade-in-section" style="animation-delay: 0.3s;">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 mb-6 relative z-10">
+                        <i data-lucide="briefcase" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-2xl font-serif font-bold mb-4 text-brand-primary relative z-10">家教兼职大厅</h3>
+                    <p class="text-brand-primary/70 mb-8 text-sm leading-relaxed relative z-10">
+                        连接优质家庭需求与优秀大学生/老师。双向互选，严格认证。发布需求或寻找兼职，都在这里一站搞定。
+                    </p>
+                    <ul class="space-y-3 mb-8 relative z-10 text-sm text-brand-primary/80">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-accent"></i> 真实海量订单实时更新</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-accent"></i> 平台担保，结算安全无忧</li>
+                    </ul>
+                    <a href="/tutor" class="inline-flex items-center text-brand-primary font-bold text-sm group-hover:text-blue-600 transition-colors relative z-10 decoration-transparent">
+                        进入大厅 <i data-lucide="external-link" class="ml-2 w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <!-- 4. 自习室预定 -->
+                <div class="bg-white rounded-[2rem] p-10 border border-brand-primary/5 card-hover relative overflow-hidden group fade-in-section" style="animation-delay: 0.4s;">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600 mb-6 relative z-10">
+                        <i data-lucide="coffee" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-2xl font-serif font-bold mb-4 text-brand-primary relative z-10">沉浸式自习室</h3>
+                    <p class="text-brand-primary/70 mb-8 text-sm leading-relaxed relative z-10">
+                        专为考研、考公、考证党打造的静谧空间。独立隔间、护眼台灯、高速Wi-Fi，提供极致专注的学习体验。
+                    </p>
+                    <ul class="space-y-3 mb-8 relative z-10 text-sm text-brand-primary/80">
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-accent"></i> 在线选座，包天/包月灵活选</li>
+                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-accent"></i> 免费茶水吧与背书专区</li>
+                    </ul>
+                    <a href="/study-room.html" class="inline-flex items-center text-brand-primary font-bold text-sm group-hover:text-emerald-600 transition-colors relative z-10 decoration-transparent">
+                        立即选座 <i data-lucide="external-link" class="ml-2 w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <!-- 5. 智能评估系统 -->
+                <div class="lg:col-span-2 bg-gradient-to-br from-brand-accent/10 to-transparent rounded-[2rem] p-10 border border-brand-accent/20 card-hover relative overflow-hidden group fade-in-section" style="animation-delay: 0.5s;">
+                    <div class="absolute -right-10 -bottom-10 opacity-10 group-hover:scale-110 transition-transform duration-700">
+                        <i data-lucide="cpu" class="w-64 h-64 text-brand-accent"></i>
+                    </div>
+                    <div class="flex flex-col md:flex-row gap-8 items-center relative z-10">
+                        <div class="md:w-1/2">
+                            <div class="w-14 h-14 rounded-2xl bg-brand-accent flex items-center justify-center text-white mb-6">
+                                <i data-lucide="scan-line" class="w-7 h-7"></i>
+                            </div>
+                            <h3 class="text-3xl font-serif font-bold mb-4 text-brand-primary">Lumina AI 智能评估</h3>
+                            <p class="text-brand-primary/70 mb-6 text-sm leading-relaxed">
+                                打破信息壁垒的家校共育中枢。教务后台录入成绩，家长端输入专属邀请码绑定学员。AI 引擎实时生成知识图谱、提分预测与学习航线。
+                            </p>
+                            <div class="flex gap-4">
+                                <a href="/student-bind.html" class="px-6 py-3 bg-brand-primary text-white text-sm font-medium rounded-xl hover:bg-brand-accent transition-colors shadow-lg shadow-brand-primary/20 decoration-transparent">
+                                    家长绑定入口
+                                </a>
+                                <a href="/teacher-dashboard.html" class="px-6 py-3 bg-white text-brand-primary border border-brand-primary/10 text-sm font-medium rounded-xl hover:bg-gray-50 transition-colors decoration-transparent">
+                                    教务后台演示
+                                </a>
+                            </div>
+                        </div>
+                        <div class="md:w-1/2 w-full">
+                            <div class="bg-white/80 backdrop-blur rounded-xl p-6 border border-white shadow-xl">
+                                <div class="flex items-center gap-3 mb-4 pb-4 border-b border-gray-100">
+                                    <div class="w-2 h-2 rounded-full bg-red-400"></div>
+                                    <div class="w-2 h-2 rounded-full bg-yellow-400"></div>
+                                    <div class="w-2 h-2 rounded-full bg-green-400"></div>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="h-2 bg-gray-200 rounded w-3/4"></div>
+                                    <div class="h-2 bg-brand-accent/40 rounded w-1/2"></div>
+                                    <div class="flex gap-2 pt-4">
+                                        <div class="h-16 w-16 rounded-full border-4 border-brand-accent/30 border-t-brand-accent animate-spin-slow"></div>
+                                        <div class="flex-1 space-y-2">
+                                            <div class="h-2 bg-gray-100 rounded w-full"></div>
+                                            <div class="h-2 bg-gray-100 rounded w-full"></div>
+                                            <div class="h-2 bg-gray-100 rounded w-2/3"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 bg-[#FDFBF7] border-t border-brand-primary/5 text-center px-6">
+        <p class="text-sm text-brand-primary/50">
+            &copy; 2024 雅宝教育工作室 Yabao Education Studio. All rights reserved.
+        </p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
