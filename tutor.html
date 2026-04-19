@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>雅宝家教兼职平台</title>
-    <!-- Google Fonts -->
+    <title>家教兼职 | 雅宝教育 Yabao Education</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -29,43 +27,17 @@
             }
         }
     </script>
-    <!-- Custom CSS -->
     <style>
-        body { background-color: #FDFBF7; color: #1A2B3C; }
-        .glass {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
-        }
-        .btn-hover { transition: all 0.3s ease; }
-        .btn-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(197, 160, 89, 0.4); }
-        .card-hover { transition: all 0.4s ease; }
-        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -10px rgba(26, 43, 60, 0.1); }
-        
-        /* 弹窗通用样式 */
-        .modal { transition: opacity 0.3s ease, visibility 0.3s ease; opacity: 0; visibility: hidden; }
-        .modal.active { opacity: 1; visibility: visible; }
-        .modal .modal-content { transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); transform: translateY(20px) scale(0.95); }
-        .modal.active .modal-content { transform: translateY(0) scale(1); }
-        
-        .tab-active { border-bottom: 2px solid #C5A059; color: #C5A059; font-weight: 600; }
-        .tab-inactive { border-bottom: 2px solid transparent; color: #1A2B3C; opacity: 0.6; }
-        .tab-inactive:hover { opacity: 1; }
-        
-        /* 自定义滚动条 */
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(26, 43, 60, 0.1); border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(26, 43, 60, 0.2); }
+        body { background-color: #FDFBF7; color: #1A2B3C; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.5); }
+        .card-hover { transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -10px rgba(26, 43, 60, 0.1); }
+        .fade-in-section { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(30px); }
+        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
     </style>
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="font-sans antialiased selection:bg-brand-accent selection:text-white min-h-screen flex flex-col">
-
-    <!-- Navbar -->
+<body class="font-sans antialiased selection:bg-brand-accent selection:text-white">
     <nav class="fixed w-full z-50 glass py-4 px-6 md:px-12 border-b border-brand-primary/5">
         <div class="max-w-7xl mx-auto relative flex items-center justify-between min-h-[3rem]">
             <a href="/" class="absolute left-0 top-1/2 -translate-y-1/2 flex items-center gap-2 text-sm font-medium text-brand-primary/60 hover:text-brand-accent transition-colors decoration-transparent">
@@ -78,258 +50,169 @@
                 <a href="/study-room.html" class="hover:text-brand-accent transition-colors decoration-transparent">自习室</a>
                 <a href="/ai-eval.html" class="hover:text-brand-accent transition-colors decoration-transparent">AI评估</a>
             </div>
-            <div class="flex items-center gap-6 ml-auto">
-                <span id="user-info" class="text-sm font-medium text-brand-primary/80 hidden"></span>
-                <button id="auth-btn" onclick="openLoginModal()" class="px-6 py-2 bg-brand-primary text-brand-bg text-sm font-medium rounded-full btn-hover cursor-pointer border-none outline-none">
-                    登录 / 注册
-                </button>
-                <a href="/" class="text-2xl font-serif font-bold text-brand-primary tracking-tight decoration-transparent hidden md:block">
-                    雅宝<span class="text-brand-accent">.</span>
-                </a>
-            </div>
+            <a href="/" class="ml-auto text-2xl font-serif font-bold text-brand-primary tracking-tight decoration-transparent">
+                雅宝<span class="text-brand-accent">.</span>
+            </a>
         </div>
     </nav>
 
-    <!-- 主体内容区 -->
-    <main class="flex-grow pt-32 pb-24 px-6 md:px-12">
-        <div class="max-w-7xl mx-auto">
-            
-            <!-- 头部说明与发单按钮 -->
-            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
-                <div class="max-w-2xl">
-                    <h1 class="text-4xl font-serif font-bold text-brand-primary mb-4">
-                        家教<span class="italic text-brand-accent">大厅</span>
-                    </h1>
-                    <p class="text-brand-primary/70 text-lg">
-                        优质生源与专业教员的对接平台。每个账号均可免费发布或申请接单。
-                    </p>
+    <section class="pt-32 pb-16 px-6 md:px-12 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-[36rem] h-[36rem] bg-brand-accent/10 rounded-full blur-3xl pointer-events-none -translate-y-1/2 -translate-x-1/3"></div>
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="fade-in-section">
+                <div class="inline-block mb-4 px-4 py-1.5 rounded-full border border-brand-accent/30 text-brand-accent text-xs font-semibold tracking-widest uppercase">
+                    Tutor Matching
                 </div>
-                <button onclick="checkAuthAndPost()" class="mt-6 md:mt-0 inline-flex items-center justify-center px-6 py-3 bg-brand-accent text-white font-medium rounded-full btn-hover shadow-lg border-none outline-none cursor-pointer">
-                    <i data-lucide="plus" class="w-4 h-4 mr-2"></i> 免费发布家教
-                </button>
-            </div>
-
-            <!-- Tabs -->
-            <div class="flex border-b border-brand-primary/10 mb-10 overflow-x-auto no-scrollbar">
-                <button onclick="switchTab('open')" id="tab-open" class="px-6 py-3 tab-active transition-all whitespace-nowrap outline-none">兼职大厅</button>
-                <button onclick="switchTab('published')" id="tab-published" class="px-6 py-3 tab-inactive transition-all whitespace-nowrap outline-none">我发布的</button>
-                <button onclick="switchTab('accepted')" id="tab-accepted" class="px-6 py-3 tab-inactive transition-all whitespace-nowrap outline-none">我的接单</button>
-            </div>
-
-            <!-- 列表容器 -->
-            <div id="jobs-container" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- JS 动态渲染卡片 -->
-            </div>
-            
-            <!-- 加载中提示 -->
-            <div id="loading-spinner" class="py-20 text-center text-brand-primary/50 hidden">
-                <i data-lucide="loader-2" class="w-8 h-8 mx-auto animate-spin mb-4"></i>
-                <p>加载中...</p>
-            </div>
-            
-            <!-- 空状态提示 -->
-            <div id="empty-state" class="py-20 text-center text-brand-primary/50 hidden">
-                <div class="w-16 h-16 bg-brand-primary/5 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i data-lucide="inbox" class="w-8 h-8"></i>
+                <h1 class="text-5xl md:text-6xl font-serif font-bold text-brand-primary mb-6">
+                    家教兼职，<span class="italic text-brand-accent">把合适的老师匹配给合适的需求</span>
+                </h1>
+                <p class="text-lg text-brand-primary/65 leading-relaxed max-w-xl mb-8">
+                    面向家长、学生和优秀教师，雅宝将家教需求梳理、筛选、沟通和匹配流程标准化，让找老师和接兼职都更高效、更安心。
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="openBookingModal('家教兼职')" class="inline-flex items-center justify-center px-7 py-3.5 bg-brand-accent text-white font-medium rounded-full hover:bg-brand-primary transition-colors decoration-transparent cursor-pointer border-none outline-none">
+                        预约合作咨询
+                    </button>
+                    <a href="/#core-services" class="inline-flex items-center justify-center px-7 py-3.5 border border-brand-primary/15 text-brand-primary font-medium rounded-full hover:bg-white transition-colors decoration-transparent">
+                        返回业务入口
+                    </a>
                 </div>
-                <p id="empty-message">暂无数据</p>
+            </div>
+            <div class="fade-in-section" style="animation-delay: 0.15s;">
+                <div class="bg-white rounded-[2rem] p-8 md:p-10 shadow-xl border border-brand-primary/5">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="rounded-2xl bg-brand-bg border border-brand-primary/5 p-5">
+                            <div class="text-3xl font-serif font-bold text-brand-primary">需求</div>
+                            <div class="mt-2 text-sm text-brand-primary/55">家长快速发布</div>
+                        </div>
+                        <div class="rounded-2xl bg-brand-accent/10 border border-brand-accent/10 p-5">
+                            <div class="text-3xl font-serif font-bold text-brand-accent">匹配</div>
+                            <div class="mt-2 text-sm text-brand-primary/55">筛选更高效</div>
+                        </div>
+                        <div class="rounded-2xl bg-white border border-brand-primary/5 p-5">
+                            <div class="text-3xl font-serif font-bold text-brand-primary">沟通</div>
+                            <div class="mt-2 text-sm text-brand-primary/55">信息更透明</div>
+                        </div>
+                        <div class="rounded-2xl bg-white border border-brand-primary/5 p-5">
+                            <div class="text-3xl font-serif font-bold text-brand-primary">支持</div>
+                            <div class="mt-2 text-sm text-brand-primary/55">全程协助对接</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </main>
+    </section>
 
-    <!-- 发布/编辑家教弹窗 -->
-    <div id="post-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closePostModal()"></div>
-        <div class="modal-content relative w-full max-w-2xl bg-white/90 backdrop-blur-xl border border-white/50 rounded-3xl shadow-2xl overflow-hidden z-10 max-h-[90vh] flex flex-col">
-            <!-- 弹窗头部 -->
-            <div class="px-8 py-6 border-b border-brand-primary/10 flex justify-between items-center bg-white/50 sticky top-0 z-20">
+    <section class="pb-24 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-[2rem] p-8 border border-brand-primary/5 card-hover fade-in-section">
+                <div class="w-14 h-14 rounded-2xl bg-brand-accent/10 text-brand-accent flex items-center justify-center mb-6">
+                    <i data-lucide="clipboard-list" class="w-7 h-7"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-4">需求梳理</h3>
+                <p class="text-sm leading-relaxed text-brand-primary/70">先明确年级、科目、预算、时间与老师要求，再进入匹配环节，避免反复沟通。</p>
+            </div>
+            <div class="bg-white rounded-[2rem] p-8 border border-brand-primary/5 card-hover fade-in-section" style="animation-delay: 0.1s;">
+                <div class="w-14 h-14 rounded-2xl bg-brand-accent/10 text-brand-accent flex items-center justify-center mb-6">
+                    <i data-lucide="users-round" class="w-7 h-7"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-4">双向匹配</h3>
+                <p class="text-sm leading-relaxed text-brand-primary/70">结合教师擅长方向与学生学习目标双向筛选，让时间、能力与预期更匹配。</p>
+            </div>
+            <div class="bg-white rounded-[2rem] p-8 border border-brand-primary/5 card-hover fade-in-section" style="animation-delay: 0.2s;">
+                <div class="w-14 h-14 rounded-2xl bg-brand-accent/10 text-brand-accent flex items-center justify-center mb-6">
+                    <i data-lucide="shield-check" class="w-7 h-7"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-4">过程支持</h3>
+                <p class="text-sm leading-relaxed text-brand-primary/70">从初次沟通到后续反馈，雅宝持续协助跟进，帮助合作关系更稳定地落地。</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="pb-32 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto bg-brand-primary text-white rounded-[2rem] p-10 md:p-14">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
                 <div>
-                    <h3 id="post-modal-title" class="text-2xl font-serif font-bold text-brand-primary">发布家教需求</h3>
-                    <p class="text-sm text-brand-primary/60 mt-1">请详细填写您的需求，以便匹配到合适的老师</p>
+                    <h2 class="text-4xl font-serif font-bold mb-6">适合哪些人群</h2>
+                    <ul class="space-y-4 text-white/80 text-sm">
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-accent shrink-0"></i> 家长希望更快找到适合孩子的老师，而不是反复试错</li>
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-accent shrink-0"></i> 在校大学生或老师想寻找更规范、更清晰的兼职机会</li>
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-accent shrink-0"></i> 希望有人协助整理需求、把控沟通效率和后续跟进</li>
+                    </ul>
                 </div>
-                <button onclick="closePostModal()" class="w-10 h-10 flex items-center justify-center rounded-full bg-brand-primary/5 text-brand-primary/50 hover:text-brand-primary hover:bg-brand-primary/10 transition-colors border-none cursor-pointer">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
+                <div class="bg-white/10 rounded-[1.5rem] p-8 border border-white/10">
+                    <div class="text-sm uppercase tracking-[0.25em] text-brand-accent mb-3">Next Step</div>
+                    <div class="text-3xl font-serif font-bold mb-4">先聊清楚需求，再安排匹配</div>
+                    <p class="text-sm text-white/75 leading-relaxed mb-6">无论您是找老师还是想接单，先把年级、科目、预算和时间讲清楚，后续匹配才会更高效。</p>
+                    <button onclick="openBookingModal('家教兼职')" class="inline-flex items-center px-6 py-3 bg-brand-accent text-white text-sm font-medium rounded-xl hover:bg-white hover:text-brand-primary transition-colors decoration-transparent cursor-pointer border-none outline-none">
+                        预约沟通匹配
+                    </button>
+                </div>
             </div>
-            
-            <!-- 弹窗表单内容 -->
-            <div class="p-8 overflow-y-auto custom-scrollbar relative">
-                <!-- 装饰背景 -->
-                <div class="absolute top-0 right-0 w-64 h-64 bg-brand-accent/5 rounded-full blur-3xl pointer-events-none -z-10"></div>
-                <div class="absolute bottom-0 left-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-3xl pointer-events-none -z-10"></div>
+        </div>
+    </section>
 
-                <!-- 智能粘贴识别区域 -->
-                <div class="mb-6 bg-brand-primary/5 rounded-xl p-4 border border-brand-primary/10">
-                    <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider mb-3 flex items-center justify-between">
-                        <span>智能识别信息 <span class="text-brand-accent font-normal normal-case">(粘贴文本自动填入下方表单)</span></span>
-                        <button type="button" onclick="smartParse()" class="bg-brand-accent text-white hover:bg-brand-accent/90 transition-colors text-sm font-bold cursor-pointer border-none outline-none flex items-center gap-1 px-4 py-2 rounded-lg shadow-md shadow-brand-accent/20 btn-hover">
-                            <i data-lucide="wand-2" class="w-4 h-4"></i> 立即识别
-                        </button>
-                    </label>
-                    <textarea id="smart-paste-area" rows="3" placeholder="例如：某某家教1004030号家教&#10;地址：科技园地铁站附近&#10;科目：英语&#10;年级：初一男..." class="w-full px-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm resize-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all custom-scrollbar"></textarea>
-                </div>
+    <footer class="py-10 bg-[#FDFBF7] border-t border-brand-primary/5 text-center px-6">
+        <p class="text-sm text-brand-primary/50">&copy; 2024 雅宝教育工作室 Yabao Education Studio. All rights reserved.</p>
+    </footer>
 
-                <form id="post-form" onsubmit="submitPost(event)" class="space-y-6">
-                    <input type="hidden" id="p-jobId">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="space-y-1">
-                            <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">地址 <span class="text-red-500">*</span></label>
-                            <div class="relative">
-                                <i data-lucide="map-pin" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
-                                <input type="text" id="p-address" required placeholder="如: 宝安区棕榈堡花园" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
-                            </div>
-                        </div>
-                        <div class="space-y-1">
-                            <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">学生年级 <span class="text-red-500">*</span></label>
-                            <div class="relative">
-                                <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
-                                <input type="text" id="p-grade" required placeholder="如: 初二女孩" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
-                            </div>
-                        </div>
+    <div id="booking-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none">
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeBookingModal()"></div>
+        <div class="modal-content relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden z-10 transform scale-95 transition-transform duration-300">
+            <div class="p-8">
+                <button onclick="closeBookingModal()" class="absolute top-6 right-6 text-brand-primary/50 hover:text-brand-primary transition-colors bg-transparent border-none outline-none cursor-pointer">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-2">预约咨询</h3>
+                <p class="text-sm text-brand-primary/60 mb-6">请留下您的联系方式，我们的顾问老师会尽快与您联系。</p>
+                <form id="booking-form" onsubmit="submitBooking(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">家长/学生姓名</label>
+                        <input type="text" id="book-name" required class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary">
                     </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="space-y-1">
-                            <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">科目 <span class="text-red-500">*</span></label>
-                            <div class="relative">
-                                <i data-lucide="book-open" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
-                                <input type="text" id="p-subject" required placeholder="如: 物理" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
-                            </div>
-                        </div>
-                        <div class="space-y-1">
-                            <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">费用 <span class="text-red-500">*</span></label>
-                            <div class="relative">
-                                <i data-lucide="dollar-sign" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
-                                <input type="text" id="p-fee" required placeholder="如: 220-240/h" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
-                            </div>
-                        </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">联系电话</label>
+                        <input type="tel" id="book-phone" required class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary">
                     </div>
-                    
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">时间安排 <span class="text-red-500">*</span></label>
-                        <div class="relative">
-                            <i data-lucide="clock" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
-                            <input type="text" id="p-time" required placeholder="如: 一周一次 周六上午" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
-                        </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">意向课程</label>
+                        <select id="book-course" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary appearance-none">
+                            <option value="家教兼职">家教兼职需求对接</option>
+                            <option value="K12全科">K12 全科功课辅导</option>
+                            <option value="成人英语">成人英语特训</option>
+                            <option value="其他咨询">其他咨询</option>
+                        </select>
                     </div>
-                    
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">学生情况</label>
-                        <div class="relative">
-                            <i data-lucide="bar-chart" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
-                            <input type="text" id="p-studentInfo" placeholder="如: 基础中等语法弱一点" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
-                        </div>
-                    </div>
-                    
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">老师要求 <span class="text-red-500">*</span></label>
-                        <div class="relative">
-                            <i data-lucide="check-square" class="absolute left-4 top-4 w-4 h-4 text-brand-primary/40"></i>
-                            <textarea id="p-req" required rows="3" placeholder="如: 女老师，沟通能力强，善于互动..." class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm resize-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all"></textarea>
-                        </div>
-                    </div>
-                    
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">备注 <span class="text-brand-primary/40 font-normal">(选填)</span></label>
-                        <div class="relative">
-                            <i data-lucide="info" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
-                            <input type="text" id="p-remark" placeholder="其他补充信息" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
-                        </div>
-                    </div>
-                    
-                    <div class="pt-4 border-t border-brand-primary/10">
-                        <button type="submit" id="post-submit-btn" class="w-full py-4 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover border-none cursor-pointer flex justify-center items-center gap-2 shadow-lg shadow-brand-primary/20">
-                            <i data-lucide="send" class="w-5 h-5"></i>
-                            <span id="post-submit-text">确认发布需求</span>
-                        </button>
-                    </div>
+                    <button type="submit" id="book-submit-btn" class="w-full mt-4 py-4 bg-brand-primary text-brand-bg font-medium rounded-xl hover:!bg-brand-primary shadow-lg border-none outline-none cursor-pointer flex justify-center items-center">
+                        <span>提交预约信息</span>
+                    </button>
                 </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- 接单弹窗 -->
-    <div id="apply-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeApplyModal()"></div>
-        <div class="modal-content relative w-full max-w-md bg-white/90 backdrop-blur-xl border border-white/50 rounded-3xl shadow-2xl overflow-hidden z-10">
-            <!-- 弹窗头部 -->
-            <div class="px-8 py-6 border-b border-brand-primary/10 flex justify-between items-center bg-white/50">
-                <div>
-                    <h3 class="text-2xl font-serif font-bold text-brand-primary">确认接单</h3>
-                    <p class="text-sm text-brand-primary/60 mt-1">留下您的联系方式，教务将与您对接</p>
+                <div id="booking-success" class="hidden flex-col items-center justify-center py-8">
+                    <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                        <i data-lucide="check" class="w-8 h-8"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-brand-primary mb-2">预约成功！</h4>
+                    <p class="text-sm text-center text-brand-primary/70">感谢您的信任，我们的教务老师会尽快致电您。</p>
+                    <button onclick="closeBookingModal()" class="mt-6 px-8 py-3 bg-brand-bg border border-brand-primary/20 text-brand-primary font-medium rounded-lg hover:bg-brand-primary/5 transition-colors cursor-pointer border-none outline-none">
+                        关闭
+                    </button>
                 </div>
-                <button onclick="closeApplyModal()" class="w-10 h-10 flex items-center justify-center rounded-full bg-brand-primary/5 text-brand-primary/50 hover:text-brand-primary hover:bg-brand-primary/10 transition-colors border-none cursor-pointer">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-
-            <!-- 弹窗表单内容 -->
-            <div class="p-8 relative">
-                <!-- 装饰背景 -->
-                <div class="absolute top-0 right-0 w-48 h-48 bg-brand-accent/5 rounded-full blur-3xl pointer-events-none -z-10"></div>
-                
-                <form id="apply-form" onsubmit="submitApply(event)" class="space-y-6">
-                    <input type="hidden" id="a-jobId">
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">老师姓名 <span class="text-red-500">*</span></label>
-                        <div class="relative">
-                            <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
-                            <input type="text" id="a-name" required placeholder="您的真实姓名" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
-                        </div>
-                    </div>
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">联系电话 <span class="text-red-500">*</span></label>
-                        <div class="relative">
-                            <i data-lucide="phone" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
-                            <input type="tel" id="a-phone" required placeholder="您的手机号码" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl text-sm focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none transition-all">
-                        </div>
-                    </div>
-                    <div class="pt-4 border-t border-brand-primary/10">
-                        <button type="submit" id="apply-submit-btn" class="w-full py-4 bg-brand-accent text-white font-medium rounded-xl btn-hover border-none cursor-pointer flex justify-center items-center gap-2 shadow-lg shadow-brand-accent/20">
-                            <i data-lucide="check-circle" class="w-5 h-5"></i>
-                            确认申请接单
-                        </button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>
 
-    <!-- 错误/提示 弹窗 -->
-    <div id="alert-modal" class="modal fixed inset-0 z-[110] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeAlertModal()"></div>
-        <div class="modal-content relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden z-10">
-            <div class="p-8 text-center">
-                <div id="alert-icon-container" class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i id="alert-icon" data-lucide="info" class="w-8 h-8"></i>
-                </div>
-                <h3 id="alert-title" class="text-xl font-bold text-brand-primary mb-2">提示</h3>
-                <p id="alert-message" class="text-sm text-brand-primary/70 mb-6 leading-relaxed"></p>
-                <button onclick="closeAlertModal()" id="alert-btn" class="w-full py-3 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer">
-                    我知道了
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 确认操作 弹窗 -->
-    <div id="confirm-modal" class="modal fixed inset-0 z-[110] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeConfirmModal()"></div>
-        <div class="modal-content relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden z-10">
+    <div id="error-modal" class="fixed inset-0 z-[110] flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none">
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeErrorModal()"></div>
+        <div class="modal-content relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden z-10 transform scale-95 transition-transform duration-300">
             <div class="p-8 text-center">
                 <div class="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i data-lucide="alert-triangle" class="w-8 h-8"></i>
+                    <i data-lucide="alert-circle" class="w-8 h-8"></i>
                 </div>
-                <h3 id="confirm-title" class="text-xl font-bold text-brand-primary mb-2">确认操作</h3>
-                <p id="confirm-message" class="text-sm text-brand-primary/70 mb-6 leading-relaxed"></p>
-                <div class="flex gap-4">
-                    <button onclick="closeConfirmModal()" class="flex-1 py-3 bg-gray-100 text-gray-600 font-medium rounded-xl hover:bg-gray-200 transition-colors border-none cursor-pointer">
-                        取消
-                    </button>
-                    <button id="confirm-btn" class="flex-1 py-3 bg-red-500 text-white font-medium rounded-xl btn-hover hover:bg-red-600 shadow-lg border-none cursor-pointer">
-                        确定
-                    </button>
-                </div>
+                <h3 class="text-xl font-bold text-brand-primary mb-2">提示</h3>
+                <p id="error-modal-message" class="text-sm text-brand-primary/70 mb-6">电话号码格式不正确，请重新输入。</p>
+                <button onclick="closeErrorModal()" class="w-full py-3 bg-brand-primary text-brand-bg font-medium rounded-xl hover:!bg-brand-primary shadow-lg border-none outline-none cursor-pointer">
+                    我知道了
+                </button>
             </div>
         </div>
     </div>
@@ -337,568 +220,96 @@
     <script>
         lucide.createIcons();
 
-        // 状态管理
-        let currentTab = 'open';
-        let jobsData = [];
-        
-        // 自定义弹窗 API
-        function customAlert(title, message, type = 'info') {
-            const modal = document.getElementById('alert-modal');
-            const iconContainer = document.getElementById('alert-icon-container');
-            const icon = document.getElementById('alert-icon');
-            const btn = document.getElementById('alert-btn');
-            
-            document.getElementById('alert-title').innerText = title;
-            document.getElementById('alert-message').innerHTML = message.replace(/\n/g, '<br>');
-            
-            if (type === 'error') {
-                iconContainer.className = 'w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4';
-                icon.setAttribute('data-lucide', 'x-circle');
-                btn.className = 'w-full py-3 bg-red-500 hover:bg-red-600 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer';
-            } else if (type === 'success') {
-                iconContainer.className = 'w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4';
-                icon.setAttribute('data-lucide', 'check-circle');
-                btn.className = 'w-full py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer';
-            } else {
-                iconContainer.className = 'w-16 h-16 bg-brand-primary/5 text-brand-primary rounded-full flex items-center justify-center mx-auto mb-4';
-                icon.setAttribute('data-lucide', 'info');
-                btn.className = 'w-full py-3 bg-brand-primary hover:bg-brand-primary/90 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer';
+        const bookingModal = document.getElementById('booking-modal');
+        const courseSelect = document.getElementById('book-course');
+
+        function openBookingModal(defaultCourse) {
+            if (defaultCourse) {
+                courseSelect.value = defaultCourse;
             }
-            
-            lucide.createIcons();
-            modal.classList.add('active');
-        }
-        
-        function closeAlertModal() {
-            document.getElementById('alert-modal').classList.remove('active');
+            bookingModal.classList.remove('opacity-0', 'pointer-events-none');
+            bookingModal.querySelector('.modal-content').classList.remove('scale-95');
+            bookingModal.querySelector('.modal-content').classList.add('scale-100');
+            document.body.style.overflow = 'hidden';
         }
 
-        function customConfirm(title, message, confirmCallback) {
-            document.getElementById('confirm-title').innerText = title;
-            document.getElementById('confirm-message').innerText = message;
-            
-            const confirmBtn = document.getElementById('confirm-btn');
-            // 移除旧的事件监听器
-            const newBtn = confirmBtn.cloneNode(true);
-            confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
-            
-            newBtn.addEventListener('click', () => {
-                closeConfirmModal();
-                confirmCallback();
-            });
-            
-            document.getElementById('confirm-modal').classList.add('active');
+        function closeBookingModal() {
+            bookingModal.classList.add('opacity-0', 'pointer-events-none');
+            bookingModal.querySelector('.modal-content').classList.add('scale-95');
+            bookingModal.querySelector('.modal-content').classList.remove('scale-100');
+            document.body.style.overflow = '';
+
+            setTimeout(() => {
+                document.getElementById('booking-form').reset();
+                document.getElementById('booking-form').style.display = 'block';
+                document.getElementById('booking-success').style.display = 'none';
+                document.getElementById('booking-success').classList.remove('flex');
+            }, 300);
         }
 
-        function closeConfirmModal() {
-            document.getElementById('confirm-modal').classList.remove('active');
-        }
+        const errorModal = document.getElementById('error-modal');
 
-        // 鉴权拦截器
-        function getToken() {
-            return localStorage.getItem('tutor_token');
-        }
-        function getEmail() {
-            return localStorage.getItem('tutor_email');
-        }
-        
-        // 初始化UI
-        function initUI() {
-            const token = getToken();
-            const email = getEmail();
-            const authBtn = document.getElementById('auth-btn');
-            const userInfo = document.getElementById('user-info');
-            
-            if (token && email) {
-                userInfo.innerText = email;
-                userInfo.style.display = 'block';
-                authBtn.innerText = '退出登录';
-                authBtn.onclick = logout;
-                authBtn.classList.replace('bg-brand-primary', 'bg-transparent');
-                authBtn.classList.replace('text-brand-bg', 'text-brand-primary');
-                authBtn.classList.add('border', 'border-brand-primary/20');
-            } else {
-                userInfo.style.display = 'none';
-                authBtn.innerText = '登录 / 注册';
-                authBtn.onclick = goToLogin;
-                authBtn.classList.replace('bg-transparent', 'bg-brand-primary');
-                authBtn.classList.replace('text-brand-primary', 'text-brand-bg');
-                authBtn.classList.remove('border', 'border-brand-primary/20');
-            }
-        }
-
-        function goToLogin() {
-            window.location.href = '/#login';
-        }
-
-        function logout() {
-            customConfirm('退出登录', '您确定要退出当前账号吗？', () => {
-                localStorage.removeItem('tutor_token');
-                localStorage.removeItem('tutor_email');
-                initUI();
-                if (currentTab !== 'open') switchTab('open');
-                else fetchJobs();
-            });
-        }
-
-        // Fetch 带 Token
-        async function apiFetch(url, options = {}) {
-            const token = getToken();
-            const headers = { 'Content-Type': 'application/json', ...options.headers };
-            if (token) headers['Authorization'] = `Bearer ${token}`;
-            
-            const response = await fetch(url, { ...options, headers });
-            if (response.status === 401) {
-                logout();
-                goToLogin();
-                throw new Error('Unauthorized');
-            }
-            return response;
-        }
-
-        // 登录逻辑
-        function openLoginModal() { document.getElementById('login-modal').classList.add('active'); }
-        function closeLoginModal() { document.getElementById('login-modal').classList.remove('active'); }
-
-        async function sendCode() {
-            const email = document.getElementById('login-email').value;
-            if (!email) return customAlert('提示', '请填写邮箱', 'error');
-            
-            const btn = document.getElementById('send-code-btn');
-            btn.disabled = true;
-            btn.innerText = '发送中...';
-            
-            try {
-                const res = await fetch('/api/tutor/send-code', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email })
-                });
-                const data = await res.json();
-                
-                if (res.ok && data.success) {
-                    if (data.debugCode) {
-                        customAlert('测试环境提示', `您的验证码是: <strong class="text-xl text-brand-accent tracking-widest">${data.debugCode}</strong>\n(线上环境配好邮件后不会弹出此提示)`, 'info');
-                    } else {
-                        customAlert('发送成功', '验证码已发送到您的邮箱，请注意查收。', 'success');
-                    }
-
-                    let sec = 60;
-                    const timer = setInterval(() => {
-                        sec--;
-                        btn.innerText = `${sec}s 后重发`;
-                        if (sec <= 0) {
-                            clearInterval(timer);
-                            btn.innerText = '获取验证码';
-                            btn.disabled = false;
-                        }
-                    }, 1000);
-                } else {
-                    customAlert('发送失败', data.error || '无法发送验证码', 'error');
-                    btn.innerText = '获取验证码';
-                    btn.disabled = false;
-                }
-            } catch (e) {
-                customAlert('网络错误', '请检查您的网络连接', 'error');
-                btn.innerText = '获取验证码';
-                btn.disabled = false;
-            }
-        }
-
-        async function submitLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const code = document.getElementById('login-code').value;
-            const btn = document.getElementById('login-submit-btn');
-            btn.innerText = '登录中...';
-            
-            try {
-                const res = await fetch('/api/tutor/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, code })
-                });
-                const data = await res.json();
-                if (res.ok) {
-                    localStorage.setItem('tutor_token', data.token);
-                    localStorage.setItem('tutor_email', data.email);
-                    closeLoginModal();
-                    initUI();
-                    fetchJobs();
-                    customAlert('登录成功', `欢迎回来，${data.email}`, 'success');
-                } else {
-                    customAlert('登录失败', data.error || '验证码不正确', 'error');
-                }
-            } catch (e) {
-                customAlert('网络错误', '请检查您的网络连接', 'error');
-            } finally {
-                btn.innerText = '登录 / 注册';
-            }
-        }
-
-        // Tab 切换
-        function switchTab(tab) {
-            if ((tab === 'published' || tab === 'accepted') && !getToken()) {
-                return goToLogin();
-            }
-            
-            ['open', 'published', 'accepted'].forEach(t => {
-                const el = document.getElementById(`tab-${t}`);
-                if (t === tab) {
-                    el.classList.replace('tab-inactive', 'tab-active');
-                } else {
-                    el.classList.replace('tab-active', 'tab-inactive');
-                }
-            });
-            currentTab = tab;
-            fetchJobs();
-        }
-
-        // 获取并渲染列表
-        async function fetchJobs() {
-            document.getElementById('jobs-container').innerHTML = '';
-            document.getElementById('loading-spinner').style.display = 'block';
-            document.getElementById('empty-state').style.display = 'none';
-            
-            try {
-                const res = await apiFetch(`/api/tutor/jobs?type=${currentTab}`);
-                const data = await res.json();
-                document.getElementById('loading-spinner').style.display = 'none';
-                
-                if (data.data.length === 0) {
-                    document.getElementById('empty-message').innerText = currentTab === 'open' ? '大厅暂无开放接单的家教' : '暂无数据';
-                    document.getElementById('empty-state').style.display = 'block';
-                } else {
-                    jobsData = data.data; // Store globally for editing
-                    renderJobs(data.data);
-                }
-            } catch (e) {
-                document.getElementById('loading-spinner').style.display = 'none';
-            }
-        }
-
-        function renderJobs(jobs) {
-            const container = document.getElementById('jobs-container');
-            const currentUser = getEmail();
-            const isAdmin = currentUser === 'admin@yabao.com';
-            
-            jobs.forEach(job => {
-                let badge = '';
-                let actionBtn = '';
-
-                if (currentTab === 'open') {
-                    badge = `<span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">可接单</span>`;
-                    
-                    let editBtnHtml = '';
-                    if (job.canEdit || isAdmin) {
-                        editBtnHtml = `<button onclick="openEditModal('${job.id}')" class="w-full mt-2 py-3 bg-blue-50 text-blue-600 font-medium rounded-xl btn-hover hover:bg-blue-100 transition-colors cursor-pointer border-none outline-none">编辑信息 ${isAdmin ? '(管理员)' : ''}</button>`;
-                    }
-                    
-                    let deleteBtnHtml = '';
-                    if (isAdmin) {
-                        deleteBtnHtml = `<button onclick="deleteJob('${job.id}')" class="w-full mt-2 py-3 bg-red-50 text-red-600 font-medium rounded-xl btn-hover hover:bg-red-100 transition-colors cursor-pointer border-none outline-none">删除此岗位 (管理员)</button>`;
-                    }
-
-                    if (job.publisherEmail === currentUser && !isAdmin) {
-                        actionBtn = `<button disabled class="w-full py-3 bg-gray-100 text-gray-400 font-medium rounded-xl border-none cursor-not-allowed">这是你发布的岗位</button>${editBtnHtml}`;
-                    } else {
-                        actionBtn = `<button onclick="openApplyModal('${job.id}')" class="w-full py-3 bg-transparent border border-brand-accent text-brand-accent font-medium rounded-xl btn-hover hover:bg-brand-accent hover:text-white transition-colors cursor-pointer outline-none">我要接单</button>${editBtnHtml}${deleteBtnHtml}`;
-                    }
-                } 
-                else if (currentTab === 'published') {
-                    let editBtnHtml = '';
-                    if (job.canEdit || isAdmin) {
-                        editBtnHtml = `<button onclick="openEditModal('${job.id}')" class="w-full mb-2 py-3 bg-blue-50 text-blue-600 font-medium rounded-xl btn-hover hover:bg-blue-100 transition-colors cursor-pointer border-none outline-none">编辑信息</button>`;
-                    }
-
-                    if (job.status === 'open') {
-                        badge = `<span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-full">等待接单</span>`;
-                        actionBtn = `${editBtnHtml}<button onclick="deleteJob('${job.id}')" class="w-full py-3 bg-red-50 text-red-600 font-medium rounded-xl btn-hover hover:bg-red-100 transition-colors cursor-pointer border-none outline-none">删除此岗位</button>`;
-                    } else {
-                        badge = `<span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-bold rounded-full">已被接单</span>`;
-                        actionBtn = `<div class="p-3 bg-gray-50 rounded-xl text-sm text-center text-gray-600 mb-2">接单人: ${job.acceptedByName} (${job.acceptedByPhone})</div>
-                                     ${editBtnHtml}
-                                     <button onclick="deleteJob('${job.id}')" class="w-full py-2 bg-transparent text-red-500 text-sm font-medium rounded-lg hover:underline cursor-pointer border-none outline-none">强制删除</button>`;
-                    }
-                }
-                else if (currentTab === 'accepted') {
-                    badge = `<span class="px-3 py-1 bg-brand-accent/20 text-brand-accent text-xs font-bold rounded-full">已接单</span>`;
-                    actionBtn = `<button onclick="cancelApply('${job.id}')" class="w-full py-3 bg-red-50 text-red-600 font-medium rounded-xl btn-hover hover:bg-red-100 transition-colors cursor-pointer border-none outline-none">取消接单 (退回大厅)</button>`;
-                }
-
-                const card = `
-                    <div class="glass rounded-2xl p-8 card-hover flex flex-col h-full relative overflow-hidden">
-                        <!-- 装饰性背景光晕 -->
-                        <div class="absolute -top-10 -right-10 w-32 h-32 bg-brand-accent/10 rounded-full blur-2xl pointer-events-none"></div>
-                        <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-brand-primary/5 rounded-full blur-2xl pointer-events-none"></div>
-                        
-                        <div class="flex-grow relative z-10">
-                            <div class="flex justify-between items-start mb-6">
-                                <h3 class="text-xl font-bold text-brand-primary">${job.subject} - ${job.grade}</h3>
-                                ${badge}
-                            </div>
-                            <div class="space-y-4 text-sm text-brand-primary/80 mb-8">
-                                <div class="flex items-start">
-                                    <i data-lucide="map-pin" class="w-4 h-4 text-brand-accent mr-3 mt-0.5 shrink-0"></i>
-                                    <span class="w-16 font-bold shrink-0">【地址】</span>
-                                    <span class="flex-grow leading-relaxed">${job.address}</span>
-                                </div>
-                                <div class="flex items-start">
-                                    <i data-lucide="bar-chart" class="w-4 h-4 text-brand-accent mr-3 mt-0.5 shrink-0"></i>
-                                    <span class="w-16 font-bold shrink-0">【情况】</span>
-                                    <span class="flex-grow leading-relaxed">${job.studentInfo || '无'}</span>
-                                </div>
-                                <div class="flex items-start">
-                                    <i data-lucide="clock" class="w-4 h-4 text-brand-accent mr-3 mt-0.5 shrink-0"></i>
-                                    <span class="w-16 font-bold shrink-0">【时间】</span>
-                                    <span class="flex-grow leading-relaxed">${job.time}</span>
-                                </div>
-                                <div class="flex items-start">
-                                    <i data-lucide="dollar-sign" class="w-4 h-4 text-brand-accent mr-3 mt-0.5 shrink-0"></i>
-                                    <span class="w-16 font-bold shrink-0">【费用】</span>
-                                    <span class="flex-grow leading-relaxed font-semibold text-brand-accent">${job.fee}</span>
-                                </div>
-                                <div class="flex items-start bg-white/50 border border-brand-primary/5 p-4 rounded-xl mt-4">
-                                    <span class="w-16 font-bold text-brand-primary/90 shrink-0">【要求】</span>
-                                    <span class="flex-grow leading-relaxed text-brand-primary/90">${job.requirement}</span>
-                                </div>
-                                ${job.remark ? `
-                                <div class="flex items-start text-brand-primary/50 text-xs mt-2">
-                                    <span class="w-16 shrink-0">【备注】</span>
-                                    <span class="flex-grow leading-relaxed">${job.remark}</span>
-                                </div>` : ''}
-                            </div>
-                        </div>
-                        <div class="mt-auto pt-4 border-t border-brand-primary/10 relative z-10">
-                            ${actionBtn}
-                        </div>
-                    </div>
-                `;
-                container.insertAdjacentHTML('beforeend', card);
-            });
+        function showErrorModal(message) {
+            document.getElementById('error-modal-message').innerText = message;
+            errorModal.classList.remove('opacity-0', 'pointer-events-none');
+            errorModal.querySelector('.modal-content').classList.remove('scale-95');
+            errorModal.querySelector('.modal-content').classList.add('scale-100');
             lucide.createIcons();
         }
 
-        // 发布/编辑逻辑
-        function checkAuthAndPost() {
-            if (!getToken()) return goToLogin();
-            document.getElementById('post-form').reset();
-            document.getElementById('smart-paste-area').value = '';
-            document.getElementById('p-jobId').value = '';
-            document.getElementById('post-modal-title').innerText = '发布家教需求';
-            document.getElementById('post-submit-text').innerText = '确认发布需求';
-            document.getElementById('post-modal').classList.add('active');
+        function closeErrorModal() {
+            errorModal.classList.add('opacity-0', 'pointer-events-none');
+            errorModal.querySelector('.modal-content').classList.add('scale-95');
+            errorModal.querySelector('.modal-content').classList.remove('scale-100');
         }
 
-        function openEditModal(id) {
-            const job = jobsData.find(j => j.id === id);
-            if (!job) return;
-            
-            // 清空智能识别区域的上次内容
-            document.getElementById('smart-paste-area').value = '';
-            
-            document.getElementById('p-jobId').value = job.id;
-            document.getElementById('p-address').value = job.address;
-            document.getElementById('p-grade').value = job.grade;
-            document.getElementById('p-subject').value = job.subject;
-            document.getElementById('p-fee').value = job.fee;
-            document.getElementById('p-time').value = job.time;
-            document.getElementById('p-studentInfo').value = job.studentInfo || '';
-            document.getElementById('p-req').value = job.requirement;
-            document.getElementById('p-remark').value = job.remark || '';
+        async function submitBooking(event) {
+            event.preventDefault();
 
-            document.getElementById('post-modal-title').innerText = '编辑家教需求';
-            document.getElementById('post-submit-text').innerText = '保存修改';
-            document.getElementById('post-modal').classList.add('active');
-        }
-
-        function closePostModal() { document.getElementById('post-modal').classList.remove('active'); }
-
-        // 智能解析粘贴文本
-        function smartParse() {
-            const text = document.getElementById('smart-paste-area').value.trim();
-            if (!text) {
-                return customAlert('提示', '请先在上方文本框内粘贴信息', 'info');
-            }
-
-            // 简单正则匹配规则 (可根据实际情况不断优化)
-            const patterns = {
-                address: /(?:地址|位置|小区|坐标)[:：\s]+([^\n]+)/i,
-                grade: /(?:年级|学生)[:：\s]+([^\n]+)/i,
-                subject: /(?:科目|补习|学科)[:：\s]+([^\n]+)/i,
-                studentInfo: /(?:情况|基础|成绩)[:：\s]+([^\n]+)/i,
-                time: /(?:时间|安排|频率)[:：\s]+([^\n]+)/i,
-                fee: /(?:费用|价格|薪水|报酬|课酬)[:：\s]+([^\n]+)/i,
-                requirement: /(?:要求|教员|老师)[:：\s]+([^\n]+)/i,
-                remark: /(?:备注|说明|其他)[:：\s]+([^\n]+)/i,
-            };
-
-            const data = {
-                address: '', grade: '', subject: '', studentInfo: '',
-                time: '', fee: '', requirement: '', remark: ''
-            };
-
-            // 1. 尝试使用明确的冒号/空格标识符进行提取
-            for (const [key, regex] of Object.entries(patterns)) {
-                const match = text.match(regex);
-                if (match && match[1]) {
-                    data[key] = match[1].trim();
-                }
-            }
-
-            // 2. 如果第一步有些核心字段没取到，尝试通过关键字猜测单行信息
-            const lines = text.split('\n').map(l => l.trim()).filter(l => l);
-            lines.forEach(line => {
-                if (!data.grade && (line.includes('初') || line.includes('高') || line.includes('小') || line.includes('年级'))) {
-                    if (!line.includes('要求')) data.grade = line;
-                }
-                if (!data.subject && (line.includes('语文') || line.includes('数学') || line.includes('英语') || line.includes('物理') || line.includes('化学'))) {
-                    if (!line.includes('要求') && !line.includes('备注')) data.subject = line;
-                }
-                if (!data.fee && (line.includes('/h') || line.includes('小时') || line.includes('次'))) {
-                    if (line.match(/\d+/)) data.fee = line;
-                }
-            });
-
-            // 填充表单
-            if(data.address) document.getElementById('p-address').value = data.address;
-            if(data.grade) document.getElementById('p-grade').value = data.grade;
-            if(data.subject) document.getElementById('p-subject').value = data.subject;
-            if(data.studentInfo) document.getElementById('p-studentInfo').value = data.studentInfo;
-            if(data.time) document.getElementById('p-time').value = data.time;
-            if(data.fee) document.getElementById('p-fee').value = data.fee;
-            if(data.requirement) document.getElementById('p-req').value = data.requirement;
-            if(data.remark) document.getElementById('p-remark').value = data.remark;
-
-            // 提示用户检查
-            customAlert('解析完成', '已尽可能为您提取信息并填入表单，<strong class="text-red-500">请务必人工核对修改后再提交！</strong>', 'success');
-        }
-
-        async function submitPost(e) {
-            e.preventDefault();
-            const btnText = document.getElementById('post-submit-text');
-            const originalText = btnText.innerText;
-            const btn = document.getElementById('post-submit-btn');
-            
-            btnText.innerText = '提交中...';
+            const btn = document.getElementById('book-submit-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> <span class="ml-2">提交中...</span>';
+            lucide.createIcons();
             btn.disabled = true;
-
-            const jobId = document.getElementById('p-jobId').value;
-            const isEdit = !!jobId;
+            btn.style.opacity = '0.7';
 
             const payload = {
-                address: document.getElementById('p-address').value,
-                grade: document.getElementById('p-grade').value,
-                subject: document.getElementById('p-subject').value,
-                studentInfo: document.getElementById('p-studentInfo').value,
-                time: document.getElementById('p-time').value,
-                fee: document.getElementById('p-fee').value,
-                requirement: document.getElementById('p-req').value,
-                remark: document.getElementById('p-remark').value
+                name: document.getElementById('book-name').value,
+                phone: document.getElementById('book-phone').value,
+                course: document.getElementById('book-course').value,
             };
 
-            if (isEdit) payload.id = jobId;
-
             try {
-                const res = await apiFetch(isEdit ? '/api/tutor/job/edit' : '/api/tutor/job/post', {
+                const response = await fetch('/api/appointment', {
                     method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify(payload)
                 });
-                if (res.ok) {
-                    closePostModal();
-                    document.getElementById('post-form').reset();
-                    customAlert(isEdit ? '保存成功' : '发布成功', isEdit ? '家教需求已更新。' : '您的家教需求已成功发布到大厅。', 'success');
-                    if (currentTab === 'published' || currentTab === 'open') fetchJobs();
-                    else switchTab('published');
+
+                if (response.ok) {
+                    document.getElementById('booking-form').style.display = 'none';
+                    const successDiv = document.getElementById('booking-success');
+                    successDiv.style.display = 'flex';
+                    successDiv.classList.add('flex');
                 } else {
-                    const data = await res.json();
-                    customAlert(isEdit ? '保存失败' : '发布失败', data.error || '无法提交，请稍后再试。', 'error');
+                    let errorMsg = '提交失败，请稍后再试或直接电话联系我们。';
+                    try {
+                        const result = await response.json();
+                        if (result.error) errorMsg = result.error;
+                    } catch (e) {}
+                    showErrorModal(errorMsg);
                 }
-            } catch (e) {
-                customAlert('网络错误', '请检查您的网络连接', 'error');
+            } catch (error) {
+                console.error('Error submitting booking:', error);
+                showErrorModal('网络错误，请检查您的连接。');
             } finally {
-                btnText.innerText = originalText;
+                btn.innerHTML = originalText;
                 btn.disabled = false;
+                btn.style.opacity = '1';
             }
         }
-
-        // 接单逻辑
-        function openApplyModal(id) {
-            if (!getToken()) return goToLogin();
-            document.getElementById('a-jobId').value = id;
-            document.getElementById('apply-modal').classList.add('active');
-        }
-        function closeApplyModal() { document.getElementById('apply-modal').classList.remove('active'); }
-
-        async function submitApply(e) {
-            e.preventDefault();
-            const btn = document.getElementById('apply-submit-btn');
-            btn.innerText = '申请中...';
-            btn.disabled = true;
-
-            try {
-                const res = await apiFetch('/api/tutor/job/accept', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        id: document.getElementById('a-jobId').value,
-                        name: document.getElementById('a-name').value,
-                        phone: document.getElementById('a-phone').value
-                    })
-                });
-                const data = await res.json();
-                if (res.ok) {
-                    closeApplyModal();
-                    customAlert('接单成功', '您已成功接下该家教单，请注意查看企业微信群通知或等待教务联系。', 'success');
-                    switchTab('accepted');
-                } else {
-                    customAlert('接单失败', data.error || '该岗位可能已被抢走或发生错误。', 'error');
-                }
-            } catch (e) {
-                customAlert('网络错误', '请检查您的网络连接', 'error');
-            } finally {
-                btn.innerText = '确认申请接单';
-                btn.disabled = false;
-            }
-        }
-
-        // 删除 & 取消逻辑
-        function deleteJob(id) {
-            if (!getToken()) return goToLogin();
-            customConfirm('删除岗位', '确定要永久删除这个家教岗位吗？此操作不可恢复。', async () => {
-                try {
-                    const res = await apiFetch('/api/tutor/job/delete', { method: 'POST', body: JSON.stringify({ id }) });
-                    if (res.ok) {
-                        customAlert('删除成功', '岗位已删除', 'success');
-                        fetchJobs();
-                    } else {
-                        customAlert('删除失败', '无法删除该岗位，请稍后再试', 'error');
-                    }
-                } catch (e) {
-                    customAlert('网络错误', '请检查网络连接', 'error');
-                }
-            });
-        }
-
-        function cancelApply(id) {
-            if (!getToken()) return goToLogin();
-            customConfirm('取消接单', '确定要放弃这个家教单并将其退回大厅吗？', async () => {
-                try {
-                    const res = await apiFetch('/api/tutor/job/cancel', { method: 'POST', body: JSON.stringify({ id }) });
-                    if (res.ok) {
-                        customAlert('已取消', '该订单已退回大厅', 'success');
-                        fetchJobs();
-                    } else {
-                        customAlert('取消失败', '操作失败，请重试', 'error');
-                    }
-                } catch (e) {
-                    customAlert('网络错误', '请检查网络连接', 'error');
-                }
-            });
-        }
-
-        // 初始化
-        initUI();
-        fetchJobs();
     </script>
 </body>
 </html>

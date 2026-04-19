@@ -3,12 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>雅宝自习室预定 | Yabao Study Room</title>
-    <!-- Google Fonts -->
+    <title>自习室 | 雅宝教育 Yabao Education</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -29,89 +27,17 @@
             }
         }
     </script>
-    <!-- Custom CSS -->
     <style>
-        body { background-color: #FDFBF7; color: #1A2B3C; }
-        .glass {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
-        }
-        .btn-hover { transition: all 0.3s ease; }
-        .btn-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(197, 160, 89, 0.4); }
-        .card-hover { transition: all 0.4s ease; }
-        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -10px rgba(26, 43, 60, 0.1); }
-        
-        /* 弹窗通用样式 */
-        .modal { transition: opacity 0.3s ease, visibility 0.3s ease; opacity: 0; visibility: hidden; pointer-events: none; }
-        .modal.active { opacity: 1; visibility: visible; pointer-events: auto; }
-        .modal .modal-content { transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); transform: translateY(20px) scale(0.95); }
-        .modal.active .modal-content { transform: translateY(0) scale(1); }
-
-        /* 预约网格样式 */
-        .schedule-grid {
-            display: grid;
-            grid-template-columns: 80px repeat(7, minmax(120px, 1fr));
-            gap: 1px;
-            background-color: rgba(26, 43, 60, 0.1);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: inset 0 0 0 1px rgba(26, 43, 60, 0.1);
-        }
-        .schedule-cell {
-            background-color: #fff;
-            padding: 12px 8px;
-            text-align: center;
-            font-size: 0.875rem;
-            transition: all 0.2s ease;
-        }
-        .schedule-header {
-            background-color: #FDFBF7;
-            font-weight: bold;
-            color: #1A2B3C;
-            padding: 16px 8px;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-        .schedule-time {
-            background-color: #FDFBF7;
-            font-weight: 500;
-            color: #1A2B3C;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .cell-available {
-            cursor: pointer;
-        }
-        .cell-available:hover {
-            background-color: rgba(197, 160, 89, 0.1);
-        }
-        .cell-booked {
-            background-color: rgba(26, 43, 60, 0.05);
-            cursor: not-allowed;
-        }
-        .cell-selected {
-            background-color: rgba(197, 160, 89, 0.4);
-            border: 1px solid rgba(197, 160, 89, 0.8);
-            cursor: pointer;
-        }
-        
-        /* 自定义滚动条 */
-        .custom-scrollbar::-webkit-scrollbar { height: 8px; width: 8px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(26, 43, 60, 0.1); border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(26, 43, 60, 0.2); }
+        body { background-color: #FDFBF7; color: #1A2B3C; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.5); }
+        .card-hover { transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -10px rgba(26, 43, 60, 0.1); }
+        .fade-in-section { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(30px); }
+        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
     </style>
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="font-sans antialiased selection:bg-brand-accent selection:text-white min-h-screen flex flex-col">
-
-    <!-- Navbar -->
+<body class="font-sans antialiased selection:bg-brand-accent selection:text-white">
     <nav class="fixed w-full z-50 glass py-4 px-6 md:px-12 border-b border-brand-primary/5">
         <div class="max-w-7xl mx-auto relative flex items-center justify-between min-h-[3rem]">
             <a href="/" class="absolute left-0 top-1/2 -translate-y-1/2 flex items-center gap-2 text-sm font-medium text-brand-primary/60 hover:text-brand-accent transition-colors decoration-transparent">
@@ -124,534 +50,265 @@
                 <a href="/study-room.html" class="text-brand-accent transition-colors decoration-transparent">自习室</a>
                 <a href="/ai-eval.html" class="hover:text-brand-accent transition-colors decoration-transparent">AI评估</a>
             </div>
-            <div class="flex items-center gap-6 ml-auto">
-                <span id="user-info" class="text-sm font-medium text-brand-primary/80 hidden"></span>
-                <button id="auth-btn" onclick="goToLogin()" class="px-6 py-2 bg-brand-primary text-brand-bg text-sm font-medium rounded-full btn-hover cursor-pointer border-none outline-none">
-                    登录 / 注册
-                </button>
-                <a href="/" class="text-2xl font-serif font-bold text-brand-primary tracking-tight decoration-transparent hidden md:block">
-                    雅宝<span class="text-brand-accent">.</span>
-                </a>
-            </div>
+            <a href="/" class="ml-auto text-2xl font-serif font-bold text-brand-primary tracking-tight decoration-transparent">
+                雅宝<span class="text-brand-accent">.</span>
+            </a>
         </div>
     </nav>
 
-    <!-- 主体内容区 -->
-    <main class="flex-grow pt-32 pb-24 px-6 md:px-12 max-w-screen-2xl mx-auto w-full">
-        <div class="text-center">
-            
-            <div class="inline-flex items-center justify-center p-4 bg-brand-primary/5 rounded-full mb-8">
-                <i data-lucide="book-open" class="w-12 h-12 text-brand-accent"></i>
+    <section class="pt-32 pb-16 px-6 md:px-12 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-[36rem] h-[36rem] bg-brand-primary/5 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="fade-in-section">
+                <div class="inline-block mb-4 px-4 py-1.5 rounded-full border border-brand-accent/30 text-brand-accent text-xs font-semibold tracking-widest uppercase">
+                    Study Room
+                </div>
+                <h1 class="text-5xl md:text-6xl font-serif font-bold text-brand-primary mb-6">
+                    自习室，<span class="italic text-brand-accent">给学习一块安静专注的空间</span>
+                </h1>
+                <p class="text-lg text-brand-primary/65 leading-relaxed max-w-xl mb-8">
+                    面向备考、自主学习和阶段冲刺人群，雅宝自习室提供稳定、舒适、低干扰的学习环境，让注意力真正沉下来。
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="openBookingModal('自习室')" class="inline-flex items-center justify-center px-7 py-3.5 bg-brand-primary text-white font-medium rounded-full hover:bg-brand-accent transition-colors decoration-transparent cursor-pointer border-none outline-none">
+                        预约到店咨询
+                    </button>
+                    <a href="/#core-services" class="inline-flex items-center justify-center px-7 py-3.5 border border-brand-primary/15 text-brand-primary font-medium rounded-full hover:bg-white transition-colors decoration-transparent">
+                        返回业务入口
+                    </a>
+                </div>
             </div>
-            <h1 class="text-4xl md:text-5xl font-serif font-bold text-brand-primary mb-6">
-                沉浸式<span class="italic text-brand-accent">自习空间</span>
-            </h1>
-            <p class="text-brand-primary/70 text-lg max-w-2xl mx-auto mb-12 leading-relaxed">
-                为您提供安静、舒适、专注的学习环境。点击下方时间格进行预约。
-            </p>
-
-            <!-- 网格预约视图 -->
-            <div class="bg-white rounded-3xl p-6 shadow-xl shadow-brand-primary/5 border border-brand-primary/10 overflow-hidden relative">
-                
-                <div class="flex justify-between items-center mb-6">
-                    <div class="flex items-center gap-4 text-sm font-medium">
-                        <div class="flex items-center gap-2"><div class="w-4 h-4 bg-white border border-gray-200 rounded"></div>可预约</div>
-                        <div class="flex items-center gap-2"><div class="w-4 h-4 bg-brand-primary/5 border border-gray-200 rounded"></div>已被定</div>
-                        <div class="flex items-center gap-2"><div class="w-4 h-4 bg-brand-accent/40 border border-brand-accent/80 rounded"></div>已选中</div>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="changeWeek(-1)" class="p-2 bg-brand-primary/5 hover:bg-brand-primary/10 rounded-lg text-brand-primary transition-colors border-none outline-none cursor-pointer"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
-                        <button onclick="changeWeek(1)" class="p-2 bg-brand-primary/5 hover:bg-brand-primary/10 rounded-lg text-brand-primary transition-colors border-none outline-none cursor-pointer"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
-                        <button onclick="openReserveModal()" id="batch-reserve-btn" class="ml-2 px-4 py-2 bg-brand-accent text-white text-sm font-medium rounded-lg btn-hover border-none outline-none cursor-pointer flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none" disabled>
-                            <i data-lucide="check-square" class="w-4 h-4"></i> 预约所选 (<span id="selected-count">0</span>)
-                        </button>
-                        <button onclick="fetchReservations()" class="ml-2 px-4 py-2 bg-brand-primary text-white text-sm font-medium rounded-lg btn-hover border-none outline-none cursor-pointer flex items-center gap-2">
-                            <i data-lucide="refresh-cw" class="w-4 h-4"></i> 刷新状态
-                        </button>
-                    </div>
-                </div>
-
-                <div id="loading-spinner" class="py-20 text-center text-brand-primary/50 absolute inset-0 bg-white/80 backdrop-blur-sm z-20 flex flex-col items-center justify-center">
-                    <i data-lucide="loader-2" class="w-10 h-10 mx-auto animate-spin mb-4 text-brand-accent"></i>
-                    <p class="font-medium text-lg">加载实时数据中...</p>
-                </div>
-
-                <div class="overflow-x-auto custom-scrollbar pb-4">
-                    <div id="schedule-grid" class="schedule-grid min-w-[900px]">
-                        <!-- JS 将在这里渲染网格 -->
+            <div class="fade-in-section" style="animation-delay: 0.15s;">
+                <div class="bg-brand-primary text-white rounded-[2rem] p-8 md:p-10 shadow-xl">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="rounded-2xl bg-white/10 border border-white/10 p-5">
+                            <div class="text-3xl font-serif font-bold">安静</div>
+                            <div class="mt-2 text-sm text-white/65">低干扰学习氛围</div>
+                        </div>
+                        <div class="rounded-2xl bg-brand-accent text-brand-primary p-5">
+                            <div class="text-3xl font-serif font-bold">专注</div>
+                            <div class="mt-2 text-sm text-brand-primary/70">适合长时段投入</div>
+                        </div>
+                        <div class="rounded-2xl bg-white/10 border border-white/10 p-5">
+                            <div class="text-3xl font-serif font-bold">舒适</div>
+                            <div class="mt-2 text-sm text-white/65">桌椅灯光更友好</div>
+                        </div>
+                        <div class="rounded-2xl bg-white/10 border border-white/10 p-5">
+                            <div class="text-3xl font-serif font-bold">灵活</div>
+                            <div class="mt-2 text-sm text-white/65">按需求安排时段</div>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
-    </main>
+    </section>
 
-    <!-- 预定表单弹窗 -->
-    <div id="reserve-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeReserveModal()"></div>
-        <div class="modal-content relative w-full max-w-md bg-white/90 backdrop-blur-xl border border-white/50 rounded-3xl shadow-2xl overflow-hidden z-10">
-            <div class="px-8 py-6 border-b border-brand-primary/10 flex justify-between items-center bg-white/50">
-                <div>
-                    <h3 class="text-2xl font-serif font-bold text-brand-primary">确认预约</h3>
-                    <p class="text-sm text-brand-primary/60 mt-1" id="reserve-time-label">请确认您的预约时间</p>
+    <section class="pb-24 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-[2rem] p-8 border border-brand-primary/5 card-hover fade-in-section">
+                <div class="w-14 h-14 rounded-2xl bg-brand-accent/10 text-brand-accent flex items-center justify-center mb-6">
+                    <i data-lucide="lamp-desk" class="w-7 h-7"></i>
                 </div>
-                <button onclick="closeReserveModal()" class="w-10 h-10 flex items-center justify-center rounded-full bg-brand-primary/5 text-brand-primary/50 hover:text-brand-primary hover:bg-brand-primary/10 transition-colors border-none cursor-pointer outline-none">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-4">沉浸环境</h3>
+                <p class="text-sm leading-relaxed text-brand-primary/70">相较于家里和咖啡馆，自习室更适合稳定投入，帮助学习状态更容易进入正轨。</p>
             </div>
+            <div class="bg-white rounded-[2rem] p-8 border border-brand-primary/5 card-hover fade-in-section" style="animation-delay: 0.1s;">
+                <div class="w-14 h-14 rounded-2xl bg-brand-accent/10 text-brand-accent flex items-center justify-center mb-6">
+                    <i data-lucide="clock-3" class="w-7 h-7"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-4">节奏稳定</h3>
+                <p class="text-sm leading-relaxed text-brand-primary/70">适合期中期末、考研考公、语言备考等阶段性冲刺，让复习安排更有连续性。</p>
+            </div>
+            <div class="bg-white rounded-[2rem] p-8 border border-brand-primary/5 card-hover fade-in-section" style="animation-delay: 0.2s;">
+                <div class="w-14 h-14 rounded-2xl bg-brand-accent/10 text-brand-accent flex items-center justify-center mb-6">
+                    <i data-lucide="map-pinned" class="w-7 h-7"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-4">到店方便</h3>
+                <p class="text-sm leading-relaxed text-brand-primary/70">可先咨询场地情况、开放时段和学习安排，再决定适合自己的使用方式。</p>
+            </div>
+        </div>
+    </section>
 
-            <div class="p-8 relative">
-                <div class="absolute top-0 right-0 w-48 h-48 bg-brand-accent/5 rounded-full blur-3xl pointer-events-none -z-10"></div>
-                
-                <form id="study-room-form" onsubmit="submitReservation(event)" class="space-y-6">
-                    <input type="hidden" id="r-selected-slots">
+    <section class="pb-32 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto bg-white rounded-[2rem] p-10 md:p-14 border border-brand-primary/5">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                <div>
+                    <div class="text-[11px] font-bold tracking-[0.25em] uppercase text-brand-accent mb-3">Who Is It For</div>
+                    <h2 class="text-4xl font-serif font-bold text-brand-primary mb-6">适合这些学习状态</h2>
+                    <ul class="space-y-4 text-sm text-brand-primary/75">
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-accent shrink-0"></i> 在家学习总被打断，想要更稳定的专注空间</li>
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-accent shrink-0"></i> 正处在考试、备考或项目冲刺阶段，需要固定节奏</li>
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-accent shrink-0"></i> 想先了解环境和安排，再决定是否长期使用</li>
+                    </ul>
+                </div>
+                <div class="bg-brand-bg rounded-[1.5rem] p-8 border border-brand-primary/5">
+                    <div class="text-sm uppercase tracking-[0.25em] text-brand-accent mb-3">Personal Plan</div>
+                    <div class="text-3xl font-serif font-bold text-brand-primary mb-4">先了解空间，再决定学习计划</div>
+                    <p class="text-sm text-brand-primary/65 leading-relaxed mb-6">先确认您的使用时间、学习目标和到店频率，再安排更适合的时段建议和使用方式。</p>
+                    <button onclick="openBookingModal('自习室')" class="inline-flex items-center px-6 py-3 bg-brand-accent text-white text-sm font-medium rounded-xl hover:bg-brand-primary transition-colors decoration-transparent cursor-pointer border-none outline-none">
+                        预约到店了解
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                    <div class="bg-brand-primary/5 rounded-xl p-4 max-h-32 overflow-y-auto custom-scrollbar text-sm text-brand-primary/80 mb-6" id="selected-slots-display">
-                        <!-- JS 渲染选中的时间段 -->
-                    </div>
+    <footer class="py-10 bg-[#FDFBF7] border-t border-brand-primary/5 text-center px-6">
+        <p class="text-sm text-brand-primary/50">&copy; 2024 雅宝教育工作室 Yabao Education Studio. All rights reserved.</p>
+    </footer>
 
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">预约人姓名 <span class="text-red-500">*</span></label>
-                        <div class="relative">
-                            <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
-                            <input type="text" id="r-name" required placeholder="您的姓名" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all text-sm">
-                        </div>
+    <div id="booking-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none">
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeBookingModal()"></div>
+        <div class="modal-content relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden z-10 transform scale-95 transition-transform duration-300">
+            <div class="p-8">
+                <button onclick="closeBookingModal()" class="absolute top-6 right-6 text-brand-primary/50 hover:text-brand-primary transition-colors bg-transparent border-none outline-none cursor-pointer">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-2">预约咨询</h3>
+                <p class="text-sm text-brand-primary/60 mb-6">请留下您的联系方式，我们的顾问老师会尽快与您联系。</p>
+                <form id="booking-form" onsubmit="submitBooking(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">家长/学生姓名</label>
+                        <input type="text" id="book-name" required class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary">
                     </div>
-                    
-                    <div class="space-y-1">
-                        <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-wider">联系电话 <span class="text-red-500">*</span></label>
-                        <div class="relative">
-                            <i data-lucide="phone" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-primary/40"></i>
-                            <input type="tel" id="r-phone" required placeholder="您的手机号" class="w-full pl-11 pr-4 py-3 bg-white/80 border border-brand-primary/10 rounded-xl focus:outline-none focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 text-brand-primary transition-all text-sm">
-                        </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">联系电话</label>
+                        <input type="tel" id="book-phone" required class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary">
                     </div>
-
-                    <div class="pt-4 border-t border-brand-primary/10">
-                        <button type="submit" id="submit-btn" class="w-full py-4 bg-brand-accent text-white font-medium rounded-xl btn-hover border-none cursor-pointer flex justify-center items-center gap-2 shadow-lg shadow-brand-accent/20">
-                            <i data-lucide="calendar-check" class="w-5 h-5"></i>
-                            <span>确认预约</span>
-                        </button>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">意向课程</label>
+                        <select id="book-course" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary appearance-none">
+                            <option value="自习室">自习室预约咨询</option>
+                            <option value="K12全科">K12 全科功课辅导</option>
+                            <option value="成人英语">成人英语特训</option>
+                            <option value="其他咨询">其他咨询</option>
+                        </select>
                     </div>
+                    <button type="submit" id="book-submit-btn" class="w-full mt-4 py-4 bg-brand-primary text-brand-bg font-medium rounded-xl hover:!bg-brand-primary shadow-lg border-none outline-none cursor-pointer flex justify-center items-center">
+                        <span>提交预约信息</span>
+                    </button>
                 </form>
+                <div id="booking-success" class="hidden flex-col items-center justify-center py-8">
+                    <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                        <i data-lucide="check" class="w-8 h-8"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-brand-primary mb-2">预约成功！</h4>
+                    <p class="text-sm text-center text-brand-primary/70">感谢您的信任，我们的教务老师会尽快致电您。</p>
+                    <button onclick="closeBookingModal()" class="mt-6 px-8 py-3 bg-brand-bg border border-brand-primary/20 text-brand-primary font-medium rounded-lg hover:bg-brand-primary/5 transition-colors cursor-pointer border-none outline-none">
+                        关闭
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- 提示弹窗 -->
-    <div id="alert-modal" class="modal fixed inset-0 z-[110] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeAlertModal()"></div>
-        <div class="modal-content relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden z-10">
+    <div id="error-modal" class="fixed inset-0 z-[110] flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none">
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeErrorModal()"></div>
+        <div class="modal-content relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden z-10 transform scale-95 transition-transform duration-300">
             <div class="p-8 text-center">
-                <div id="alert-icon-container" class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i id="alert-icon" data-lucide="info" class="w-8 h-8"></i>
+                <div class="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="alert-circle" class="w-8 h-8"></i>
                 </div>
-                <h3 id="alert-title" class="text-xl font-bold text-brand-primary mb-2">提示</h3>
-                <p id="alert-message" class="text-sm text-brand-primary/70 mb-6 leading-relaxed"></p>
-                <button onclick="closeAlertModal()" id="alert-btn" class="w-full py-3 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer">
+                <h3 class="text-xl font-bold text-brand-primary mb-2">提示</h3>
+                <p id="error-modal-message" class="text-sm text-brand-primary/70 mb-6">电话号码格式不正确，请重新输入。</p>
+                <button onclick="closeErrorModal()" class="w-full py-3 bg-brand-primary text-brand-bg font-medium rounded-xl hover:!bg-brand-primary shadow-lg border-none outline-none cursor-pointer">
                     我知道了
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- 确认弹窗 -->
-    <div id="confirm-modal" class="modal fixed inset-0 z-[110] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeConfirmModal()"></div>
-        <div class="modal-content relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden z-10">
-            <div class="p-8 text-center">
-                <div class="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i data-lucide="alert-triangle" class="w-8 h-8"></i>
-                </div>
-                <h3 id="confirm-title" class="text-xl font-bold text-brand-primary mb-2">确认操作</h3>
-                <p id="confirm-message" class="text-sm text-brand-primary/70 mb-6 leading-relaxed"></p>
-                <div class="flex gap-4">
-                    <button onclick="closeConfirmModal()" class="flex-1 py-3 bg-brand-primary/5 hover:bg-brand-primary/10 text-brand-primary font-medium rounded-xl transition-colors border-none cursor-pointer">
-                        取消
-                    </button>
-                    <button id="confirm-btn" class="flex-1 py-3 bg-red-500 hover:bg-red-600 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer">
-                        确定
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 悬浮预约条 -->
-    <div id="floating-reserve-bar" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[90] bg-white/90 backdrop-blur-md px-6 py-4 rounded-2xl shadow-2xl border border-brand-accent/30 flex items-center gap-6 transition-all duration-300 translate-y-24 opacity-0 pointer-events-none">
-        <div class="flex flex-col">
-            <span class="text-sm text-brand-primary/70">已选择时间段</span>
-            <span class="text-lg font-bold text-brand-primary"><span id="floating-count" class="text-brand-accent">0</span> 个时段</span>
-        </div>
-        <button onclick="openReserveModal()" class="px-8 py-3 bg-brand-accent text-white font-bold rounded-xl btn-hover border-none cursor-pointer shadow-lg shadow-brand-accent/30 flex items-center gap-2">
-            <i data-lucide="calendar-check" class="w-5 h-5"></i> 立即预约
-        </button>
-    </div>
-
     <script>
         lucide.createIcons();
 
-        // 自定义弹窗 API
-        function customAlert(title, message, type = 'info') {
-            const modal = document.getElementById('alert-modal');
-            const iconContainer = document.getElementById('alert-icon-container');
-            const icon = document.getElementById('alert-icon');
-            const btn = document.getElementById('alert-btn');
-            
-            document.getElementById('alert-title').innerText = title;
-            document.getElementById('alert-message').innerHTML = message.replace(/\n/g, '<br>');
-            
-            if (type === 'error') {
-                iconContainer.className = 'w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4';
-                icon.setAttribute('data-lucide', 'x-circle');
-                btn.className = 'w-full py-3 bg-red-500 hover:bg-red-600 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer';
-            } else if (type === 'success') {
-                iconContainer.className = 'w-16 h-16 bg-green-50 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4';
-                icon.setAttribute('data-lucide', 'check-circle');
-                btn.className = 'w-full py-3 bg-green-500 hover:bg-green-600 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer';
-            } else {
-                iconContainer.className = 'w-16 h-16 bg-brand-primary/5 text-brand-primary rounded-full flex items-center justify-center mx-auto mb-4';
-                icon.setAttribute('data-lucide', 'info');
-                btn.className = 'w-full py-3 bg-brand-primary hover:bg-brand-primary/90 text-white font-medium rounded-xl btn-hover shadow-lg border-none cursor-pointer';
+        const bookingModal = document.getElementById('booking-modal');
+        const courseSelect = document.getElementById('book-course');
+
+        function openBookingModal(defaultCourse) {
+            if (defaultCourse) {
+                courseSelect.value = defaultCourse;
             }
-            
-            lucide.createIcons();
-            modal.classList.add('active');
-        }
-        
-        function closeAlertModal() {
-            document.getElementById('alert-modal').classList.remove('active');
+            bookingModal.classList.remove('opacity-0', 'pointer-events-none');
+            bookingModal.querySelector('.modal-content').classList.remove('scale-95');
+            bookingModal.querySelector('.modal-content').classList.add('scale-100');
+            document.body.style.overflow = 'hidden';
         }
 
-        function customConfirm(title, message, onConfirm) {
-            const modal = document.getElementById('confirm-modal');
-            document.getElementById('confirm-title').innerText = title;
-            document.getElementById('confirm-message').innerHTML = message.replace(/\n/g, '<br>');
-            
-            const confirmBtn = document.getElementById('confirm-btn');
-            // Remove previous event listeners
-            const newBtn = confirmBtn.cloneNode(true);
-            confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
-            
-            newBtn.addEventListener('click', () => {
-                closeConfirmModal();
-                if (onConfirm) onConfirm();
-            });
-            
-            lucide.createIcons();
-            modal.classList.add('active');
+        function closeBookingModal() {
+            bookingModal.classList.add('opacity-0', 'pointer-events-none');
+            bookingModal.querySelector('.modal-content').classList.add('scale-95');
+            bookingModal.querySelector('.modal-content').classList.remove('scale-100');
+            document.body.style.overflow = '';
+
+            setTimeout(() => {
+                document.getElementById('booking-form').reset();
+                document.getElementById('booking-form').style.display = 'block';
+                document.getElementById('booking-success').style.display = 'none';
+                document.getElementById('booking-success').classList.remove('flex');
+            }, 300);
         }
 
-        function closeConfirmModal() {
-            document.getElementById('confirm-modal').classList.remove('active');
-        }
+        const errorModal = document.getElementById('error-modal');
 
-        async function cancelReservation(id, date, timeSlot) {
-            customConfirm(
-                '取消预定',
-                `您确定要取消 ${date} ${timeSlot} 的自习室预定吗？`,
-                async () => {
-                    try {
-                        const res = await apiFetch('/api/study-room/cancel', {
-                            method: 'POST',
-                            body: JSON.stringify({ id })
-                        });
-                        const data = await res.json();
-                        if (res.ok && data.success) {
-                            customAlert('取消成功', '您的预定已成功取消。', 'success');
-                            fetchReservations(); // 刷新网格
-                        } else {
-                            customAlert('取消失败', data.error || '无法取消预定，请稍后再试。', 'error');
-                        }
-                    } catch (e) {
-                        customAlert('网络错误', '请检查您的网络连接', 'error');
-                    }
-                }
-            );
-        }
-
-        // 鉴权拦截器
-        function getToken() { return localStorage.getItem('tutor_token'); }
-        function getEmail() { return localStorage.getItem('tutor_email'); }
-        
-        function initUI() {
-            const token = getToken();
-            const email = getEmail();
-            const authBtn = document.getElementById('auth-btn');
-            const userInfo = document.getElementById('user-info');
-            
-            if (token && email) {
-                userInfo.innerText = email;
-                userInfo.style.display = 'block';
-                authBtn.innerText = '退出登录';
-                authBtn.onclick = logout;
-                authBtn.classList.replace('bg-brand-primary', 'bg-transparent');
-                authBtn.classList.replace('text-brand-bg', 'text-brand-primary');
-                authBtn.classList.add('border', 'border-brand-primary/20');
-            } else {
-                userInfo.style.display = 'none';
-                authBtn.innerText = '登录 / 注册';
-                authBtn.onclick = goToLogin;
-                authBtn.classList.replace('bg-transparent', 'bg-brand-primary');
-                authBtn.classList.replace('text-brand-primary', 'text-brand-bg');
-                authBtn.classList.remove('border', 'border-brand-primary/20');
-            }
-        }
-
-        function goToLogin() {
-            // 跳转回主页并可能通过 hash 触发登录弹窗
-            window.location.href = '/#login';
-        }
-
-        function logout() {
-            customConfirm('退出登录', '您确定要退出当前账号吗？', () => {
-                localStorage.removeItem('tutor_token');
-                localStorage.removeItem('tutor_email');
-                initUI();
-                // 退出登录后清空选中状态并重新渲染
-                selectedCells = [];
-                fetchReservations();
-            });
-        }
-
-        let currentWeekOffset = 0;
-        let reservationsData = [];
-        let selectedCells = []; // 存储选中的单元格信息 {date, timeSlot}
-        
-        const timeSlots = [
-            "08:00-09:00", "09:00-10:00", "10:00-11:00", "11:00-12:00",
-            "12:00-13:00", "13:00-14:00", "14:00-15:00", "15:00-16:00",
-            "16:00-17:00", "17:00-18:00", "18:00-19:00", "19:00-20:00",
-            "20:00-21:00", "21:00-22:00"
-        ];
-
-        function getDatesForWeek(offset) {
-            const dates = [];
-            const today = new Date();
-            // Get the day of the week (0-6), where 0 is Sunday. Convert to 1-7 (Monday-Sunday)
-            const dayOfWeek = today.getDay() === 0 ? 7 : today.getDay();
-            // Calculate Monday of the current week
-            const startDay = new Date(today);
-            startDay.setDate(today.getDate() - dayOfWeek + 1 + (offset * 7));
-            
-            for (let i = 0; i < 7; i++) {
-                const d = new Date(startDay);
-                d.setDate(startDay.getDate() + i);
-                dates.push(d);
-            }
-            return dates;
-        }
-
-        function formatDate(date) {
-            return date.toISOString().split('T')[0];
-        }
-
-        function changeWeek(delta) {
-            // 不允许查看过去的周
-            if (currentWeekOffset + delta < 0) return;
-            currentWeekOffset += delta;
-            renderGrid();
-        }
-
-        // 限制日期只能选今天及以后
-        document.addEventListener('DOMContentLoaded', () => {
-            initUI();
-            fetchReservations(); // 加载预定列表并渲染网格
-        });
-
-        // 统一 Fetch 方法 (处理未登录)
-        async function apiFetch(url, options = {}) {
-            const token = getToken();
-            const headers = { 'Content-Type': 'application/json', ...options.headers };
-            if (token) headers['Authorization'] = `Bearer ${token}`;
-            
-            const response = await fetch(url, { ...options, headers });
-            if (response.status === 401) {
-                logout();
-                goToLogin();
-                throw new Error('Unauthorized');
-            }
-            return response;
-        }
-
-        // 获取并渲染预定列表
-        async function fetchReservations() {
-            document.getElementById('loading-spinner').style.display = 'flex';
-            document.getElementById('schedule-grid').innerHTML = '';
-            
-            try {
-                const res = await fetch('/api/study-room/reservations');
-                const data = await res.json();
-                
-                document.getElementById('loading-spinner').style.display = 'none';
-                
-                if (res.ok && data.success) {
-                    reservationsData = data.data;
-                } else {
-                    reservationsData = [];
-                }
-                renderGrid();
-            } catch (e) {
-                document.getElementById('loading-spinner').style.display = 'none';
-                console.error("加载预定失败", e);
-                renderGrid(); // Render empty grid on error
-            }
-        }
-
-        function renderGrid() {
-            const grid = document.getElementById('schedule-grid');
-            const dates = getDatesForWeek(currentWeekOffset);
-            const currentUserEmail = getEmail();
-            
-            const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-            
-            let html = `
-                <div class="schedule-header">时间</div>
-            `;
-            
-            dates.forEach(d => {
-                html += `<div class="schedule-header text-center">
-                    <div class="text-xs text-brand-primary/60 mb-1">${formatDate(d).slice(5)}</div>
-                    <div>${days[d.getDay()]}</div>
-                </div>`;
-            });
-
-            timeSlots.forEach(slot => {
-                // Time column
-                html += `<div class="schedule-time">${slot.split('-')[0]}</div>`;
-                
-                // Days columns
-                dates.forEach(d => {
-                    const dateStr = formatDate(d);
-                    const res = reservationsData.find(r => r.date === dateStr && r.timeSlot === slot);
-                    
-                    if (res) {
-                        const isMyBooked = res.userEmail === currentUserEmail;
-                        const cellClass = isMyBooked ? 'cell-my-booked' : 'cell-booked';
-                        const displayText = isMyBooked ? '我定的' : res.name;
-                        html += `<div class="schedule-cell ${cellClass} flex items-center justify-center text-xs font-medium" title="已被 ${res.name} 预定">
-                            ${displayText}
-                        </div>`;
-                    } else {
-                        // 检查是否已被选中
-                        const isSelected = selectedCells.some(c => c.date === dateStr && c.timeSlot === slot);
-                        const cellClass = isSelected ? 'cell-selected' : 'cell-available';
-                        const content = isSelected ? '<i data-lucide="check" class="w-4 h-4 text-brand-accent"></i>' : '<span class="opacity-0 hover:opacity-100 transition-opacity text-brand-accent font-medium text-xs">可预约</span>';
-                        
-                        html += `<div class="schedule-cell ${cellClass} flex items-center justify-center" onclick="toggleCellSelection('${dateStr}', '${slot}')">
-                            ${content}
-                        </div>`;
-                    }
-                });
-            });
-
-            grid.innerHTML = html;
-            updateBatchButton();
+        function showErrorModal(message) {
+            document.getElementById('error-modal-message').innerText = message;
+            errorModal.classList.remove('opacity-0', 'pointer-events-none');
+            errorModal.querySelector('.modal-content').classList.remove('scale-95');
+            errorModal.querySelector('.modal-content').classList.add('scale-100');
             lucide.createIcons();
         }
 
-        function toggleCellSelection(dateStr, timeSlot) {
-            const index = selectedCells.findIndex(c => c.date === dateStr && c.timeSlot === timeSlot);
-            if (index > -1) {
-                // Deselect
-                selectedCells.splice(index, 1);
-            } else {
-                // Select
-                selectedCells.push({ date: dateStr, timeSlot });
-            }
-            renderGrid(); // Re-render to update UI
+        function closeErrorModal() {
+            errorModal.classList.add('opacity-0', 'pointer-events-none');
+            errorModal.querySelector('.modal-content').classList.add('scale-95');
+            errorModal.querySelector('.modal-content').classList.remove('scale-100');
         }
 
-        function updateBatchButton() {
-            const btn = document.getElementById('batch-reserve-btn');
-            const countSpan = document.getElementById('selected-count');
-            const floatingBar = document.getElementById('floating-reserve-bar');
-            const floatingCount = document.getElementById('floating-count');
-            
-            countSpan.innerText = selectedCells.length;
-            floatingCount.innerText = selectedCells.length;
-            btn.disabled = selectedCells.length === 0;
-            
-            if (selectedCells.length > 0) {
-                floatingBar.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
-                floatingBar.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
-            } else {
-                floatingBar.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
-                floatingBar.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
-            }
-        }
+        async function submitBooking(event) {
+            event.preventDefault();
 
-        function openReserveModal() {
-            if (!getToken()) {
-                return customAlert('提示', '请先登录后再进行预约', 'info');
-            }
-            if (selectedCells.length === 0) return;
-
-            // 排序选中的时间段，方便展示
-            const sortedCells = [...selectedCells].sort((a, b) => {
-                if (a.date !== b.date) return a.date.localeCompare(b.date);
-                return a.timeSlot.localeCompare(b.timeSlot);
-            });
-
-            document.getElementById('r-selected-slots').value = JSON.stringify(sortedCells);
-            document.getElementById('reserve-time-label').innerText = `已选择 ${sortedCells.length} 个时间段`;
-            
-            // 渲染选中的时间段到展示区域
-            const displayArea = document.getElementById('selected-slots-display');
-            let displayHtml = '<ul class="space-y-2">';
-            sortedCells.forEach(cell => {
-                displayHtml += `<li class="flex items-center gap-2"><i data-lucide="check-circle-2" class="w-4 h-4 text-brand-accent"></i> ${cell.date} ${cell.timeSlot}</li>`;
-            });
-            displayHtml += '</ul>';
-            displayArea.innerHTML = displayHtml;
-            
-            lucide.createIcons();
-            document.getElementById('reserve-modal').classList.add('active');
-        }
-
-        function closeReserveModal() {
-            document.getElementById('reserve-modal').classList.remove('active');
-        }
-
-        async function submitReservation(e) {
-            e.preventDefault();
-            if (!getToken()) {
-                return goToLogin();
-            }
-
-            const btn = document.getElementById('submit-btn');
-            const originalHtml = btn.innerHTML;
-            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i><span>提交中...</span>';
+            const btn = document.getElementById('book-submit-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> <span class="ml-2">提交中...</span>';
             lucide.createIcons();
             btn.disabled = true;
+            btn.style.opacity = '0.7';
 
             const payload = {
-                selectedSlots: JSON.parse(document.getElementById('r-selected-slots').value),
-                name: document.getElementById('r-name').value,
-                phone: document.getElementById('r-phone').value,
+                name: document.getElementById('book-name').value,
+                phone: document.getElementById('book-phone').value,
+                course: document.getElementById('book-course').value,
             };
 
             try {
-                const res = await apiFetch('/api/study-room/reserve', {
+                const response = await fetch('/api/appointment', {
                     method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify(payload)
                 });
-                
-                const data = await res.json();
-                if (res.ok && data.success) {
-                    closeReserveModal();
-                    customAlert('预约成功', '您的自习室预约已提交，请准时前往。', 'success');
-                    document.getElementById('study-room-form').reset();
-                    selectedCells = []; // 清空选中状态
-                    fetchReservations(); // 刷新网格
+
+                if (response.ok) {
+                    document.getElementById('booking-form').style.display = 'none';
+                    const successDiv = document.getElementById('booking-success');
+                    successDiv.style.display = 'flex';
+                    successDiv.classList.add('flex');
                 } else {
-                    customAlert('预约失败', data.error || '无法提交预约，请稍后再试。', 'error');
+                    let errorMsg = '提交失败，请稍后再试或直接电话联系我们。';
+                    try {
+                        const result = await response.json();
+                        if (result.error) errorMsg = result.error;
+                    } catch (e) {}
+                    showErrorModal(errorMsg);
                 }
-            } catch (e) {
-                customAlert('网络错误', '请检查您的网络连接', 'error');
+            } catch (error) {
+                console.error('Error submitting booking:', error);
+                showErrorModal('网络错误，请检查您的连接。');
             } finally {
-                btn.innerHTML = originalHtml;
-                lucide.createIcons();
+                btn.innerHTML = originalText;
                 btn.disabled = false;
+                btn.style.opacity = '1';
             }
         }
     </script>
