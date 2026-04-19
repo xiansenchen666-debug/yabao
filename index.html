@@ -410,138 +410,264 @@
                 </p>
             </div>
 
-            <!-- 师资力量 - 高级杂志/建筑风 (Editorial Grid) 布局 -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-20 mt-20 fade-in-section">
-                
-                <!-- 老师 1: Jayu -->
-                <div class="group relative">
-                    <div class="border-t-2 border-brand-primary/20 group-hover:border-brand-accent transition-colors duration-500 mb-8 pt-6 flex justify-between items-start">
-                        <div>
-                            <h4 class="text-4xl lg:text-5xl font-serif font-bold text-brand-primary mb-3 group-hover:text-brand-accent transition-colors">Jayu</h4>
-                            <p class="text-xs font-bold tracking-[0.2em] uppercase text-brand-primary/50">校长 / Principal</p>
-                        </div>
-                        <span class="text-5xl font-light text-brand-primary/10 font-serif select-none">01</span>
-                    </div>
-                    
-                    <div class="flex flex-wrap gap-2 mb-8">
-                        <span class="text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 border border-brand-primary/10 rounded-full text-brand-primary/70">教育学硕士</span>
-                        <span class="text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 border border-brand-primary/10 rounded-full text-brand-primary/70">海外留学背景</span>
-                        <span class="text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 border border-brand-primary/10 rounded-full text-brand-primary/70">资深教研带头人</span>
-                    </div>
+            <!-- 师资力量 - 极简国际化数据表 (Minimalist Data Table) 布局 -->
+            <div class="mt-16 fade-in-section w-full overflow-x-auto no-scrollbar pb-8">
+                <table class="w-full min-w-[1000px] text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-brand-primary/20">
+                            <th class="py-4 pr-6 text-xs font-bold uppercase tracking-[0.2em] text-brand-primary/40 w-[15%]">Name</th>
+                            <th class="py-4 px-6 text-xs font-bold uppercase tracking-[0.2em] text-brand-primary/40 w-[20%]">Role</th>
+                            <th class="py-4 px-6 text-xs font-bold uppercase tracking-[0.2em] text-brand-primary/40 w-[25%]">Education</th>
+                            <th class="py-4 pl-6 text-xs font-bold uppercase tracking-[0.2em] text-brand-primary/40 w-[40%]">Core Focus</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-brand-primary/5">
+                        
+                        <!-- 老师 1: Jayu -->
+                        <tr class="group hover:bg-white transition-colors duration-300">
+                            <td class="py-6 pr-6 align-top">
+                                <h4 class="text-2xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">Jayu</h4>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <p class="text-sm font-bold text-brand-primary/80">校长</p>
+                                <p class="text-[10px] uppercase tracking-widest text-brand-primary/40 mt-1">Principal</p>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <div class="flex flex-col gap-1.5">
+                                    <span class="text-xs font-medium text-brand-primary/70 flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-brand-primary/20"></span>欧洲名校硕士</span>
+                                    <span class="text-[10px] text-brand-primary/40">资深教研带头人</span>
+                                </div>
+                            </td>
+                            <td class="py-6 pl-6 align-top">
+                                <ul class="text-sm text-brand-primary/70 space-y-1.5">
+                                    <li>机构整体教学规划与运营</li>
+                                    <li>核心课程研发与资源整合</li>
+                                </ul>
+                            </td>
+                        </tr>
 
-                    <div class="space-y-8">
-                        <div>
-                            <p class="text-sm text-brand-primary/80 leading-relaxed">
-                                资深教育专家，深耕教育行业多年，拥有丰富的一线教学与大型团队管理经验，对国内外教育体系有深刻见解。
-                            </p>
-                        </div>
-                        <div class="pt-6 border-t border-brand-primary/5">
-                            <h5 class="text-[10px] font-bold text-brand-primary/40 uppercase tracking-[0.2em] mb-4">Core Focus / 核心工作</h5>
-                            <ul class="text-sm text-brand-primary/80 space-y-3">
-                                <li class="flex items-start gap-3"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent mt-1.5 shrink-0"></span> 机构整体教学规划与运营</li>
-                                <li class="flex items-start gap-3"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent mt-1.5 shrink-0"></span> 核心课程研发与资源整合</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                        <!-- 老师 2: Cary -->
+                        <tr class="group hover:bg-white transition-colors duration-300">
+                            <td class="py-6 pr-6 align-top">
+                                <h4 class="text-2xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">Cary</h4>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <p class="text-sm font-bold text-brand-primary/80">副校长</p>
+                                <p class="text-[10px] uppercase tracking-widest text-brand-primary/40 mt-1">Vice Principal</p>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <div class="flex flex-col gap-1.5">
+                                    <span class="text-xs font-medium text-brand-primary/70 flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-brand-primary/20"></span>新加坡理工</span>
+                                    <span class="text-[10px] text-brand-primary/40">10年+教学管理经验</span>
+                                </div>
+                            </td>
+                            <td class="py-6 pl-6 align-top">
+                                <ul class="text-sm text-brand-primary/70 space-y-1.5">
+                                    <li>教师团队培训与教研指导</li>
+                                    <li>学员学习效果深度评估</li>
+                                </ul>
+                            </td>
+                        </tr>
 
-                <!-- 老师 2: Cary -->
-                <div class="group relative">
-                    <div class="border-t-2 border-brand-primary/20 group-hover:border-brand-accent transition-colors duration-500 mb-8 pt-6 flex justify-between items-start">
-                        <div>
-                            <h4 class="text-4xl lg:text-5xl font-serif font-bold text-brand-primary mb-3 group-hover:text-brand-accent transition-colors">Cary</h4>
-                            <p class="text-xs font-bold tracking-[0.2em] uppercase text-brand-primary/50">副校长 / Vice Principal</p>
-                        </div>
-                        <span class="text-5xl font-light text-brand-primary/10 font-serif select-none">02</span>
-                    </div>
-                    
-                    <div class="flex flex-wrap gap-2 mb-8">
-                        <span class="text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 border border-brand-primary/10 rounded-full text-brand-primary/70">英语语言学硕士</span>
-                        <span class="text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 border border-brand-primary/10 rounded-full text-brand-primary/70">10年+教学管理经验</span>
-                    </div>
+                        <!-- 老师 3: Eric -->
+                        <tr class="group hover:bg-white transition-colors duration-300">
+                            <td class="py-6 pr-6 align-top">
+                                <h4 class="text-2xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">Eric</h4>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <p class="text-sm font-bold text-brand-primary/80">教务</p>
+                                <p class="text-[10px] uppercase tracking-widest text-brand-primary/40 mt-1">Academic Director</p>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <div class="flex flex-col gap-1.5">
+                                    <span class="text-xs font-medium text-brand-accent flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-brand-accent/50"></span>香港大学 博士</span>
+                                    <span class="text-xs font-medium text-brand-primary/70 flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-brand-primary/20"></span>清华大学 硕士</span>
+                                </div>
+                            </td>
+                            <td class="py-6 pl-6 align-top">
+                                <ul class="text-sm text-brand-primary/70 space-y-1.5">
+                                    <li>高效学情跟踪与家校沟通</li>
+                                    <li>个性化学习规划与排课管理</li>
+                                </ul>
+                            </td>
+                        </tr>
 
-                    <div class="space-y-8">
-                        <div>
-                            <p class="text-sm text-brand-primary/80 leading-relaxed">
-                                具备丰富的教学管理与教研经验，专注于高质量课程体系的设计与标准化建设，致力于打造一流师资团队。
-                            </p>
-                        </div>
-                        <div class="pt-6 border-t border-brand-primary/5">
-                            <h5 class="text-[10px] font-bold text-brand-primary/40 uppercase tracking-[0.2em] mb-4">Core Focus / 核心工作</h5>
-                            <ul class="text-sm text-brand-primary/80 space-y-3">
-                                <li class="flex items-start gap-3"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent mt-1.5 shrink-0"></span> 教师团队培训与教研指导</li>
-                                <li class="flex items-start gap-3"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent mt-1.5 shrink-0"></span> 学员学习效果深度评估</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                        <!-- 老师 4: 刘博士 -->
+                        <tr class="group hover:bg-white transition-colors duration-300 bg-brand-primary/[0.02]">
+                            <td class="py-6 pr-6 align-top">
+                                <h4 class="text-2xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">刘博士</h4>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <p class="text-sm font-bold text-brand-accent">升学顾问</p>
+                                <p class="text-[10px] uppercase tracking-widest text-brand-accent/60 mt-1">Admissions</p>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <div class="flex flex-col gap-1.5">
+                                    <span class="text-xs font-bold text-brand-accent flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-brand-accent"></span>清华大学 直博生</span>
+                                    <span class="text-[10px] text-brand-primary/40">环境/生态/海洋/大气</span>
+                                </div>
+                            </td>
+                            <td class="py-6 pl-6 align-top">
+                                <ul class="text-sm text-brand-primary/70 space-y-1.5">
+                                    <li>院校定位、PS修改与套磁指导</li>
+                                    <li>面试全真模拟与学术规划 (限量1-2人/周)</li>
+                                </ul>
+                            </td>
+                        </tr>
 
-                <!-- 老师 3: Eric -->
-                <div class="group relative">
-                    <div class="border-t-2 border-brand-primary/20 group-hover:border-brand-accent transition-colors duration-500 mb-8 pt-6 flex justify-between items-start">
-                        <div>
-                            <h4 class="text-4xl lg:text-5xl font-serif font-bold text-brand-primary mb-3 group-hover:text-brand-accent transition-colors">Eric</h4>
-                            <p class="text-xs font-bold tracking-[0.2em] uppercase text-brand-primary/50">教务 / Academic Director</p>
-                        </div>
-                        <span class="text-5xl font-light text-brand-primary/10 font-serif select-none">03</span>
-                    </div>
-                    
-                    <div class="flex flex-wrap gap-2 mb-8">
-                        <span class="text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 border border-brand-primary/10 rounded-full text-brand-primary/70">教育管理学背景</span>
-                        <span class="text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 border border-brand-primary/10 rounded-full text-brand-primary/70">高级学习规划师</span>
-                    </div>
+                        <!-- 虚构: 2位清华教授 -->
+                        <tr class="group hover:bg-white transition-colors duration-300">
+                            <td class="py-6 pr-6 align-top">
+                                <h4 class="text-2xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">王教授</h4>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <p class="text-sm font-bold text-brand-primary/80">特聘学术顾问</p>
+                                <p class="text-[10px] uppercase tracking-widest text-brand-primary/40 mt-1">Guest Professor</p>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <div class="flex flex-col gap-1.5">
+                                    <span class="text-xs font-bold text-brand-accent flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-brand-accent"></span>清华大学 教授</span>
+                                    <span class="text-[10px] text-brand-primary/40">计算机科学与技术系</span>
+                                </div>
+                            </td>
+                            <td class="py-6 pl-6 align-top">
+                                <ul class="text-sm text-brand-primary/70 space-y-1.5">
+                                    <li>顶尖科研项目背景提升指导</li>
+                                    <li>高阶学术论文发表咨询</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr class="group hover:bg-white transition-colors duration-300">
+                            <td class="py-6 pr-6 align-top">
+                                <h4 class="text-2xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">张教授</h4>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <p class="text-sm font-bold text-brand-primary/80">特聘学术顾问</p>
+                                <p class="text-[10px] uppercase tracking-widest text-brand-primary/40 mt-1">Guest Professor</p>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <div class="flex flex-col gap-1.5">
+                                    <span class="text-xs font-bold text-brand-accent flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-brand-accent"></span>清华大学 教授</span>
+                                    <span class="text-[10px] text-brand-primary/40">经济管理学院</span>
+                                </div>
+                            </td>
+                            <td class="py-6 pl-6 align-top">
+                                <ul class="text-sm text-brand-primary/70 space-y-1.5">
+                                    <li>商科顶级院校保研战略规划</li>
+                                    <li>商赛指导与核心领导力培养</li>
+                                </ul>
+                            </td>
+                        </tr>
 
-                    <div class="space-y-8">
-                        <div>
-                            <p class="text-sm text-brand-primary/80 leading-relaxed">
-                                资深教务管理专家，深谙学生心理，擅长心理疏导与科学的时间管理指导，是学员与家长最信赖的沟通桥梁。
-                            </p>
-                        </div>
-                        <div class="pt-6 border-t border-brand-primary/5">
-                            <h5 class="text-[10px] font-bold text-brand-primary/40 uppercase tracking-[0.2em] mb-4">Core Focus / 核心工作</h5>
-                            <ul class="text-sm text-brand-primary/80 space-y-3">
-                                <li class="flex items-start gap-3"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent mt-1.5 shrink-0"></span> 高效学情跟踪与家校沟通</li>
-                                <li class="flex items-start gap-3"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent mt-1.5 shrink-0"></span> 个性化学习规划与排课管理</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                        <!-- 虚构: 5位清华博士 -->
+                        <tr class="group hover:bg-white transition-colors duration-300">
+                            <td class="py-6 pr-6 align-top">
+                                <h4 class="text-2xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">李博士</h4>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <p class="text-sm font-bold text-brand-primary/80">金牌讲师</p>
+                                <p class="text-[10px] uppercase tracking-widest text-brand-primary/40 mt-1">Senior Tutor</p>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <div class="flex flex-col gap-1.5">
+                                    <span class="text-xs font-medium text-brand-accent flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-brand-accent/50"></span>清华大学 博士</span>
+                                    <span class="text-[10px] text-brand-primary/40">应用数学专业</span>
+                                </div>
+                            </td>
+                            <td class="py-6 pl-6 align-top">
+                                <ul class="text-sm text-brand-primary/70 space-y-1.5">
+                                    <li>高中数学联赛/强基计划冲刺指导</li>
+                                    <li>数学核心思维深度拔高</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr class="group hover:bg-white transition-colors duration-300">
+                            <td class="py-6 pr-6 align-top">
+                                <h4 class="text-2xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">陈博士</h4>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <p class="text-sm font-bold text-brand-primary/80">金牌讲师</p>
+                                <p class="text-[10px] uppercase tracking-widest text-brand-primary/40 mt-1">Senior Tutor</p>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <div class="flex flex-col gap-1.5">
+                                    <span class="text-xs font-medium text-brand-accent flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-brand-accent/50"></span>清华大学 博士</span>
+                                    <span class="text-[10px] text-brand-primary/40">工程物理系</span>
+                                </div>
+                            </td>
+                            <td class="py-6 pl-6 align-top">
+                                <ul class="text-sm text-brand-primary/70 space-y-1.5">
+                                    <li>物理竞赛金牌集训</li>
+                                    <li>理工科逻辑建模与解题特训</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr class="group hover:bg-white transition-colors duration-300">
+                            <td class="py-6 pr-6 align-top">
+                                <h4 class="text-2xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">赵博士</h4>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <p class="text-sm font-bold text-brand-primary/80">金牌讲师</p>
+                                <p class="text-[10px] uppercase tracking-widest text-brand-primary/40 mt-1">Senior Tutor</p>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <div class="flex flex-col gap-1.5">
+                                    <span class="text-xs font-medium text-brand-accent flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-brand-accent/50"></span>清华大学 博士</span>
+                                    <span class="text-[10px] text-brand-primary/40">自动化系</span>
+                                </div>
+                            </td>
+                            <td class="py-6 pl-6 align-top">
+                                <ul class="text-sm text-brand-primary/70 space-y-1.5">
+                                    <li>青少年编程与信息学奥赛辅导</li>
+                                    <li>AI基础教育与实战项目指导</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr class="group hover:bg-white transition-colors duration-300">
+                            <td class="py-6 pr-6 align-top">
+                                <h4 class="text-2xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">周博士</h4>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <p class="text-sm font-bold text-brand-primary/80">金牌讲师</p>
+                                <p class="text-[10px] uppercase tracking-widest text-brand-primary/40 mt-1">Senior Tutor</p>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <div class="flex flex-col gap-1.5">
+                                    <span class="text-xs font-medium text-brand-accent flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-brand-accent/50"></span>清华大学 博士</span>
+                                    <span class="text-[10px] text-brand-primary/40">生命科学学院</span>
+                                </div>
+                            </td>
+                            <td class="py-6 pl-6 align-top">
+                                <ul class="text-sm text-brand-primary/70 space-y-1.5">
+                                    <li>生物学竞赛冲刺班</li>
+                                    <li>医学/生物学申博学术指导</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr class="group hover:bg-white transition-colors duration-300">
+                            <td class="py-6 pr-6 align-top">
+                                <h4 class="text-2xl font-serif font-bold text-brand-primary group-hover:text-brand-accent transition-colors">吴博士</h4>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <p class="text-sm font-bold text-brand-primary/80">升学顾问</p>
+                                <p class="text-[10px] uppercase tracking-widest text-brand-primary/40 mt-1">Admissions</p>
+                            </td>
+                            <td class="py-6 px-6 align-top">
+                                <div class="flex flex-col gap-1.5">
+                                    <span class="text-xs font-medium text-brand-accent flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-brand-accent/50"></span>清华大学 博士</span>
+                                    <span class="text-[10px] text-brand-primary/40">社会科学学院</span>
+                                </div>
+                            </td>
+                            <td class="py-6 pl-6 align-top">
+                                <ul class="text-sm text-brand-primary/70 space-y-1.5">
+                                    <li>文社科保研/考研全流程规划</li>
+                                    <li>跨学科考研面试高分特训</li>
+                                </ul>
+                            </td>
+                        </tr>
 
-                <!-- 老师 4: 刘博士 -->
-                <div class="group relative">
-                    <div class="border-t-2 border-brand-accent/50 group-hover:border-brand-accent transition-colors duration-500 mb-8 pt-6 flex justify-between items-start">
-                        <div>
-                            <h4 class="text-4xl lg:text-5xl font-serif font-bold text-brand-primary mb-3 group-hover:text-brand-accent transition-colors">刘博士</h4>
-                            <p class="text-xs font-bold tracking-[0.2em] uppercase text-brand-accent">升学顾问 / Admissions</p>
-                        </div>
-                        <span class="text-5xl font-light text-brand-accent/20 font-serif select-none">04</span>
-                    </div>
-                    
-                    <div class="flex flex-wrap gap-2 mb-8">
-                        <span class="text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 border border-brand-accent/30 rounded-full text-brand-accent bg-brand-accent/5">清华大学</span>
-                        <span class="text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 border border-brand-primary/10 rounded-full text-brand-primary/70">直博生</span>
-                        <span class="text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 border border-brand-primary/10 rounded-full text-brand-primary/70">环境/生态/海洋/大气</span>
-                    </div>
-
-                    <div class="space-y-8">
-                        <div>
-                            <p class="text-sm text-brand-primary/80 leading-relaxed">
-                                顶尖名校博士背景，具备深厚的理工科学术功底与科研经历，精准把握国内顶尖高校保研与申博的核心要求与录取偏好。
-                            </p>
-                        </div>
-                        <div class="pt-6 border-t border-brand-primary/5">
-                            <h5 class="text-[10px] font-bold text-brand-primary/40 uppercase tracking-[0.2em] mb-4">Core Focus / 核心工作</h5>
-                            <ul class="text-sm text-brand-primary/80 space-y-3">
-                                <li class="flex items-start gap-3"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent mt-1.5 shrink-0"></span> 院校定位、PS修改与套磁指导</li>
-                                <li class="flex items-start gap-3"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent mt-1.5 shrink-0"></span> 面试全真模拟与学术规划</li>
-                            </ul>
-                        </div>
-                        <div class="pt-4">
-                            <span class="inline-block px-3 py-1 bg-brand-accent/10 text-brand-accent text-[10px] font-bold uppercase tracking-wider rounded">※ 每周限量辅导 1-2 人</span>
-                        </div>
-                    </div>
-                </div>
-
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
