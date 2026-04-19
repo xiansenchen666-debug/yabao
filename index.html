@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -81,18 +81,25 @@
         .service-dropdown {
             opacity: 0;
             visibility: hidden;
-            transform: translateY(10px);
+            transform: translateY(6px);
             transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
             pointer-events: none;
         }
 
-        .service-menu-group:hover .service-dropdown,
-        .service-menu-group:focus-within .service-dropdown,
         .service-menu-group.is-open .service-dropdown {
             opacity: 1;
             visibility: visible;
             transform: translateY(0);
             pointer-events: auto;
+        }
+
+        .service-dropdown::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 0;
+            right: 0;
+            height: 12px;
         }
 
         /* 滚动入场动画类 */
@@ -217,9 +224,9 @@
                 <div class="service-menu-group relative">
                     <button type="button" id="desktop-services-trigger" class="flex items-center gap-1.5 hover:text-brand-accent transition-colors text-brand-primary border-none bg-transparent cursor-pointer outline-none p-0">
                         核心业务
-                        <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                        <i data-lucide="chevron-down" id="desktop-services-icon" class="w-4 h-4 transition-transform"></i>
                     </button>
-                    <div class="service-dropdown absolute left-1/2 top-full mt-4 -translate-x-1/2 w-[42rem] rounded-[1.75rem] bg-white/95 backdrop-blur-xl border border-white/70 shadow-2xl shadow-brand-primary/10 p-4">
+                    <div class="service-dropdown absolute left-0 top-full mt-2 w-[36rem] rounded-[1.75rem] bg-white/95 backdrop-blur-xl border border-white/70 shadow-2xl shadow-brand-primary/10 p-4">
                         <div class="grid grid-cols-5 gap-3">
                             <a href="/services.html#k12" class="rounded-2xl border border-brand-primary/5 bg-brand-bg px-4 py-4 hover:border-brand-accent/20 hover:-translate-y-1 transition-all decoration-transparent">
                                 <div class="text-sm font-bold text-brand-primary">K12教育</div>
@@ -1325,16 +1332,26 @@
 
             const desktopServicesMenu = document.querySelector('.service-menu-group');
             const desktopServicesTrigger = document.getElementById('desktop-services-trigger');
+            const desktopServicesIcon = document.getElementById('desktop-services-icon');
             if (desktopServicesMenu && desktopServicesTrigger) {
                 desktopServicesTrigger.addEventListener('click', (event) => {
                     event.stopPropagation();
                     desktopServicesMenu.classList.toggle('is-open');
+                    desktopServicesIcon.classList.toggle('rotate-180');
                 });
 
                 document.addEventListener('click', (event) => {
                     if (!desktopServicesMenu.contains(event.target)) {
                         desktopServicesMenu.classList.remove('is-open');
+                        desktopServicesIcon.classList.remove('rotate-180');
                     }
+                });
+
+                desktopServicesMenu.querySelectorAll('a').forEach((link) => {
+                    link.addEventListener('click', () => {
+                        desktopServicesMenu.classList.remove('is-open');
+                        desktopServicesIcon.classList.remove('rotate-180');
+                    });
                 });
             }
         });
