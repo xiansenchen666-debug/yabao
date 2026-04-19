@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>绑定学员档案 | Yabao Education</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              bg: '#FDFBF7',
+              primary: '#1A2B3C',
+              accent: '#C5A059',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #FDFBF7;
+      color: #1A2B3C;
+      background-image: radial-gradient(circle at 15% 50%, rgba(197, 160, 89, 0.05) 0%, transparent 25%),
+                        radial-gradient(circle at 85% 30%, rgba(26, 43, 60, 0.03) 0%, transparent 25%);
+    }
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 25px 50px -12px rgba(26, 43, 60, 0.1);
+    }
+    .input-box {
+      letter-spacing: 0.5em;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="font-sans min-h-screen flex items-center justify-center p-6 selection:bg-brand-accent selection:text-white relative overflow-hidden">
+  
+  <!-- Decorative background elements -->
+  <div class="absolute top-[-10%] left-[-5%] w-96 h-96 bg-brand-accent/10 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="absolute bottom-[-10%] right-[-5%] w-96 h-96 bg-brand-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+
+  <!-- Back button -->
+  <a href="/" class="absolute top-8 left-8 flex items-center gap-2 text-brand-primary/60 hover:text-brand-accent transition-colors z-20">
+    <i data-lucide="arrow-left" class="w-5 h-5"></i>
+    <span class="text-sm font-medium">返回主页</span>
+  </a>
+
+  <div class="w-full max-w-md z-10">
+    <!-- User Context Banner -->
+    <div class="mb-8 flex items-center justify-center gap-3">
+      <img id="user-avatar" src="https://ui-avatars.com/api/?name=Guest&background=1A2B3C&color=fff" class="w-10 h-10 rounded-full shadow-sm">
+      <div>
+        <p class="text-xs text-brand-primary/60">当前登录账号</p>
+        <p id="user-email" class="text-sm font-bold text-brand-primary">未登录</p>
+      </div>
+    </div>
+
+    <!-- Main Card -->
+    <div class="glass-panel rounded-3xl p-8 md:p-10 relative overflow-hidden">
+      <!-- Icon Header -->
+      <div class="w-16 h-16 bg-brand-accent/10 rounded-2xl flex items-center justify-center mb-6 border border-brand-accent/20">
+        <i data-lucide="link" class="w-8 h-8 text-brand-accent"></i>
+      </div>
+      
+      <h2 class="text-3xl font-serif font-bold text-brand-primary mb-2">绑定学员档案</h2>
+      <p class="text-brand-primary/60 text-sm leading-relaxed mb-8">
+        请输入教务老师发送给您的 <strong>学员专属邀请码</strong>。绑定成功后，您即可实时查看该学员的 AI 智能评估报告。
+      </p>
+
+      <form id="bind-form" onsubmit="handleBind(event)" class="space-y-6">
+        <div>
+          <label class="block text-xs font-bold text-brand-primary/80 uppercase tracking-widest mb-2">学员邀请码 (Invite Code)</label>
+          <div class="relative">
+            <input type="text" id="invite-code" required placeholder="例如: YB-8X92-K1" class="input-box w-full px-6 py-4 bg-white/80 border-2 border-brand-primary/10 rounded-2xl focus:outline-none focus:border-brand-accent focus:ring-4 focus:ring-brand-accent/10 text-brand-primary transition-all uppercase" maxlength="12">
+          </div>
+          <p class="text-[10px] text-brand-primary/40 mt-2 flex items-center gap-1">
+            <i data-lucide="info" class="w-3 h-3"></i> 邀请码通常由8-10位大写字母和数字组成
+          </p>
+        </div>
+
+        <button type="submit" id="submit-btn" class="w-full py-4 bg-brand-primary text-white font-medium rounded-2xl hover:bg-brand-accent hover:shadow-xl hover:shadow-brand-accent/20 transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer outline-none border-none">
+          <span>验证并绑定</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </form>
+
+      <!-- Loading / Success State (Hidden by default) -->
+      <div id="status-overlay" class="absolute inset-0 bg-white/95 backdrop-blur-md flex flex-col items-center justify-center hidden opacity-0 transition-opacity duration-300 z-20">
+        <div id="status-icon" class="w-16 h-16 rounded-full bg-emerald/10 flex items-center justify-center mb-4 text-emerald">
+          <i data-lucide="check" class="w-8 h-8"></i>
+        </div>
+        <h3 class="text-xl font-bold text-brand-primary mb-2" id="status-title">绑定成功</h3>
+        <p class="text-sm text-brand-primary/60 text-center px-8" id="status-desc">正在为您加载学员「张小明」的专属学习航线...</p>
+      </div>
+    </div>
+
+    <!-- Help text -->
+    <div class="mt-8 text-center">
+      <p class="text-xs text-brand-primary/40">
+        没有邀请码？请联系您的教务老师 (微信: YabaoEdu) 获取。<br>
+        如果您是成人学员，可以直接绑定您自己的学号。
+      </p>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    // Check login status
+    document.addEventListener('DOMContentLoaded', () => {
+      const email = localStorage.getItem('tutor_email');
+      if (email) {
+        document.getElementById('user-email').textContent = email;
+        document.getElementById('user-avatar').src = `https://ui-avatars.com/api/?name=${email.split('@')[0]}&background=1A2B3C&color=fff`;
+      } else {
+        alert('请先在主页登录您的账号！');
+        window.location.href = '/';
+      }
+    });
+
+    function handleBind(e) {
+      e.preventDefault();
+      const code = document.getElementById('invite-code').value.trim();
+      const btn = document.getElementById('submit-btn');
+      const overlay = document.getElementById('status-overlay');
+      
+      if (!code) return;
+
+      // UI Loading state
+      btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> 验证中...';
+      btn.disabled = true;
+      lucide.createIcons();
+
+      // Simulate API call to verify invite code
+      setTimeout(() => {
+        // Show success overlay
+        overlay.classList.remove('hidden');
+        // Trigger reflow
+        void overlay.offsetWidth;
+        overlay.classList.remove('opacity-0');
+        overlay.classList.add('opacity-100');
+
+        // Redirect to evaluation page after 2 seconds
+        setTimeout(() => {
+          window.location.href = '/student-eval.html';
+        }, 2000);
+      }, 1500);
+    }
+
+    // Auto-format invite code (add dashes)
+    document.getElementById('invite-code').addEventListener('input', function(e) {
+      let val = e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+      if (val.length > 0) {
+        let formatted = val.match(/.{1,4}/g).join('-');
+        e.target.value = formatted;
+      }
+    });
+  </script>
+</body>
+</html>
