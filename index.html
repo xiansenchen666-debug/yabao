@@ -410,8 +410,8 @@
                 </p>
             </div>
 
-            <!-- 照片墙网格 - 非对称 -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 lg:gap-10">
+            <!-- 照片墙网格 - 调整为4列适应新老师 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-6 lg:gap-8">
                 
                 <!-- 老师 1 -->
                 <div class="teacher-card aspect-[3/4] md:mt-0 fade-in-section">
@@ -436,7 +436,7 @@
                 </div>
 
                 <!-- 老师 2 (向下偏移) -->
-                <div class="teacher-card aspect-[3/4] md:mt-16 fade-in-section" style="transition-delay: 0.2s;">
+                <div class="teacher-card aspect-[3/4] md:mt-12 fade-in-section" style="transition-delay: 0.2s;">
                     <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Cary - 副校长" class="w-full h-full object-cover">
                     <div class="teacher-overlay glass-dark text-white">
                         <h4 class="text-3xl font-serif font-bold mb-1">Cary</h4>
@@ -457,7 +457,7 @@
                 </div>
 
                 <!-- 老师 3 (向下偏移更多) -->
-                <div class="teacher-card aspect-[3/4] md:mt-32 fade-in-section" style="transition-delay: 0.4s;">
+                <div class="teacher-card aspect-[3/4] md:mt-24 fade-in-section" style="transition-delay: 0.4s;">
                     <img src="https://images.unsplash.com/photo-1580894732444-8ecded7900cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Eric - 教务" class="w-full h-full object-cover">
                     <div class="teacher-overlay glass-dark text-white">
                         <h4 class="text-3xl font-serif font-bold mb-1">Eric</h4>
@@ -474,6 +474,38 @@
                             </li>
                         </ul>
                         <p class="text-sm italic text-gray-400 px-4">"做学员最坚实的后盾，让学习之旅畅通无阻。"</p>
+                    </div>
+                </div>
+
+                <!-- 老师 4 刘博士 -->
+                <div class="teacher-card aspect-[3/4] md:mt-36 fade-in-section" style="transition-delay: 0.6s;">
+                    <!-- 无照片，使用品牌色背景加渐变 -->
+                    <div class="w-full h-full bg-gradient-to-br from-brand-primary/10 to-brand-primary/30 flex items-center justify-center">
+                        <i data-lucide="user-check" class="w-24 h-24 text-brand-primary/40"></i>
+                    </div>
+                    <div class="teacher-overlay glass-dark text-white">
+                        <h4 class="text-3xl font-serif font-bold mb-1">刘博士</h4>
+                        <div class="text-brand-accent text-xs font-semibold tracking-widest uppercase mb-5">升学辅导顾问</div>
+                        <div class="w-12 h-px bg-brand-accent/50 mb-6"></div>
+                        <ul class="text-xs text-gray-200 space-y-2 mb-6 text-left w-full px-4">
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="book-open" class="w-3.5 h-3.5 text-brand-accent shrink-0 mt-0.5"></i> 
+                                <span>环境/生态/海洋/大气</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="target" class="w-3.5 h-3.5 text-brand-accent shrink-0 mt-0.5"></i> 
+                                <span>保研(本科) / 申博(硕士)</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="file-edit" class="w-3.5 h-3.5 text-brand-accent shrink-0 mt-0.5"></i> 
+                                <span>定位/PS修改/套磁/面试</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="clock" class="w-3.5 h-3.5 text-brand-accent shrink-0 mt-0.5"></i> 
+                                <span>辅导容量：每周1-2人</span>
+                            </li>
+                        </ul>
+                        <p class="text-xs italic text-gray-400 px-2">"为您提供专业的升学规划，精准定位，助力名校梦想。"</p>
                     </div>
                 </div>
 

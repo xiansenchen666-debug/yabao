@@ -15,4 +15,4 @@ echo.
 
 echo -----------------------------
 echo complete
-pause >nul
+exit
