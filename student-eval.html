@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumina AI - K12 智慧教育平台 | Yabao Style</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              bg: '#FDFBF7',
+              primary: '#1A2B3C',
+              accent: '#C5A059',
+            },
+            emerald: '#10B981',
+            warning: '#F59E0B',
+            danger: '#EF4444'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+          },
+          animation: {
+            'float': 'float 4s ease-in-out infinite',
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            'glow': 'glow 2s ease-in-out infinite alternate',
+            'spin-slow': 'spin 12s linear infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-12px)' },
+            },
+            slideUp: {
+              '0%': { opacity: 0, transform: 'translateY(30px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' },
+            },
+            glow: {
+              '0%': { boxShadow: '0 0 10px rgba(197, 160, 89, 0.2)' },
+              '100%': { boxShadow: '0 0 25px rgba(197, 160, 89, 0.6)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { 
+      background-color: #FDFBF7; 
+      color: #1A2B3C; 
+      overflow-x: hidden; 
+      background-image: radial-gradient(circle at 15% 50%, rgba(197, 160, 89, 0.05) 0%, transparent 25%),
+                        radial-gradient(circle at 85% 30%, rgba(26, 43, 60, 0.03) 0%, transparent 25%);
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(26, 43, 60, 0.05);
+      border-radius: 1.5rem;
+      box-shadow: 0 4px 30px rgba(26, 43, 60, 0.05);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(26, 43, 60, 0.08), 0 0 20px rgba(197, 160, 89, 0.05);
+      border: 1px solid rgba(197, 160, 89, 0.2);
+    }
+    .gradient-text {
+      color: #1A2B3C;
+    }
+    
+    /* Connection lines for knowledge graph */
+    .tree-line {
+      position: absolute;
+      border-left: 2px dashed rgba(26, 43, 60, 0.1);
+      border-bottom: 2px dashed rgba(26, 43, 60, 0.1);
+      border-bottom-left-radius: 12px;
+    }
+    
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(26, 43, 60, 0.1); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(26, 43, 60, 0.2); }
+  </style>
+</head>
+<body class="font-sans bg-brand-bg text-brand-primary antialiased min-h-screen flex selection:bg-brand-accent selection:text-white">
+  
+  <!-- Sidebar -->
+  <aside class="w-20 lg:w-64 border-r border-brand-primary/10 bg-white/80 backdrop-blur-2xl flex flex-col justify-between hidden md:flex fixed h-full z-20 transition-all duration-300">
+    <div class="p-6">
+      <div class="flex items-center gap-3 mb-12">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-accent to-[#d4b476] flex items-center justify-center shadow-lg shadow-brand-accent/20">
+          <i data-lucide="brain-circuit" class="w-6 h-6 text-white"></i>
+        </div>
+        <h1 class="text-xl font-bold tracking-tight hidden lg:block gradient-text">Lumina AI</h1>
+      </div>
+      <nav class="space-y-2">
+        <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl bg-brand-accent/10 text-brand-accent border border-brand-accent/20 transition-colors">
+          <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+          <span class="font-medium hidden lg:block">诊断看板</span>
+        </a>
+        <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl text-brand-primary/60 hover:bg-brand-primary/5 hover:text-brand-primary transition-colors">
+          <i data-lucide="compass" class="w-5 h-5"></i>
+          <span class="font-medium hidden lg:block">学习航线</span>
+        </a>
+        <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl text-brand-primary/60 hover:bg-brand-primary/5 hover:text-brand-primary transition-colors">
+          <i data-lucide="target" class="w-5 h-5"></i>
+          <span class="font-medium hidden lg:block">弱项靶场</span>
+        </a>
+        <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl text-brand-primary/60 hover:bg-brand-primary/5 hover:text-brand-primary transition-colors">
+          <i data-lucide="file-bar-chart-2" class="w-5 h-5"></i>
+          <span class="font-medium hidden lg:block">家校共育</span>
+        </a>
+      </nav>
+    </div>
+    <div class="p-6 border-t border-brand-primary/10">
+      <div class="flex items-center gap-3">
+        <img src="https://ui-avatars.com/api/?name=Jayu&background=0D8ABC&color=fff" alt="User" class="w-10 h-10 rounded-full border border-brand-primary/10">
+        <div class="hidden lg:block">
+          <p class="text-sm font-semibold">Jayu (初二)</p>
+          <p class="text-xs text-brand-primary/60">数学专项提分计划</p>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 md:ml-20 lg:ml-64 p-6 lg:p-10 relative z-10 w-full overflow-x-hidden">
+    
+    <!-- Header -->
+    <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4 animate-slide-up">
+      <div>
+        <h2 class="text-3xl font-serif font-bold text-brand-primary tracking-tight mb-1">今日智学诊断</h2>
+        <p class="text-brand-primary/60 text-sm flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald animate-pulse"></span>
+          AI 核心引擎正在实时分析您的学习轨迹
+        </p>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="glass-card px-4 py-2 flex items-center gap-3">
+          <div class="text-right">
+            <p class="text-xs text-brand-primary/60">当前综合预测力</p>
+            <p class="text-lg font-bold text-brand-accent">92.4 <span class="text-xs text-emerald">+1.2% ↑</span></p>
+          </div>
+          <div class="w-10 h-10 rounded-full bg-brand-accent/10 flex items-center justify-center">
+            <i data-lucide="trending-up" class="w-5 h-5 text-brand-accent"></i>
+          </div>
+        </div>
+        <button class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:bg-brand-primary/5 transition">
+          <i data-lucide="bell" class="w-5 h-5 text-brand-primary/80"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Grid Layout -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+      
+      <!-- 1. AI 知识图谱诊断 (Visual Knowledge Graph) -->
+      <div class="xl:col-span-2 glass-card p-6 animate-slide-up flex flex-col" style="animation-delay: 0.1s;">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-lg font-serif font-bold text-brand-primary flex items-center gap-2">
+            <i data-lucide="network" class="w-5 h-5 text-brand-accent"></i>
+            多维知识图谱 (代数域)
+          </h3>
+          <div class="flex gap-3 text-xs">
+            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald"></span>已掌握</span>
+            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-danger"></span>薄弱点</span>
+            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-slate-600"></span>未触发</span>
+          </div>
+        </div>
+        <div class="flex-1 relative min-h-[300px] flex items-center justify-center overflow-hidden bg-brand-primary/5 rounded-xl border border-brand-primary/10">
+          <!-- SVG Graph Representation -->
+          <svg class="absolute w-full h-full opacity-30" viewBox="0 0 800 400">
+            <path d="M400,100 L250,200 L150,300" stroke="rgba(26, 43, 60, 0.1)" stroke-width="2" fill="none" class="animate-pulse-slow"/>
+            <path d="M400,100 L400,200 L400,300" stroke="rgba(26, 43, 60, 0.1)" stroke-width="2" fill="none"/>
+            <path d="M400,100 L550,200 L650,300" stroke="rgba(239,68,68,0.3)" stroke-width="2" stroke-dasharray="5,5" fill="none"/>
+            <path d="M250,200 L350,300" stroke="rgba(26, 43, 60, 0.1)" stroke-width="2" fill="none"/>
+            <path d="M550,200 L450,300" stroke="rgba(26, 43, 60, 0.1)" stroke-width="2" fill="none"/>
+          </svg>
+          
+          <!-- Nodes -->
+          <div class="relative w-full max-w-2xl h-64">
+            <!-- Root -->
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 flex flex-col items-center group cursor-pointer">
+              <div class="w-14 h-14 rounded-full bg-emerald/20 border-2 border-emerald flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.4)] z-10 transition-transform group-hover:scale-110">
+                <i data-lucide="function-square" class="w-6 h-6 text-emerald"></i>
+              </div>
+              <span class="mt-2 text-xs font-medium">代数式</span>
+            </div>
+            
+            <!-- Level 2 -->
+            <div class="absolute top-24 left-[20%] -translate-x-1/2 flex flex-col items-center group cursor-pointer">
+              <div class="w-12 h-12 rounded-full bg-emerald/20 border-2 border-emerald flex items-center justify-center z-10 transition-transform group-hover:scale-110">
+                <span class="text-xs font-bold text-emerald">整式</span>
+              </div>
+              <span class="mt-2 text-xs font-medium">95%</span>
+            </div>
+            
+            <div class="absolute top-24 left-1/2 -translate-x-1/2 flex flex-col items-center group cursor-pointer">
+              <div class="w-12 h-12 rounded-full bg-brand-primary/10 border-2 border-brand-primary/20 flex items-center justify-center z-10 transition-transform group-hover:scale-110">
+                <span class="text-xs font-bold text-brand-primary/60">根式</span>
+              </div>
+              <span class="mt-2 text-xs font-medium text-brand-primary/50">未触发</span>
+            </div>
+            
+            <div class="absolute top-24 left-[80%] -translate-x-1/2 flex flex-col items-center group cursor-pointer">
+              <div class="w-12 h-12 rounded-full bg-danger/20 border-2 border-danger flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.4)] animate-pulse-slow z-10 transition-transform group-hover:scale-110">
+                <span class="text-xs font-bold text-danger">分式</span>
+              </div>
+              <span class="mt-2 text-xs font-medium text-danger">42%</span>
+            </div>
+
+            <!-- Level 3 (Under 分式) -->
+            <div class="absolute top-48 left-[65%] -translate-x-1/2 flex flex-col items-center group cursor-pointer">
+              <div class="w-10 h-10 rounded-full bg-warning/20 border-2 border-warning flex items-center justify-center z-10 transition-transform group-hover:scale-110">
+                <span class="text-[10px] font-bold text-warning">概念</span>
+              </div>
+            </div>
+            
+            <div class="absolute top-48 left-[95%] -translate-x-1/2 flex flex-col items-center group cursor-pointer">
+              <div class="w-10 h-10 rounded-full bg-danger/20 border-2 border-danger flex items-center justify-center z-10 transition-transform group-hover:scale-110">
+                <span class="text-[10px] font-bold text-danger">方程</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 成绩预测与趋势 (Predictive Analytics) -->
+      <div class="glass-card p-6 animate-slide-up flex flex-col" style="animation-delay: 0.2s;">
+        <h3 class="text-lg font-serif font-bold text-brand-primary flex items-center gap-2 mb-4">
+          <i data-lucide="line-chart" class="w-5 h-5 text-brand-primary"></i>
+          AI 中考概率预测
+        </h3>
+        <div class="flex-1 w-full h-48 relative">
+          <canvas id="predictiveChart"></canvas>
+        </div>
+        <div class="mt-4 p-4 rounded-xl bg-brand-primary/5 border border-brand-primary/10">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-sm text-brand-primary/60">重点高中录取概率</span>
+            <span class="text-sm font-bold text-emerald">78.5%</span>
+          </div>
+          <div class="w-full bg-brand-primary/10 rounded-full h-1.5 mb-1 overflow-hidden">
+            <div class="bg-gradient-to-r from-[#d4b476] to-emerald h-1.5 rounded-full" style="width: 78.5%"></div>
+          </div>
+          <p class="text-xs text-brand-primary/50 mt-2">提示：解决“分式方程”模块可将概率提升至 <span class="text-brand-accent">82%</span></p>
+        </div>
+      </div>
+
+      <!-- 3. AI 弱项溯源 (Root Cause Analysis) -->
+      <div class="glass-card p-6 animate-slide-up" style="animation-delay: 0.3s;">
+        <h3 class="text-lg font-serif font-bold text-brand-primary flex items-center gap-2 mb-6">
+          <i data-lucide="microscope" class="w-5 h-5 text-danger"></i>
+          错题逻辑溯源
+        </h3>
+        <div class="relative">
+          <div class="absolute left-4 top-4 bottom-4 w-px bg-brand-primary/10"></div>
+          
+          <div class="relative pl-10 mb-6">
+            <div class="absolute left-[11px] top-1 w-3 h-3 rounded-full bg-danger border-2 border-white shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
+            <p class="text-xs text-danger font-medium mb-1">表层错误 (昨日作业)</p>
+            <div class="bg-white/60 p-3 rounded-lg border border-brand-primary/10">
+              <p class="text-sm font-serif">解分式方程: 2/(x-1) = 3/x</p>
+              <p class="text-xs text-brand-primary/60 mt-1">作答：x = -3 (漏乘公分母导致符号错误)</p>
+            </div>
+          </div>
+
+          <div class="relative pl-10 mb-6">
+            <div class="absolute left-[11px] top-1 w-3 h-3 rounded-full bg-warning border-2 border-white"></div>
+            <p class="text-xs text-warning font-medium mb-1">中层障碍</p>
+            <div class="bg-white/60 p-3 rounded-lg border border-brand-primary/10">
+              <p class="text-sm">去分母时的等式性质运用不熟练</p>
+            </div>
+          </div>
+
+          <div class="relative pl-10">
+            <div class="absolute left-2 top-0 w-5 h-5 rounded-full bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center">
+              <div class="w-2 h-2 rounded-full bg-brand-primary animate-pulse"></div>
+            </div>
+            <p class="text-xs text-brand-primary font-bold mb-1">AI 诊断：根本原因 (Root Cause)</p>
+            <div class="bg-brand-primary/5 p-4 rounded-xl border border-brand-primary/20 shadow-md">
+              <p class="text-sm font-medium">基础分式概念不牢</p>
+              <p class="text-xs text-brand-primary/80 mt-2">未彻底理解分式的基本性质（分子分母同乘非零数），导致在解方程时机械模仿步骤而忽略了逻辑前提。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. 个性化学习路径 (Adaptive Learning Path) -->
+      <div class="xl:col-span-2 glass-card p-6 animate-slide-up" style="animation-delay: 0.4s;">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-lg font-serif font-bold text-brand-primary flex items-center gap-2">
+            <i data-lucide="map" class="w-5 h-5 text-brand-accent"></i>
+            今日智能通关地图
+          </h3>
+          <button class="text-xs text-brand-accent hover:text-brand-primary transition-colors flex items-center gap-1">
+            重新生成 <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+          </button>
+        </div>
+        
+        <div class="flex gap-4 overflow-x-auto pb-4 snap-x hide-scrollbar">
+          <!-- Step 1 -->
+          <div class="min-w-[200px] flex-shrink-0 bg-brand-primary/5 border border-emerald/30 p-4 rounded-2xl relative snap-center">
+            <div class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-emerald text-navy-900 flex items-center justify-center font-bold text-sm shadow-lg">1</div>
+            <h4 class="text-sm font-bold text-emerald mb-2">概念修复</h4>
+            <p class="text-xs text-brand-primary/60 mb-4">分式的基本性质动画微课 (3分钟)</p>
+            <button class="w-full py-2 bg-emerald/10 hover:bg-emerald/20 text-emerald text-xs rounded-lg transition-colors border border-emerald/20">
+              开始学习
+            </button>
+          </div>
+          
+          <div class="flex items-center justify-center text-brand-primary/40 px-2">
+            <i data-lucide="chevron-right" class="w-5 h-5"></i>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="min-w-[200px] flex-shrink-0 bg-brand-primary/5 border border-brand-accent/30 p-4 rounded-2xl relative snap-center shadow-md">
+            <div class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-brand-accent text-navy-900 flex items-center justify-center font-bold text-sm shadow-lg animate-pulse-slow">2</div>
+            <div class="absolute top-2 right-2 flex gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-brand-accent"></span>
+              <span class="w-1.5 h-1.5 rounded-full bg-brand-accent/50"></span>
+              <span class="w-1.5 h-1.5 rounded-full bg-brand-accent/20"></span>
+            </div>
+            <h4 class="text-sm font-bold text-brand-accent mb-2">靶向训练</h4>
+            <p class="text-xs text-brand-primary/60 mb-4">去分母专项练习 (5道自适应题)</p>
+            <button class="w-full py-2 bg-brand-accent text-navy-900 hover:bg-white font-medium text-xs rounded-lg transition-colors shadow-lg shadow-brand-accent/20">
+              当前任务
+            </button>
+          </div>
+
+          <div class="flex items-center justify-center text-brand-primary/40 px-2">
+            <i data-lucide="chevron-right" class="w-5 h-5"></i>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="min-w-[200px] flex-shrink-0 bg-brand-primary/5 border border-brand-primary/10 border-dashed p-4 rounded-2xl relative snap-center opacity-70">
+            <div class="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-brand-primary/10 text-brand-primary/80 flex items-center justify-center font-bold text-sm">3</div>
+            <h4 class="text-sm font-bold text-brand-primary/80 mb-2">巅峰挑战</h4>
+            <p class="text-xs text-brand-primary/50 mb-4">历年中考分式方程压轴题体验</p>
+            <button class="w-full py-2 bg-brand-primary/10 text-brand-primary/60 text-xs rounded-lg cursor-not-allowed">
+              待解锁
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. 家校 AI 沟通周报 -->
+      <div class="xl:col-span-3 glass-card p-6 animate-slide-up" style="animation-delay: 0.5s;">
+        <h3 class="text-lg font-serif font-bold text-brand-primary flex items-center gap-2 mb-6">
+          <i data-lucide="mail" class="w-5 h-5 text-emerald"></i>
+          专家级家校洞察 (本周)
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="md:col-span-2 bg-brand-primary/5 p-5 rounded-xl border border-brand-primary/10">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-full bg-emerald/20 flex items-center justify-center flex-shrink-0 mt-1">
+                <i data-lucide="sparkles" class="w-5 h-5 text-emerald"></i>
+              </div>
+              <div>
+                <h4 class="text-sm font-bold text-brand-primary mb-2">给家长的 AI 教育建议</h4>
+                <p class="text-sm text-brand-primary/60 leading-relaxed font-light">
+                  "Jayu 本周在<span class="text-emerald font-medium">代数学习专注度上提升了 15%</span>。在面对较难的分式方程时，他表现出了极强的韧性，没有轻易放弃。建议本周末家长可以肯定他的探索精神，而不仅仅是关注最终得分。目前他的卡点在于基础概念的转化，AI 助教已为您安排了亲子互动数学小游戏，可在微信端查看。"
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-brand-primary/5 p-5 rounded-xl border border-brand-primary/10 flex flex-col justify-center">
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-xs text-brand-primary/60">学习情绪指数 (专注/积极)</span>
+              <span class="text-xs font-bold text-brand-accent">A+</span>
+            </div>
+            <div class="w-full h-2 bg-brand-primary/10 rounded-full mb-4 overflow-hidden">
+              <div class="bg-brand-accent h-full rounded-full w-[90%]"></div>
+            </div>
+            <div class="flex justify-between items-center mb-3">
+              <span class="text-xs text-brand-primary/60">抗挫折韧性</span>
+              <span class="text-xs font-bold text-brand-primary">A</span>
+            </div>
+            <div class="w-full h-2 bg-brand-primary/10 rounded-full overflow-hidden">
+              <div class="bg-brand-primary h-full rounded-full w-[85%]"></div>
+            </div>
+            <button class="mt-5 w-full py-2 text-xs border border-brand-primary/20 rounded-lg hover:bg-brand-primary/10 transition-colors flex items-center justify-center gap-2">
+              <i data-lucide="share" class="w-3 h-3"></i> 一键生成微信报告
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- 6. 苏格拉底式 AI 助教悬浮窗 (Socratic AI Tutor Widget) -->
+  <div class="fixed bottom-8 right-8 z-50 flex flex-col items-end group">
+    <!-- Chat Box (Initially hidden, shows on hover or click) -->
+    <div class="glass-card w-80 mb-4 p-0 overflow-hidden opacity-0 translate-y-4 scale-95 pointer-events-none transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto origin-bottom-right">
+      <div class="bg-gradient-to-r from-accent to-brand-accent p-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+            <i data-lucide="bot" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="font-bold text-sm text-white">苏格拉底 AI 导师</span>
+        </div>
+        <i data-lucide="more-horizontal" class="w-4 h-4 text-brand-primary/70 cursor-pointer"></i>
+      </div>
+      <div class="p-4 h-64 overflow-y-auto bg-white/90 flex flex-col gap-3">
+        <div class="text-center text-[10px] text-brand-primary/50 my-2">今天 14:30 - 分式方程错题诊断</div>
+        
+        <!-- Student Msg -->
+        <div class="self-end bg-brand-primary/5 rounded-2xl rounded-tr-sm px-3 py-2 max-w-[85%] border border-brand-primary/10">
+          <p class="text-xs">这道题 2/(x-1) = 3/x，我算出 x = -3，为什么错了呀？</p>
+        </div>
+        
+        <!-- AI Msg -->
+        <div class="self-start bg-brand-accent/10 border border-brand-accent/20 rounded-2xl rounded-tl-sm px-3 py-2 max-w-[90%] relative">
+          <div class="absolute -left-1 -top-1 w-2 h-2 rounded-full bg-brand-accent animate-ping"></div>
+          <p class="text-xs text-brand-primary leading-relaxed">
+            观察一下你解题的第一步。为了去掉分母，你两边同时乘以了什么？
+          </p>
+        </div>
+
+        <!-- Student Msg -->
+        <div class="self-end bg-brand-primary/5 rounded-2xl rounded-tr-sm px-3 py-2 max-w-[85%] border border-brand-primary/10">
+          <p class="text-xs">我乘以了 x(x-1) 啊，然后左边变成 2x，右边变成 3(x-1)，也就是 3x-3。所以 2x = 3x - 3，移项得到 -x = -3，x = 3。啊！我移项的时候符号写错了！</p>
+        </div>
+
+        <!-- AI Msg -->
+        <div class="self-start bg-brand-accent/10 border border-brand-accent/20 rounded-2xl rounded-tl-sm px-3 py-2 max-w-[90%]">
+          <p class="text-xs text-brand-primary leading-relaxed">
+            非常棒！你自己发现了移项时的符号问题。不仅如此，求出 x=3 后，在分式方程中，我们最后还必须做一步非常关键的操作，你还记得是什么吗？🤔
+          </p>
+        </div>
+      </div>
+      <div class="p-3 border-t border-brand-primary/10 bg-brand-bg">
+        <div class="relative">
+          <input type="text" placeholder="回复 AI 导师..." class="w-full bg-white border border-brand-primary/10 rounded-full py-2 pl-4 pr-10 text-xs focus:outline-none focus:border-aurora text-brand-primary placeholder-slate-500">
+          <button class="absolute right-1 top-1 w-6 h-6 rounded-full bg-brand-accent flex items-center justify-center text-navy-900 hover:bg-white transition-colors">
+            <i data-lucide="arrow-up" class="w-3 h-3 font-bold"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Floating Button -->
+    <button class="w-14 h-14 rounded-full bg-gradient-to-r from-accent to-brand-accent flex items-center justify-center shadow-[0_10px_30px_rgba(197,160,89,0.3)] hover:scale-110 transition-transform animate-float z-50">
+      <i data-lucide="message-circle" class="w-6 h-6 text-white"></i>
+      <span class="absolute -top-1 -right-1 w-4 h-4 bg-danger rounded-full text-[8px] font-bold flex items-center justify-center border-2 border-white">1</span>
+    </button>
+  </div>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Initialize Chart.js for Predictive Analytics
+    document.addEventListener('DOMContentLoaded', function() {
+      const ctx = document.getElementById('predictiveChart').getContext('2d');
+      
+      // Gradient for line chart
+      const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+      gradient.addColorStop(0, 'rgba(197, 160, 89, 0.4)');
+      gradient.addColorStop(1, 'rgba(197, 160, 89, 0.0)');
+
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['第1周', '第2周', '第3周', '当前', '下周(预测)', '中考(预测)'],
+          datasets: [{
+            label: '综合能力分值',
+            data: [72, 75, 81, 85, 88, 92],
+            borderColor: '#C5A059',
+            backgroundColor: gradient,
+            borderWidth: 2,
+            pointBackgroundColor: '#FFFFFF',
+            pointBorderColor: '#C5A059',
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(255, 255, 255, 0.95)',
+              titleColor: '#1A2B3C', titleFont: { family: 'Inter' },
+              bodyColor: '#C5A059',
+              borderColor: 'rgba(197, 160, 89, 0.3)',
+              borderWidth: 1,
+              padding: 10,
+              displayColors: false,
+              callbacks: {
+                label: function(context) {
+                  return '能力值: ' + context.parsed.y;
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false, drawBorder: false },
+              ticks: { color: 'rgba(26, 43, 60, 0.5)', font: { size: 10 } }
+            },
+            y: {
+              grid: { color: 'rgba(26, 43, 60, 0.05)', drawBorder: false },
+              ticks: { color: 'rgba(26, 43, 60, 0.5)', font: { size: 10 }, stepSize: 10 },
+              min: 60,
+              max: 100
+            }
+          },
+          interaction: {
+            intersect: false,
+            mode: 'index',
+          },
+        }
+      });
+    });
+  </script>
+</body>
+</html>
