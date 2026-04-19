@@ -66,8 +66,8 @@
 <body class="font-sans antialiased selection:bg-brand-accent selection:text-white min-h-screen flex flex-col">
 
     <!-- Navbar -->
-    <nav class="w-full z-50 glass py-4 px-6 md:px-12 sticky top-0">
-        <div class="max-w-7xl mx-auto relative flex justify-between items-center min-h-[3rem]">
+    <nav class="fixed w-full z-50 glass py-4 px-6 md:px-12 border-b border-brand-primary/5">
+        <div class="max-w-7xl mx-auto relative flex items-center justify-between min-h-[3rem]">
             <a href="/" class="absolute left-0 top-1/2 -translate-y-1/2 flex items-center gap-2 text-sm font-medium text-brand-primary/60 hover:text-brand-accent transition-colors decoration-transparent">
                 <i data-lucide="arrow-left" class="w-4 h-4"></i> 返回首页
             </a>
@@ -78,17 +78,20 @@
                 <a href="/study-room.html" class="hover:text-brand-accent transition-colors decoration-transparent">自习室</a>
                 <a href="/ai-eval.html" class="hover:text-brand-accent transition-colors decoration-transparent">AI评估</a>
             </div>
-            <div class="flex items-center gap-4 ml-auto">
+            <div class="flex items-center gap-6 ml-auto">
                 <span id="user-info" class="text-sm font-medium text-brand-primary/80 hidden"></span>
                 <button id="auth-btn" onclick="openLoginModal()" class="px-6 py-2 bg-brand-primary text-brand-bg text-sm font-medium rounded-full btn-hover cursor-pointer border-none outline-none">
                     登录 / 注册
                 </button>
+                <a href="/" class="text-2xl font-serif font-bold text-brand-primary tracking-tight decoration-transparent hidden md:block">
+                    雅宝<span class="text-brand-accent">.</span>
+                </a>
             </div>
         </div>
     </nav>
 
     <!-- 主体内容区 -->
-    <main class="flex-grow pt-12 pb-24 px-6 md:px-12">
+    <main class="flex-grow pt-32 pb-24 px-6 md:px-12">
         <div class="max-w-7xl mx-auto">
             
             <!-- 头部说明与发单按钮 -->
