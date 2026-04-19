@@ -70,9 +70,9 @@
                     雅宝 K12 体系覆盖小学、初中、高中核心学科，聚焦同步提升、弱科突破、中高考冲刺与学习习惯养成，让孩子从“被动学”转向“会学习”。
                 </p>
                 <div class="flex flex-wrap gap-4">
-                    <a href="/#contact" class="inline-flex items-center justify-center px-7 py-3.5 bg-brand-accent text-white font-medium rounded-full hover:bg-brand-primary transition-colors decoration-transparent">
+                    <button onclick="openBookingModal('K12全科')" class="inline-flex items-center justify-center px-7 py-3.5 bg-brand-accent text-white font-medium rounded-full hover:bg-brand-primary transition-colors decoration-transparent cursor-pointer border-none outline-none">
                         预约学习规划
-                    </a>
+                    </button>
                     <a href="/#core-services" class="inline-flex items-center justify-center px-7 py-3.5 border border-brand-primary/15 text-brand-primary font-medium rounded-full hover:bg-white transition-colors decoration-transparent">
                         返回业务入口
                     </a>
@@ -144,9 +144,9 @@
                     <div class="text-sm uppercase tracking-[0.25em] text-brand-accent mb-3">Next Step</div>
                     <div class="text-3xl font-serif font-bold mb-4">先做一次学习诊断</div>
                     <p class="text-sm text-white/75 leading-relaxed mb-6">先了解学生当前学情、优势和短板，再决定课程安排，比直接报班更高效。</p>
-                    <a href="/#contact" class="inline-flex items-center px-6 py-3 bg-brand-accent text-white text-sm font-medium rounded-xl hover:bg-white hover:text-brand-primary transition-colors decoration-transparent">
+                    <button onclick="openBookingModal('K12全科')" class="inline-flex items-center px-6 py-3 bg-brand-accent text-white text-sm font-medium rounded-xl hover:bg-white hover:text-brand-primary transition-colors decoration-transparent cursor-pointer border-none outline-none">
                         预约免费沟通
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -156,8 +156,174 @@
         <p class="text-sm text-brand-primary/50">&copy; 2024 雅宝教育工作室 Yabao Education Studio. All rights reserved.</p>
     </footer>
 
+    <!-- 预约表单 玻璃拟态弹窗 (从主页同步) -->
+    <div id="booking-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none">
+        <!-- 弹窗背景蒙层 -->
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeBookingModal()"></div>
+        
+        <!-- 弹窗内容 -->
+        <div class="modal-content relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden z-10 transform scale-95 transition-transform duration-300">
+            <div class="p-8">
+                <button onclick="closeBookingModal()" class="absolute top-6 right-6 text-brand-primary/50 hover:text-brand-primary transition-colors bg-transparent border-none outline-none cursor-pointer">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+                
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-2">预约咨询</h3>
+                <p class="text-sm text-brand-primary/60 mb-6">请留下您的联系方式，我们的顾问老师会尽快与您联系。</p>
+                
+                <form id="booking-form" onsubmit="submitBooking(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">家长/学生姓名</label>
+                        <input type="text" id="book-name" required class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">联系电话</label>
+                        <input type="tel" id="book-phone" required class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">意向课程</label>
+                        <select id="book-course" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary appearance-none">
+                            <option value="K12全科">K12 全科功课辅导</option>
+                            <option value="成人英语">成人英语特训</option>
+                            <option value="其他咨询">其他咨询</option>
+                        </select>
+                    </div>
+                    <button type="submit" id="book-submit-btn" class="w-full mt-4 py-4 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover hover:!bg-brand-primary shadow-lg border-none outline-none cursor-pointer flex justify-center items-center">
+                        <span>提交预约信息</span>
+                    </button>
+                </form>
+                
+                <!-- 成功提示区域 -->
+                <div id="booking-success" class="hidden flex-col items-center justify-center py-8">
+                    <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                        <i data-lucide="check" class="w-8 h-8"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-brand-primary mb-2">预约成功！</h4>
+                    <p class="text-sm text-center text-brand-primary/70">感谢您的信任，我们的教务老师会尽快致电您。</p>
+                    <button onclick="closeBookingModal()" class="mt-6 px-8 py-3 bg-brand-bg border border-brand-primary/20 text-brand-primary font-medium rounded-lg hover:bg-brand-primary/5 transition-colors cursor-pointer border-none outline-none">
+                        关闭
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 错误提示 玻璃拟态弹窗 -->
+    <div id="error-modal" class="fixed inset-0 z-[110] flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none">
+        <!-- 弹窗背景蒙层 -->
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeErrorModal()"></div>
+        
+        <!-- 弹窗内容 -->
+        <div class="modal-content relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden z-10 transform scale-95 transition-transform duration-300">
+            <div class="p-8 text-center">
+                <div class="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="alert-circle" class="w-8 h-8"></i>
+                </div>
+                <h3 class="text-xl font-bold text-brand-primary mb-2">提示</h3>
+                <p id="error-modal-message" class="text-sm text-brand-primary/70 mb-6">电话号码格式不正确，请重新输入。</p>
+                <button onclick="closeErrorModal()" class="w-full py-3 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover hover:!bg-brand-primary shadow-lg border-none outline-none cursor-pointer">
+                    我知道了
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         lucide.createIcons();
+
+        // 预约弹窗逻辑
+        const bookingModal = document.getElementById('booking-modal');
+        const courseSelect = document.getElementById('book-course');
+        
+        function openBookingModal(defaultCourse) {
+            if (defaultCourse) {
+                courseSelect.value = defaultCourse;
+            }
+            bookingModal.classList.remove('opacity-0', 'pointer-events-none');
+            bookingModal.querySelector('.modal-content').classList.remove('scale-95');
+            bookingModal.querySelector('.modal-content').classList.add('scale-100');
+            document.body.style.overflow = 'hidden'; // 防止背景滚动
+        }
+        
+        function closeBookingModal() {
+            bookingModal.classList.add('opacity-0', 'pointer-events-none');
+            bookingModal.querySelector('.modal-content').classList.add('scale-95');
+            bookingModal.querySelector('.modal-content').classList.remove('scale-100');
+            document.body.style.overflow = '';
+            
+            // 重置表单状态
+            setTimeout(() => {
+                document.getElementById('booking-form').reset();
+                document.getElementById('booking-form').style.display = 'block';
+                document.getElementById('booking-success').style.display = 'none';
+                document.getElementById('booking-success').classList.remove('flex');
+            }, 300);
+        }
+
+        // 错误弹窗逻辑
+        const errorModal = document.getElementById('error-modal');
+        function showErrorModal(message) {
+            document.getElementById('error-modal-message').innerText = message;
+            errorModal.classList.remove('opacity-0', 'pointer-events-none');
+            errorModal.querySelector('.modal-content').classList.remove('scale-95');
+            errorModal.querySelector('.modal-content').classList.add('scale-100');
+            lucide.createIcons(); // 确保新弹窗中的图标也能正确渲染
+        }
+        
+        function closeErrorModal() {
+            errorModal.classList.add('opacity-0', 'pointer-events-none');
+            errorModal.querySelector('.modal-content').classList.add('scale-95');
+            errorModal.querySelector('.modal-content').classList.remove('scale-100');
+        }
+        
+        // 提交预约表单
+        async function submitBooking(event) {
+            event.preventDefault();
+            
+            const btn = document.getElementById('book-submit-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> <span class="ml-2">提交中...</span>';
+            lucide.createIcons();
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+            
+            const payload = {
+                name: document.getElementById('book-name').value,
+                phone: document.getElementById('book-phone').value,
+                course: document.getElementById('book-course').value,
+            };
+            
+            try {
+                const response = await fetch('/api/appointment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('booking-form').style.display = 'none';
+                    const successDiv = document.getElementById('booking-success');
+                    successDiv.style.display = 'flex';
+                    successDiv.classList.add('flex');
+                } else {
+                    let errorMsg = '提交失败，请稍后再试或直接电话联系我们。';
+                    try {
+                        const result = await response.json();
+                        if (result.error) errorMsg = result.error;
+                    } catch(e) {}
+                    showErrorModal(errorMsg);
+                }
+            } catch (error) {
+                console.error('Error submitting booking:', error);
+                showErrorModal('网络错误，请检查您的连接。');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            }
+        }
     </script>
 </body>
 </html>
