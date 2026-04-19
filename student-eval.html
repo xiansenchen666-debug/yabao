@@ -105,20 +105,20 @@
         </div>
         <h1 class="text-xl font-bold tracking-tight hidden lg:block gradient-text group-hover:text-brand-accent transition-colors">返回主页</h1>
       </a>
-      <nav class="space-y-2">
-        <a href="#" class="flex items-center gap-4 px-4 py-3 rounded-xl bg-brand-accent/10 text-brand-accent border border-brand-accent/20 transition-colors">
+      <nav class="space-y-2" id="sidebar-nav">
+        <a id="nav-dashboard" onclick="switchTab('dashboard')" class="sidebar-tab flex items-center gap-4 px-4 py-3 rounded-xl bg-brand-accent/10 text-brand-accent border border-brand-accent/20 transition-colors cursor-pointer">
           <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
           <span class="font-medium hidden lg:block">诊断看板</span>
         </a>
-        <a href="javascript:void(0)" onclick="alert('学习航线模块正在升级中，敬请期待！')" class="flex items-center gap-4 px-4 py-3 rounded-xl text-brand-primary/60 hover:bg-brand-primary/5 hover:text-brand-primary transition-colors cursor-pointer">
+        <a id="nav-path" onclick="switchTab('path')" class="sidebar-tab flex items-center gap-4 px-4 py-3 rounded-xl text-brand-primary/60 hover:bg-brand-primary/5 hover:text-brand-primary transition-colors cursor-pointer border border-transparent">
           <i data-lucide="compass" class="w-5 h-5"></i>
           <span class="font-medium hidden lg:block">学习航线</span>
         </a>
-        <a href="javascript:void(0)" onclick="alert('弱项靶场模块正在升级中，敬请期待！')" class="flex items-center gap-4 px-4 py-3 rounded-xl text-brand-primary/60 hover:bg-brand-primary/5 hover:text-brand-primary transition-colors cursor-pointer">
+        <a id="nav-weakness" onclick="switchTab('weakness')" class="sidebar-tab flex items-center gap-4 px-4 py-3 rounded-xl text-brand-primary/60 hover:bg-brand-primary/5 hover:text-brand-primary transition-colors cursor-pointer border border-transparent">
           <i data-lucide="target" class="w-5 h-5"></i>
           <span class="font-medium hidden lg:block">弱项靶场</span>
         </a>
-        <a href="javascript:void(0)" onclick="alert('家校共育模块正在升级中，敬请期待！')" class="flex items-center gap-4 px-4 py-3 rounded-xl text-brand-primary/60 hover:bg-brand-primary/5 hover:text-brand-primary transition-colors cursor-pointer">
+        <a id="nav-home" onclick="switchTab('home')" class="sidebar-tab flex items-center gap-4 px-4 py-3 rounded-xl text-brand-primary/60 hover:bg-brand-primary/5 hover:text-brand-primary transition-colors cursor-pointer border border-transparent">
           <i data-lucide="file-bar-chart-2" class="w-5 h-5"></i>
           <span class="font-medium hidden lg:block">家校共育</span>
         </a>
@@ -126,10 +126,10 @@
     </div>
     <div class="p-6 border-t border-brand-primary/10">
       <div class="flex items-center gap-3">
-        <img src="https://ui-avatars.com/api/?name=Jayu&background=0D8ABC&color=fff" alt="User" class="w-10 h-10 rounded-full border border-brand-primary/10">
+        <img src="https://ui-avatars.com/api/?name=User&background=C5A059&color=fff" alt="User" id="user-avatar" class="w-10 h-10 rounded-full border border-brand-primary/10">
         <div class="hidden lg:block">
-          <p class="text-sm font-semibold">Jayu (初二)</p>
-          <p class="text-xs text-brand-primary/60">数学专项提分计划</p>
+          <p class="text-sm font-semibold" id="current-user-name">获取中...</p>
+          <p class="text-xs text-brand-primary/60" id="current-user-role">未登录</p>
         </div>
       </div>
     </div>
@@ -141,8 +141,8 @@
     <!-- Header -->
     <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4 animate-slide-up">
       <div>
-        <h2 class="text-3xl font-serif font-bold text-brand-primary tracking-tight mb-1">今日智学诊断</h2>
-        <p class="text-brand-primary/60 text-sm flex items-center gap-2">
+        <h2 id="header-title" class="text-3xl font-serif font-bold text-brand-primary tracking-tight mb-1">今日智学诊断</h2>
+        <p id="header-subtitle" class="text-brand-primary/60 text-sm flex items-center gap-2">
           <span class="w-2 h-2 rounded-full bg-emerald animate-pulse"></span>
           AI 核心引擎正在实时分析您的学习轨迹
         </p>
@@ -163,7 +163,11 @@
       </div>
     </header>
 
-    <!-- Grid Layout -->
+    
+    <!-- Sections Container -->
+    <div id="section-dashboard" class="eval-section block">
+      <!-- Grid Layout -->
+
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
       
       <!-- 1. AI 知识图谱诊断 (Visual Knowledge Graph) -->
@@ -400,7 +404,136 @@
     </div>
   </main>
 
-  <!-- 6. 苏格拉底式 AI 助教悬浮窗 (Socratic AI Tutor Widget) -->
+  
+    </div>
+
+    <!-- Section: 学习航线 -->
+    <div id="section-path" class="eval-section hidden animate-slide-up">
+      <div class="glass-card p-8 min-h-[600px]">
+        <h3 class="text-2xl font-serif font-bold text-brand-primary mb-8 flex items-center gap-3">
+          <i data-lucide="compass" class="w-6 h-6 text-brand-accent"></i> 专属进阶航线
+        </h3>
+        
+        <div class="relative border-l-2 border-brand-primary/10 ml-6 space-y-10 pb-8">
+          <!-- Item 1 (Completed) -->
+          <div class="relative pl-10">
+            <div class="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-emerald flex items-center justify-center shadow-lg shadow-emerald/20 border-4 border-white">
+              <i data-lucide="check" class="w-3 h-3 text-white"></i>
+            </div>
+            <h4 class="text-lg font-bold text-brand-primary mb-1">阶段一：夯实基础（已完成）</h4>
+            <p class="text-sm text-brand-primary/60 mb-4">掌握了代数式的基本概念与四则运算，正确率达 95%。</p>
+            <div class="bg-brand-primary/5 rounded-xl p-4 border border-brand-primary/10">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold text-emerald bg-emerald/10 rounded-lg"><i data-lucide="award" class="w-3 h-3"></i> 获得「代数先锋」徽章</span>
+            </div>
+          </div>
+          
+          <!-- Item 2 (Current) -->
+          <div class="relative pl-10">
+            <div class="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-brand-accent flex items-center justify-center shadow-lg shadow-brand-accent/30 border-4 border-white animate-pulse-slow">
+              <div class="w-2 h-2 bg-white rounded-full"></div>
+            </div>
+            <h4 class="text-lg font-bold text-brand-accent mb-1">阶段二：分式方程特训（进行中）</h4>
+            <p class="text-sm text-brand-primary/60 mb-4">攻克分式方程去分母的易错点，提升解题严谨性。</p>
+            <div class="bg-brand-accent/5 rounded-xl p-4 border border-brand-accent/20">
+              <div class="flex justify-between text-sm mb-2"><span class="text-brand-primary font-medium">当前进度</span><span class="text-brand-accent font-bold">45%</span></div>
+              <div class="w-full bg-brand-primary/10 rounded-full h-1.5 overflow-hidden"><div class="bg-brand-accent h-full rounded-full w-[45%]"></div></div>
+            </div>
+          </div>
+
+          <!-- Item 3 (Locked) -->
+          <div class="relative pl-10 opacity-60">
+            <div class="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-brand-primary/20 flex items-center justify-center border-4 border-white">
+              <i data-lucide="lock" class="w-2.5 h-2.5 text-brand-primary/60"></i>
+            </div>
+            <h4 class="text-lg font-bold text-brand-primary/60 mb-1">阶段三：二次函数启蒙（未解锁）</h4>
+            <p class="text-sm text-brand-primary/50">掌握抛物线的图像与性质，结合实际应用题进行拓展。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: 弱项靶场 -->
+    <div id="section-weakness" class="eval-section hidden animate-slide-up">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="glass-card p-6 border border-danger/20 relative overflow-hidden group">
+          <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform"><i data-lucide="target" class="w-24 h-24 text-danger"></i></div>
+          <span class="px-3 py-1 bg-danger/10 text-danger text-xs font-bold rounded-full mb-4 inline-block">高频错点</span>
+          <h3 class="text-xl font-bold text-brand-primary mb-2">分式方程：去分母</h3>
+          <p class="text-sm text-brand-primary/60 mb-6">近一周错误 5 次，主要原因：漏乘不含分母的项及符号变号错误。</p>
+          <button class="w-full py-3 bg-brand-primary text-white rounded-xl font-medium hover:bg-brand-accent transition-colors flex items-center justify-center gap-2 cursor-pointer border-none outline-none">
+            进入靶场特训 <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+        
+        <div class="glass-card p-6 border border-warning/20 relative overflow-hidden group">
+          <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform"><i data-lucide="target" class="w-24 h-24 text-warning"></i></div>
+          <span class="px-3 py-1 bg-warning/10 text-warning text-xs font-bold rounded-full mb-4 inline-block">概念模糊</span>
+          <h3 class="text-xl font-bold text-brand-primary mb-2">完全平方公式运用</h3>
+          <p class="text-sm text-brand-primary/60 mb-6">近一周错误 3 次，主要原因：交叉项系数混淆及符号问题。</p>
+          <button class="w-full py-3 bg-brand-primary/5 text-brand-primary border border-brand-primary/10 rounded-xl font-medium hover:bg-brand-primary hover:text-white transition-colors flex items-center justify-center gap-2 cursor-pointer outline-none">
+            进入靶场特训 <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <div class="glass-card p-6 flex flex-col items-center justify-center text-center border border-dashed border-brand-primary/20 bg-brand-primary/5">
+          <div class="w-16 h-16 rounded-full bg-emerald/10 flex items-center justify-center mb-4">
+            <i data-lucide="check-circle" class="w-8 h-8 text-emerald"></i>
+          </div>
+          <h3 class="text-lg font-bold text-brand-primary mb-2">暂无更多弱项</h3>
+          <p class="text-sm text-brand-primary/60">继续保持良好的学习状态，AI 引擎持续为您监测。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section: 家校共育 -->
+    <div id="section-home" class="eval-section hidden animate-slide-up">
+      <div class="glass-card p-8">
+        <div class="flex justify-between items-center border-b border-brand-primary/10 pb-6 mb-6">
+          <h3 class="text-2xl font-serif font-bold text-brand-primary flex items-center gap-3">
+            <i data-lucide="mail-open" class="w-6 h-6 text-brand-accent"></i> 雅宝教育本周报告
+          </h3>
+          <span class="text-sm text-brand-primary/50">2026年4月第3周</span>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <h4 class="font-bold text-brand-primary mb-4 flex items-center gap-2"><i data-lucide="bar-chart-2" class="w-4 h-4 text-emerald"></i> 学习数据概览</h4>
+            <ul class="space-y-4">
+              <li class="flex justify-between items-center p-3 bg-brand-primary/5 rounded-lg border border-brand-primary/5">
+                <span class="text-sm text-brand-primary/70">专注学习时长</span>
+                <span class="font-bold text-brand-primary">12.5 小时 <span class="text-xs text-emerald">+2h</span></span>
+              </li>
+              <li class="flex justify-between items-center p-3 bg-brand-primary/5 rounded-lg border border-brand-primary/5">
+                <span class="text-sm text-brand-primary/70">完成自适应练习</span>
+                <span class="font-bold text-brand-primary">158 题</span>
+              </li>
+              <li class="flex justify-between items-center p-3 bg-brand-primary/5 rounded-lg border border-brand-primary/5">
+                <span class="text-sm text-brand-primary/70">弱项攻克数</span>
+                <span class="font-bold text-brand-primary text-emerald">3 个</span>
+              </li>
+            </ul>
+          </div>
+          
+          <div>
+            <h4 class="font-bold text-brand-primary mb-4 flex items-center gap-2"><i data-lucide="message-square" class="w-4 h-4 text-brand-accent"></i> 导师专属点评</h4>
+            <div class="bg-brand-accent/5 p-5 rounded-xl border border-brand-accent/20 relative">
+              <i data-lucide="quote" class="absolute top-4 right-4 w-8 h-8 text-brand-accent/20"></i>
+              <div class="flex items-center gap-3 mb-3">
+                <img src="https://ui-avatars.com/api/?name=Jayu+Teacher&background=1A2B3C&color=fff" class="w-8 h-8 rounded-full">
+                <span class="text-sm font-bold text-brand-primary">Jayu 导师</span>
+              </div>
+              <p class="text-sm text-brand-primary/80 leading-relaxed">
+                本周的学习态度非常值得表扬！在遇到分式方程的难题时，没有退缩，而是通过 AI 助教反复推导了错因。建议周末家长可以陪伴孩子一起进行一次小老师角色互换，让孩子把错题讲给你们听，这有助于巩固记忆。
+              </p>
+            </div>
+            <button class="mt-4 w-full py-3 bg-brand-primary text-white rounded-xl text-sm font-medium hover:bg-brand-accent transition-colors cursor-pointer border-none outline-none">
+              向导师留言反馈
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+<!-- 6. 苏格拉底式 AI 助教悬浮窗 (Socratic AI Tutor Widget) -->
   <div class="fixed bottom-8 right-8 z-50 flex flex-col items-end group">
     <!-- Chat Box (Initially hidden, shows on hover or click) -->
     <div class="glass-card w-80 mb-4 p-0 overflow-hidden opacity-0 translate-y-4 scale-95 pointer-events-none transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto origin-bottom-right">
@@ -461,6 +594,26 @@
   <script>
     // Initialize Lucide Icons
     lucide.createIcons();
+
+    // Check Auth Status
+    document.addEventListener('DOMContentLoaded', () => {
+      const userEmail = localStorage.getItem('tutor_email');
+      const userNameEl = document.getElementById('current-user-name');
+      const userRoleEl = document.getElementById('current-user-role');
+      const userAvatarEl = document.getElementById('user-avatar');
+      
+      if (userEmail) {
+        const username = userEmail.split('@')[0];
+        userNameEl.textContent = username;
+        userRoleEl.textContent = '已登录账号';
+        userAvatarEl.src = `https://ui-avatars.com/api/?name=${username}&background=C5A059&color=fff`;
+      } else {
+        userNameEl.textContent = '游客';
+        userRoleEl.textContent = '点击前往登录';
+        userRoleEl.classList.add('cursor-pointer', 'text-brand-accent');
+        userRoleEl.onclick = () => window.location.href = '/';
+      }
+    });
 
     // Initialize Chart.js for Predictive Analytics
     document.addEventListener('DOMContentLoaded', function() {
@@ -529,6 +682,39 @@
         }
       });
     });
+
+    // Switch Tabs
+    window.switchTab = function(tabId) {
+      document.querySelectorAll('.eval-section').forEach(el => {
+        el.classList.remove('block');
+        el.classList.add('hidden');
+      });
+      document.getElementById('section-' + tabId).classList.remove('hidden');
+      document.getElementById('section-' + tabId).classList.add('block');
+      
+      // Update Sidebar styling
+      document.querySelectorAll('.sidebar-tab').forEach(el => {
+        el.className = "sidebar-tab flex items-center gap-4 px-4 py-3 rounded-xl text-brand-primary/60 hover:bg-brand-primary/5 hover:text-brand-primary transition-colors cursor-pointer border border-transparent";
+      });
+      const activeTab = document.getElementById('nav-' + tabId);
+      activeTab.className = "sidebar-tab flex items-center gap-4 px-4 py-3 rounded-xl bg-brand-accent/10 text-brand-accent border border-brand-accent/20 transition-colors cursor-pointer";
+      
+      // Update Header Title
+      const titles = {
+        'dashboard': '今日智学诊断',
+        'path': '专属进阶航线',
+        'weakness': '弱项靶场特训',
+        'home': '家校共育档案'
+      };
+      const subtitles = {
+        'dashboard': '<span class="w-2 h-2 rounded-full bg-emerald animate-pulse"></span> AI 核心引擎正在实时分析您的学习轨迹',
+        'path': 'AI 为您量身定制的最佳学习路线',
+        'weakness': '精准定位薄弱知识点，高效提分',
+        'home': '连接家庭与学校，共筑成长闭环'
+      };
+      document.getElementById('header-title').textContent = titles[tabId];
+      document.getElementById('header-subtitle').innerHTML = subtitles[tabId];
+    }
   </script>
 </body>
 </html>
