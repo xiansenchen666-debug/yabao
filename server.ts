@@ -349,17 +349,7 @@ Deno.serve(async (req) => {
     }
   }
 
-  // 4.3 返回独立的核心业务页面
-  if (req.method === "GET" && url.pathname === "/services.html") {
-    try {
-      const htmlContent = await Deno.readTextFile("./services.html");
-      return new Response(htmlContent, { headers: { "content-type": "text/html; charset=utf-8" } });
-    } catch (error) {
-      return new Response("Error: services.html not found.", { status: 500 });
-    }
-  }
-
-  // 4.4 返回智能评估绑定页面
+  // 4.3 返回智能评估绑定页面
   if (req.method === "GET" && url.pathname === "/student-bind.html") {
     try {
       const htmlContent = await Deno.readTextFile("./student-bind.html");
@@ -369,7 +359,7 @@ Deno.serve(async (req) => {
     }
   }
 
-  // 4.5 返回教务后台演示页面
+  // 4.4 返回教务后台演示页面
   if (req.method === "GET" && url.pathname === "/teacher-dashboard.html") {
     try {
       const htmlContent = await Deno.readTextFile("./teacher-dashboard.html");
@@ -379,7 +369,7 @@ Deno.serve(async (req) => {
     }
   }
 
-  // 4.6 返回 K12 独立页面
+  // 4.5 返回 K12 独立页面
   if (req.method === "GET" && url.pathname === "/k12.html") {
     try {
       const htmlContent = await Deno.readTextFile("./k12.html");
@@ -389,7 +379,7 @@ Deno.serve(async (req) => {
     }
   }
 
-  // 4.7 返回成人教育独立页面
+  // 4.6 返回成人教育独立页面
   if (req.method === "GET" && url.pathname === "/adult-education.html") {
     try {
       const htmlContent = await Deno.readTextFile("./adult-education.html");
@@ -399,7 +389,7 @@ Deno.serve(async (req) => {
     }
   }
 
-  // 4.8 返回 AI 评估独立页面
+  // 4.7 返回 AI 评估独立页面
   if (req.method === "GET" && url.pathname === "/ai-eval.html") {
     try {
       const htmlContent = await Deno.readTextFile("./ai-eval.html");
