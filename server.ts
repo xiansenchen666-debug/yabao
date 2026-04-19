@@ -349,6 +349,36 @@ Deno.serve(async (req) => {
     }
   }
 
+  // 4.3 返回独立的核心业务页面
+  if (req.method === "GET" && url.pathname === "/services.html") {
+    try {
+      const htmlContent = await Deno.readTextFile("./services.html");
+      return new Response(htmlContent, { headers: { "content-type": "text/html; charset=utf-8" } });
+    } catch (error) {
+      return new Response("Error: services.html not found.", { status: 500 });
+    }
+  }
+
+  // 4.4 返回智能评估绑定页面
+  if (req.method === "GET" && url.pathname === "/student-bind.html") {
+    try {
+      const htmlContent = await Deno.readTextFile("./student-bind.html");
+      return new Response(htmlContent, { headers: { "content-type": "text/html; charset=utf-8" } });
+    } catch (error) {
+      return new Response("Error: student-bind.html not found.", { status: 500 });
+    }
+  }
+
+  // 4.5 返回教务后台演示页面
+  if (req.method === "GET" && url.pathname === "/teacher-dashboard.html") {
+    try {
+      const htmlContent = await Deno.readTextFile("./teacher-dashboard.html");
+      return new Response(htmlContent, { headers: { "content-type": "text/html; charset=utf-8" } });
+    } catch (error) {
+      return new Response("Error: teacher-dashboard.html not found.", { status: 500 });
+    }
+  }
+
   // 5. 兼职平台核心 API
   if (url.pathname.startsWith("/api/tutor/")) {
     
