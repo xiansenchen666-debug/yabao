@@ -79,7 +79,7 @@
     </nav>
 
     <!-- 主体内容区 -->
-    <main class="pt-32 pb-24 px-6 md:px-12">
+    <main class="pt-32 pb-24 px-6 md:px-12 min-h-[calc(100vh+12rem)]">
         <div class="max-w-7xl mx-auto">
             
             <!-- 头部说明与发单按钮 -->
@@ -425,8 +425,8 @@
         }
 
         // 登录逻辑
-        function openLoginModal() { document.getElementById('login-modal').classList.add('active'); }
-        function closeLoginModal() { document.getElementById('login-modal').classList.remove('active'); }
+        function openLoginModal() {}
+        function closeLoginModal() {}
 
         async function sendCode() {
             const email = document.getElementById('login-email').value;
