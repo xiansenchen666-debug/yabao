@@ -31,7 +31,8 @@
     </script>
     <!-- Custom CSS -->
     <style>
-        body { background-color: #FDFBF7; color: #1A2B3C; overflow-x: hidden; }
+        html { overflow-y: auto; }
+        body { background-color: #FDFBF7; color: #1A2B3C; overflow-x: hidden; overflow-y: auto; }
         .glass { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.5); }
         .btn-hover { transition: all 0.3s ease; }
         .btn-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(197, 160, 89, 0.4); }
@@ -39,8 +40,8 @@
         .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -10px rgba(26, 43, 60, 0.1); }
         
         /* 弹窗通用样式 */
-        .modal { transition: opacity 0.3s ease, visibility 0.3s ease; opacity: 0; visibility: hidden; }
-        .modal.active { opacity: 1; visibility: visible; }
+        .modal { transition: opacity 0.3s ease, visibility 0.3s ease; opacity: 0; visibility: hidden; pointer-events: none; }
+        .modal.active { opacity: 1; visibility: visible; pointer-events: auto; }
         .modal .modal-content { transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); transform: translateY(20px) scale(0.95); }
         .modal.active .modal-content { transform: translateY(0) scale(1); }
         
