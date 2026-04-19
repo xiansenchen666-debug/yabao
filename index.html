@@ -410,102 +410,142 @@
                 </p>
             </div>
 
-            <!-- 照片墙网格 - 调整为4列适应新老师 -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-6 lg:gap-8">
+            <!-- 师资力量 - 纯文字履历与服务介绍卡片 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 
                 <!-- 老师 1 -->
-                <div class="teacher-card aspect-[3/4] md:mt-0 fade-in-section">
-                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Jayu - 校长" class="w-full h-full object-cover">
-                    <!-- 玻璃拟态悬浮窗 -->
-                    <div class="teacher-overlay glass-dark text-white">
-                        <h4 class="text-3xl font-serif font-bold mb-1">Jayu</h4>
-                        <div class="text-brand-accent text-xs font-semibold tracking-widest uppercase mb-5">校长</div>
-                        <div class="w-12 h-px bg-brand-accent/50 mb-6"></div>
-                        <ul class="text-sm text-gray-200 space-y-3 mb-8 text-left w-full px-6">
-                            <li class="flex items-start gap-3">
-                                <i data-lucide="award" class="w-4 h-4 text-brand-accent shrink-0 mt-0.5"></i> 
-                                <span>资深教育专家</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <i data-lucide="book" class="w-4 h-4 text-brand-accent shrink-0 mt-0.5"></i> 
-                                <span>深耕教育行业多年</span>
-                            </li>
-                        </ul>
-                        <p class="text-sm italic text-gray-400 px-4">"教育的本质意味着：一棵树摇动另一棵树，一朵云推动另一朵云。"</p>
+                <div class="bg-white rounded-3xl p-8 shadow-lg border border-brand-primary/5 hover:shadow-2xl transition-all duration-300 group fade-in-section">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-16 h-16 bg-brand-primary/5 rounded-2xl flex items-center justify-center text-brand-accent group-hover:bg-brand-accent group-hover:text-white transition-colors">
+                            <i data-lucide="user" class="w-8 h-8"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-serif font-bold text-brand-primary">Jayu</h4>
+                            <div class="text-brand-accent text-sm font-semibold tracking-widest uppercase">校长</div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <h5 class="text-sm font-bold text-brand-primary/80 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <i data-lucide="graduation-cap" class="w-4 h-4 text-brand-accent"></i> 履历介绍
+                            </h5>
+                            <ul class="text-sm text-brand-primary/70 space-y-2">
+                                <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent/50 mt-1.5 shrink-0"></span> 资深教育专家，深耕教育行业多年</li>
+                                <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent/50 mt-1.5 shrink-0"></span> 拥有丰富的一线教学与团队管理经验</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h5 class="text-sm font-bold text-brand-primary/80 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <i data-lucide="briefcase" class="w-4 h-4 text-brand-accent"></i> 核心工作
+                            </h5>
+                            <ul class="text-sm text-brand-primary/70 space-y-2">
+                                <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent/50 mt-1.5 shrink-0"></span> 机构整体教学规划与运营管理</li>
+                                <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent/50 mt-1.5 shrink-0"></span> 核心课程研发与教育资源整合</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 老师 2 (向下偏移) -->
-                <div class="teacher-card aspect-[3/4] md:mt-12 fade-in-section" style="transition-delay: 0.2s;">
-                    <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Cary - 副校长" class="w-full h-full object-cover">
-                    <div class="teacher-overlay glass-dark text-white">
-                        <h4 class="text-3xl font-serif font-bold mb-1">Cary</h4>
-                        <div class="text-brand-accent text-xs font-semibold tracking-widest uppercase mb-5">副校长</div>
-                        <div class="w-12 h-px bg-brand-accent/50 mb-6"></div>
-                        <ul class="text-sm text-gray-200 space-y-3 mb-8 text-left w-full px-6">
-                            <li class="flex items-start gap-3">
-                                <i data-lucide="award" class="w-4 h-4 text-brand-accent shrink-0 mt-0.5"></i> 
-                                <span>丰富教学管理经验</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <i data-lucide="book" class="w-4 h-4 text-brand-accent shrink-0 mt-0.5"></i> 
-                                <span>专注课程体系建设</span>
-                            </li>
-                        </ul>
-                        <p class="text-sm italic text-gray-400 px-4">"用专业的态度做有温度的教育，陪伴每一位学员成长。"</p>
+                <!-- 老师 2 -->
+                <div class="bg-white rounded-3xl p-8 shadow-lg border border-brand-primary/5 hover:shadow-2xl transition-all duration-300 group fade-in-section" style="transition-delay: 0.1s;">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-16 h-16 bg-brand-primary/5 rounded-2xl flex items-center justify-center text-brand-accent group-hover:bg-brand-accent group-hover:text-white transition-colors">
+                            <i data-lucide="users" class="w-8 h-8"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-serif font-bold text-brand-primary">Cary</h4>
+                            <div class="text-brand-accent text-sm font-semibold tracking-widest uppercase">副校长</div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <h5 class="text-sm font-bold text-brand-primary/80 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <i data-lucide="graduation-cap" class="w-4 h-4 text-brand-accent"></i> 履历介绍
+                            </h5>
+                            <ul class="text-sm text-brand-primary/70 space-y-2">
+                                <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent/50 mt-1.5 shrink-0"></span> 具备丰富的教学管理与教研经验</li>
+                                <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent/50 mt-1.5 shrink-0"></span> 专注于高质量课程体系的设计与标准化建设</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h5 class="text-sm font-bold text-brand-primary/80 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <i data-lucide="briefcase" class="w-4 h-4 text-brand-accent"></i> 核心工作
+                            </h5>
+                            <ul class="text-sm text-brand-primary/70 space-y-2">
+                                <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent/50 mt-1.5 shrink-0"></span> 教师团队培训与教研指导</li>
+                                <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent/50 mt-1.5 shrink-0"></span> 学员学习效果的深度评估与优化追踪</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 老师 3 (向下偏移更多) -->
-                <div class="teacher-card aspect-[3/4] md:mt-24 fade-in-section" style="transition-delay: 0.4s;">
-                    <img src="https://images.unsplash.com/photo-1580894732444-8ecded7900cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Eric - 教务" class="w-full h-full object-cover">
-                    <div class="teacher-overlay glass-dark text-white">
-                        <h4 class="text-3xl font-serif font-bold mb-1">Eric</h4>
-                        <div class="text-brand-accent text-xs font-semibold tracking-widest uppercase mb-5">教务</div>
-                        <div class="w-12 h-px bg-brand-accent/50 mb-6"></div>
-                        <ul class="text-sm text-gray-200 space-y-3 mb-8 text-left w-full px-6">
-                            <li class="flex items-start gap-3">
-                                <i data-lucide="award" class="w-4 h-4 text-brand-accent shrink-0 mt-0.5"></i> 
-                                <span>高效学情跟踪</span>
-                            </li>
-                            <li class="flex items-start gap-3">
-                                <i data-lucide="book" class="w-4 h-4 text-brand-accent shrink-0 mt-0.5"></i> 
-                                <span>个性化学习规划</span>
-                            </li>
-                        </ul>
-                        <p class="text-sm italic text-gray-400 px-4">"做学员最坚实的后盾，让学习之旅畅通无阻。"</p>
+                <!-- 老师 3 -->
+                <div class="bg-white rounded-3xl p-8 shadow-lg border border-brand-primary/5 hover:shadow-2xl transition-all duration-300 group fade-in-section" style="transition-delay: 0.2s;">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-16 h-16 bg-brand-primary/5 rounded-2xl flex items-center justify-center text-brand-accent group-hover:bg-brand-accent group-hover:text-white transition-colors">
+                            <i data-lucide="calendar" class="w-8 h-8"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-serif font-bold text-brand-primary">Eric</h4>
+                            <div class="text-brand-accent text-sm font-semibold tracking-widest uppercase">教务</div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <h5 class="text-sm font-bold text-brand-primary/80 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <i data-lucide="graduation-cap" class="w-4 h-4 text-brand-accent"></i> 履历介绍
+                            </h5>
+                            <ul class="text-sm text-brand-primary/70 space-y-2">
+                                <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent/50 mt-1.5 shrink-0"></span> 资深教务管理专家</li>
+                                <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent/50 mt-1.5 shrink-0"></span> 擅长沟通心理疏导与科学的时间管理指导</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h5 class="text-sm font-bold text-brand-primary/80 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <i data-lucide="briefcase" class="w-4 h-4 text-brand-accent"></i> 核心工作
+                            </h5>
+                            <ul class="text-sm text-brand-primary/70 space-y-2">
+                                <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent/50 mt-1.5 shrink-0"></span> 高效学情跟踪反馈与家校沟通</li>
+                                <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent/50 mt-1.5 shrink-0"></span> 个性化学习规划定制与日常排课管理</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
                 <!-- 老师 4 刘博士 -->
-                <div class="teacher-card aspect-[3/4] md:mt-36 fade-in-section" style="transition-delay: 0.6s;">
-                    <!-- 无照片，使用品牌色背景加渐变 -->
-                    <div class="w-full h-full bg-gradient-to-br from-brand-primary/10 to-brand-primary/30 flex items-center justify-center">
-                        <i data-lucide="user-check" class="w-24 h-24 text-brand-primary/40"></i>
+                <div class="bg-white rounded-3xl p-8 shadow-lg border border-brand-primary/5 hover:shadow-2xl transition-all duration-300 group fade-in-section" style="transition-delay: 0.3s;">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-16 h-16 bg-brand-primary/5 rounded-2xl flex items-center justify-center text-brand-accent group-hover:bg-brand-accent group-hover:text-white transition-colors">
+                            <i data-lucide="user-check" class="w-8 h-8"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-2xl font-serif font-bold text-brand-primary">刘博士</h4>
+                            <div class="text-brand-accent text-sm font-semibold tracking-widest uppercase">升学辅导顾问</div>
+                        </div>
                     </div>
-                    <div class="teacher-overlay glass-dark text-white">
-                        <h4 class="text-3xl font-serif font-bold mb-1">刘博士</h4>
-                        <div class="text-brand-accent text-xs font-semibold tracking-widest uppercase mb-5">升学辅导顾问</div>
-                        <div class="w-12 h-px bg-brand-accent/50 mb-6"></div>
-                        <ul class="text-xs text-gray-200 space-y-2 mb-6 text-left w-full px-4">
-                            <li class="flex items-start gap-2">
-                                <i data-lucide="book-open" class="w-3.5 h-3.5 text-brand-accent shrink-0 mt-0.5"></i> 
-                                <span>环境/生态/海洋/大气</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <i data-lucide="target" class="w-3.5 h-3.5 text-brand-accent shrink-0 mt-0.5"></i> 
-                                <span>保研(本科) / 申博(硕士)</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <i data-lucide="file-edit" class="w-3.5 h-3.5 text-brand-accent shrink-0 mt-0.5"></i> 
-                                <span>定位/PS修改/套磁/面试</span>
-                            </li>
-                            <li class="flex items-start gap-2">
-                                <i data-lucide="clock" class="w-3.5 h-3.5 text-brand-accent shrink-0 mt-0.5"></i> 
-                                <span>辅导容量：每周1-2人</span>
-                            </li>
-                        </ul>
-                        <p class="text-xs italic text-gray-400 px-2">"为您提供专业的升学规划，精准定位，助力名校梦想。"</p>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <h5 class="text-sm font-bold text-brand-primary/80 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <i data-lucide="graduation-cap" class="w-4 h-4 text-brand-accent"></i> 履历介绍
+                            </h5>
+                            <ul class="text-sm text-brand-primary/70 space-y-2">
+                                <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent/50 mt-1.5 shrink-0"></span> 名校博士学历，具备深厚的学术背景</li>
+                                <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent/50 mt-1.5 shrink-0"></span> 专注于环境、生态、海洋、大气等理工科专业方向</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h5 class="text-sm font-bold text-brand-primary/80 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <i data-lucide="briefcase" class="w-4 h-4 text-brand-accent"></i> 核心工作
+                            </h5>
+                            <ul class="text-sm text-brand-primary/70 space-y-2">
+                                <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent/50 mt-1.5 shrink-0"></span> 本科生保研、硕士生申博全流程辅导 (院校定位/PS修改/套磁/面试)</li>
+                                <li class="flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full bg-brand-accent/50 mt-1.5 shrink-0"></span> 辅导容量限制：每周精细化辅导 1-2 人</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
