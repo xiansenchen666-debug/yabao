@@ -586,16 +586,26 @@ Deno.serve(async (req) => {
         const notifyFrom = Deno.env.get("NOTIFY_EMAIL_FROM");
         
         if (resendApiKey && notifyFrom) {
-           fetch("https://api.resend.com/emails", {
-            method: "POST",
-            headers: { "Authorization": `Bearer ${resendApiKey}`, "Content-Type": "application/json" },
-            body: JSON.stringify({
-              from: notifyFrom,
-              to: [email],
-              subject: "雅宝家教兼职平台 - 登录验证码",
-              html: `<p>您的登录验证码是：<strong>${code}</strong>，5分钟内有效。</p>`
-            })
-          }).catch(e => console.error("发送邮件失败", e));
+          try {
+            const res = await fetch("https://api.resend.com/emails", {
+              method: "POST",
+              headers: { "Authorization": `Bearer ${resendApiKey}`, "Content-Type": "application/json" },
+              body: JSON.stringify({
+                from: notifyFrom,
+                to: [email],
+                subject: "雅宝家教兼职平台 - 登录验证码",
+                html: `<p>您的登录验证码是：<strong>${code}</strong>，5分钟内有效。</p>`
+              })
+            });
+            const data = await res.json();
+            if (!res.ok) {
+              console.error("Resend 接口返回错误:", data);
+              return new Response(JSON.stringify({ success: false, error: `邮件发送失败: ${data.message || '未知错误'}` }), { status: 500, headers: JSON_HEADERS });
+            }
+          } catch (e) {
+            console.error("发送邮件请求异常", e);
+            return new Response(JSON.stringify({ success: false, error: "发送邮件请求异常" }), { status: 500, headers: JSON_HEADERS });
+          }
         } else {
           console.warn("[警告] 未配置邮件环境变量，无法发送邮件。");
         }

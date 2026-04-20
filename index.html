@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -227,8 +227,8 @@
                         <i data-lucide="chevron-down" id="desktop-services-icon" class="w-4 h-4 transition-transform"></i>
                     </button>
                     <!-- 直接用更大的 translateX 左移，让“家教兼职”更准确落在“核心业务”正下方 -->
-                    <div class="service-dropdown absolute left-1/2 top-full mt-2 -translate-x-[60%] w-[44rem] rounded-[1.75rem] bg-white/95 backdrop-blur-xl border border-white/70 shadow-2xl shadow-brand-primary/10 p-4">
-                        <div class="grid grid-cols-5 gap-3">
+                    <div class="service-dropdown absolute left-1/2 top-full mt-2 -translate-x-[60%] w-[52rem] rounded-[1.75rem] bg-white/95 backdrop-blur-xl border border-white/70 shadow-2xl shadow-brand-primary/10 p-4">
+                        <div class="grid grid-cols-6 gap-3">
                             <a href="/k12.html" class="rounded-2xl border border-brand-primary/5 bg-brand-bg px-4 py-4 hover:border-brand-accent/20 hover:-translate-y-1 transition-all decoration-transparent">
                                 <div class="text-sm font-bold text-brand-primary">K12教育</div>
                                 <div class="mt-1 text-xs text-brand-primary/50">提分与升学</div>
@@ -237,7 +237,7 @@
                                 <div class="text-sm font-bold text-brand-primary">成人教育</div>
                                 <div class="mt-1 text-xs text-brand-primary/50">口语与职场</div>
                             </a>
-                            <a href="/tutor" class="rounded-2xl border border-brand-primary/5 bg-brand-bg px-4 py-4 hover:border-brand-accent/20 hover:-translate-y-1 transition-all decoration-transparent">
+                            <a href="/tutor.html" class="rounded-2xl border border-brand-primary/5 bg-brand-bg px-4 py-4 hover:border-brand-accent/20 hover:-translate-y-1 transition-all decoration-transparent">
                                 <div class="text-sm font-bold text-brand-primary">家教兼职</div>
                                 <div class="mt-1 text-xs text-brand-primary/50">供需双向匹配</div>
                             </a>
@@ -248,6 +248,10 @@
                             <a href="/ai-eval.html" class="rounded-2xl border border-brand-primary/5 bg-brand-bg px-4 py-4 hover:border-brand-accent/20 hover:-translate-y-1 transition-all decoration-transparent">
                                 <div class="text-sm font-bold text-brand-primary">AI评估</div>
                                 <div class="mt-1 text-xs text-brand-primary/50">家校协同分析</div>
+                            </a>
+                            <a href="#" onclick="openBookingModal('论文指导'); return false;" class="rounded-2xl border border-brand-primary/5 bg-brand-bg px-4 py-4 hover:border-brand-accent/20 hover:-translate-y-1 transition-all decoration-transparent">
+                                <div class="text-sm font-bold text-brand-primary">论文指导</div>
+                                <div class="mt-1 text-xs text-brand-primary/50">专业学术辅导</div>
                             </a>
                         </div>
                     </div>
@@ -286,9 +290,10 @@
                 <div class="flex flex-col items-center gap-4 text-lg">
                     <a href="/k12.html" onclick="toggleMobileMenu()" class="text-brand-primary hover:text-brand-accent transition-colors">K12教育</a>
                     <a href="/adult-education.html" onclick="toggleMobileMenu()" class="text-brand-primary hover:text-brand-accent transition-colors">成人教育</a>
-                    <a href="/tutor" onclick="toggleMobileMenu()" class="text-brand-primary hover:text-brand-accent transition-colors">家教兼职</a>
+                    <a href="/tutor.html" onclick="toggleMobileMenu()" class="text-brand-primary hover:text-brand-accent transition-colors">家教兼职</a>
                     <a href="/study-room.html" onclick="toggleMobileMenu()" class="text-brand-primary hover:text-brand-accent transition-colors">自习室</a>
                     <a href="/ai-eval.html" onclick="toggleMobileMenu()" class="text-brand-primary hover:text-brand-accent transition-colors">AI评估</a>
+                    <a href="#" onclick="toggleMobileMenu(); openBookingModal('论文指导'); return false;" class="text-brand-primary hover:text-brand-accent transition-colors">论文指导</a>
                 </div>
             </div>
         </div>
@@ -367,7 +372,7 @@
                     </div>
                     <div class="text-sm font-bold text-brand-primary/55">点击卡片直达独立业务页面</div>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
                     <a href="/k12.html" class="bg-white rounded-2xl px-5 py-5 border border-brand-primary/5 hover:border-brand-accent/25 hover:-translate-y-1 transition-all decoration-transparent">
                         <div class="w-10 h-10 rounded-xl bg-brand-accent/10 text-brand-accent flex items-center justify-center mb-4">
                             <i data-lucide="pen-tool" class="w-5 h-5"></i>
@@ -382,7 +387,7 @@
                         <div class="text-base font-bold text-brand-primary">成人教育</div>
                         <div class="mt-1 text-sm text-brand-primary/55">口语商务与考试</div>
                     </a>
-                    <a href="/tutor" class="bg-white rounded-2xl px-5 py-5 border border-brand-primary/5 hover:border-brand-accent/25 hover:-translate-y-1 transition-all decoration-transparent">
+                    <a href="/tutor.html" class="bg-white rounded-2xl px-5 py-5 border border-brand-primary/5 hover:border-brand-accent/25 hover:-translate-y-1 transition-all decoration-transparent">
                         <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4">
                             <i data-lucide="briefcase" class="w-5 h-5"></i>
                         </div>
@@ -402,6 +407,13 @@
                         </div>
                         <div class="text-base font-bold text-brand-primary">AI评估</div>
                         <div class="mt-1 text-sm text-brand-primary/55">成绩分析与画像</div>
+                    </a>
+                    <a href="#" onclick="openBookingModal('论文指导'); return false;" class="bg-white rounded-2xl px-5 py-5 border border-brand-primary/5 hover:border-brand-accent/25 hover:-translate-y-1 transition-all decoration-transparent">
+                        <div class="w-10 h-10 rounded-xl bg-brand-primary/10 text-brand-primary flex items-center justify-center mb-4">
+                            <i data-lucide="scroll-text" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-base font-bold text-brand-primary">论文指导</div>
+                        <div class="mt-1 text-sm text-brand-primary/55">专业学术辅导</div>
                     </a>
                 </div>
             </div>
@@ -859,6 +871,7 @@
                         <select id="book-course" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary appearance-none">
                             <option value="K12全科">K12 全科功课辅导</option>
                             <option value="成人英语">成人英语特训</option>
+                            <option value="论文指导">论文指导</option>
                             <option value="其他咨询">其他咨询</option>
                         </select>
                     </div>
@@ -1118,6 +1131,18 @@
             const modal = document.getElementById('auth-modal');
             modal.classList.add('opacity-0', 'pointer-events-none');
             modal.classList.remove('opacity-100');
+            // 关闭弹窗时清空表单并重置状态
+            setTimeout(() => {
+                document.getElementById('auth-form').reset();
+                const sendBtn = document.getElementById('auth-send-btn');
+                sendBtn.innerText = '获取验证码';
+                sendBtn.disabled = false;
+                // 重置倒计时定时器（如果有）
+                if (window.authTimer) {
+                    clearInterval(window.authTimer);
+                    window.authTimer = null;
+                }
+            }, 300);
         }
 
         let currentAuthMode = 'login';
@@ -1218,11 +1243,12 @@
                     }
 
                     let sec = 60;
-                    const timer = setInterval(() => {
+                    window.authTimer = setInterval(() => {
                         sec--;
                         btn.innerText = `${sec}s 后重发`;
                         if (sec <= 0) {
-                            clearInterval(timer);
+                            clearInterval(window.authTimer);
+                            window.authTimer = null;
                             btn.innerText = '获取验证码';
                             btn.disabled = false;
                         }
