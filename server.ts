@@ -601,7 +601,7 @@ Deno.serve(async (req) => {
               method: "POST",
               headers: { "Authorization": `Bearer ${resendApiKey}`, "Content-Type": "application/json" },
               body: JSON.stringify({
-                from: notifyFrom,
+                from: `雅宝教育 <${notifyFrom}>`,
                 to: [email],
                 subject: "雅宝家教兼职平台 - 登录验证码",
                 html: `<p>您的登录验证码是：<strong>${code}</strong>，5分钟内有效。</p>`
