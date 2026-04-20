@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>论文指导 | 雅宝教育 Yabao Education</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#FDFBF7',
+                            primary: '#1A2B3C',
+                            accent: '#C5A059',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #FDFBF7; color: #1A2B3C; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.5); }
+        .card-hover { transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -10px rgba(26, 43, 60, 0.1); }
+        .fade-in-section { animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(30px); }
+        @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+    </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="font-sans antialiased selection:bg-brand-accent selection:text-white">
+    <nav class="fixed w-full z-50 glass py-4 px-6 md:px-12 border-b border-brand-primary/5">
+        <div class="max-w-7xl mx-auto relative flex items-center justify-between min-h-[3rem]">
+            <a href="/" class="absolute left-0 top-1/2 -translate-y-1/2 flex items-center gap-2 text-base font-medium text-brand-primary/60 hover:text-brand-accent transition-colors decoration-transparent">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> 返回首页
+            </a>
+            <div class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-8 text-lg font-medium text-brand-primary/70">
+                <a href="/k12.html" class="hover:text-brand-accent transition-colors decoration-transparent">K12教育</a>
+                <a href="/paper-guidance.html" class="text-brand-accent transition-colors decoration-transparent">论文指导</a>
+                <a href="/adult-education.html" class="hover:text-brand-accent transition-colors decoration-transparent">成人教育</a>
+                <a href="/tutor" class="hover:text-brand-accent transition-colors decoration-transparent">家教兼职</a>
+                <a href="/study-room.html" class="hover:text-brand-accent transition-colors decoration-transparent">自习室</a>
+                <a href="/ai-eval.html" class="hover:text-brand-accent transition-colors decoration-transparent">AI评估</a>
+            </div>
+            <a href="/" class="ml-auto text-2xl font-serif font-bold text-brand-primary tracking-tight decoration-transparent">
+                雅宝<span class="text-brand-accent">.</span>
+            </a>
+        </div>
+    </nav>
+
+    <section class="pt-32 pb-16 px-6 md:px-12 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-[36rem] h-[36rem] bg-brand-accent/10 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="fade-in-section">
+                <div class="inline-block mb-4 px-4 py-1.5 rounded-full border border-brand-accent/30 text-brand-accent text-xs font-semibold tracking-widest uppercase">
+                    Paper Guidance
+                </div>
+                <h1 class="text-5xl md:text-6xl font-serif font-bold text-brand-primary mb-6">
+                    论文指导，<span class="italic text-brand-accent">学术进阶之路</span>
+                </h1>
+                <p class="text-lg text-brand-primary/65 leading-relaxed max-w-xl mb-8">
+                    由顶尖名校博士与资深学者组成的导师团队，为您提供从选题构思、文献综述到数据分析、论文润色的一站式专业学术辅导。
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="openBookingModal('论文指导')" class="inline-flex items-center justify-center px-7 py-3.5 bg-brand-accent text-white font-medium rounded-full hover:bg-brand-primary transition-colors decoration-transparent cursor-pointer border-none outline-none">
+                        预约学术评估
+                    </button>
+                    <a href="/#core-services" class="inline-flex items-center justify-center px-7 py-3.5 border border-brand-primary/15 text-brand-primary font-medium rounded-full hover:bg-white transition-colors decoration-transparent">
+                        返回业务入口
+                    </a>
+                </div>
+            </div>
+            <div class="fade-in-section" style="animation-delay: 0.15s;">
+                <div class="bg-white rounded-[2rem] p-8 md:p-10 shadow-xl border border-brand-primary/5">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="rounded-2xl bg-brand-bg border border-brand-primary/5 p-5">
+                            <div class="text-3xl font-serif font-bold text-brand-primary">硕博</div>
+                            <div class="mt-2 text-sm text-brand-primary/55">名校导师团队</div>
+                        </div>
+                        <div class="rounded-2xl bg-brand-accent/10 border border-brand-accent/10 p-5">
+                            <div class="text-3xl font-serif font-bold text-brand-accent">1对1</div>
+                            <div class="mt-2 text-sm text-brand-primary/55">深度定制辅导</div>
+                        </div>
+                        <div class="rounded-2xl bg-white border border-brand-primary/5 p-5">
+                            <div class="text-3xl font-serif font-bold text-brand-primary">选题</div>
+                            <div class="mt-2 text-sm text-brand-primary/55">创新切入点挖掘</div>
+                        </div>
+                        <div class="rounded-2xl bg-white border border-brand-primary/5 p-5">
+                            <div class="text-3xl font-serif font-bold text-brand-primary">润色</div>
+                            <div class="mt-2 text-sm text-brand-primary/55">提升学术规范性</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pb-24 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white rounded-[2rem] p-8 border border-brand-primary/5 card-hover fade-in-section">
+                <div class="w-14 h-14 rounded-2xl bg-brand-accent/10 text-brand-accent flex items-center justify-center mb-6">
+                    <i data-lucide="lightbulb" class="w-7 h-7"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-4">选题与开题</h3>
+                <p class="text-sm leading-relaxed text-brand-primary/70">结合学术前沿与个人研究基础，指导挖掘具有创新性和可行性的研究课题，完善开题报告。</p>
+            </div>
+            <div class="bg-white rounded-[2rem] p-8 border border-brand-primary/5 card-hover fade-in-section" style="animation-delay: 0.1s;">
+                <div class="w-14 h-14 rounded-2xl bg-brand-accent/10 text-brand-accent flex items-center justify-center mb-6">
+                    <i data-lucide="bar-chart-3" class="w-7 h-7"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-4">研究方法指导</h3>
+                <p class="text-sm leading-relaxed text-brand-primary/70">提供定性/定量研究方法辅导，协助进行数据收集、处理与模型分析，确保论证严密。</p>
+            </div>
+            <div class="bg-white rounded-[2rem] p-8 border border-brand-primary/5 card-hover fade-in-section" style="animation-delay: 0.2s;">
+                <div class="w-14 h-14 rounded-2xl bg-brand-accent/10 text-brand-accent flex items-center justify-center mb-6">
+                    <i data-lucide="pen-tool" class="w-7 h-7"></i>
+                </div>
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-4">论文润色与修改</h3>
+                <p class="text-sm leading-relaxed text-brand-primary/70">优化文章逻辑结构，提升学术语言表达，针对审稿人意见提供修改建议，助力成功发表。</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="pb-32 px-6 md:px-12">
+        <div class="max-w-7xl mx-auto bg-brand-primary text-white rounded-[2rem] p-10 md:p-14">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                <div>
+                    <h2 class="text-4xl font-serif font-bold mb-6">适合哪些学员</h2>
+                    <ul class="space-y-4 text-white/80 text-sm">
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-accent shrink-0"></i> 面临毕业论文压力，选题困难或进度停滞的本科/硕士生</li>
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-accent shrink-0"></i> 准备申请海外名校或保研，急需高水平学术论文背景提升的同学</li>
+                        <li class="flex items-start gap-3"><i data-lucide="check" class="w-5 h-5 text-brand-accent shrink-0"></i> 投稿核心期刊被拒，需要专业学者指导修改策略的研究者</li>
+                    </ul>
+                </div>
+                <div class="bg-white/10 rounded-[1.5rem] p-8 border border-white/10">
+                    <div class="text-sm uppercase tracking-[0.25em] text-brand-accent mb-3">Next Step</div>
+                    <div class="text-3xl font-serif font-bold mb-4">先进行学术评估</div>
+                    <p class="text-sm text-white/75 leading-relaxed mb-6">与导师深入沟通研究方向与当前痛点，匹配最适合的学术指导方案。</p>
+                    <button onclick="openBookingModal('论文指导')" class="inline-flex items-center px-6 py-3 bg-brand-accent text-white text-sm font-medium rounded-xl hover:bg-white hover:text-brand-primary transition-colors decoration-transparent cursor-pointer border-none outline-none">
+                        预约免费评估
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-10 bg-[#FDFBF7] border-t border-brand-primary/5 text-center px-6">
+        <p class="text-sm text-brand-primary/50">&copy; <span data-current-year></span> 雅宝教育工作室 Yabao Education Studio. All rights reserved.</p>
+    </footer>
+
+    <!-- 预约表单 玻璃拟态弹窗 (从主页同步) -->
+    <div id="booking-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none">
+        <!-- 弹窗背景蒙层 -->
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeBookingModal()"></div>
+        
+        <!-- 弹窗内容 -->
+        <div class="modal-content relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden z-10 transform scale-95 transition-transform duration-300">
+            <div class="p-8">
+                <button onclick="closeBookingModal()" class="absolute top-6 right-6 text-brand-primary/50 hover:text-brand-primary transition-colors bg-transparent border-none outline-none cursor-pointer">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+                
+                <h3 class="text-2xl font-serif font-bold text-brand-primary mb-2">预约咨询</h3>
+                <p class="text-sm text-brand-primary/60 mb-6">请留下您的联系方式，我们的顾问老师会尽快与您联系。</p>
+                
+                <form id="booking-form" onsubmit="submitBooking(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">家长/学生姓名</label>
+                        <input type="text" id="book-name" required class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">联系电话</label>
+                        <input type="tel" id="book-phone" required class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-primary/80 uppercase tracking-wider mb-1">意向课程</label>
+                        <select id="book-course" class="w-full px-4 py-3 bg-brand-bg border border-brand-primary/10 rounded-lg focus:outline-none focus:border-brand-accent transition-colors text-brand-primary appearance-none">
+                            <option value="K12全科">K12 全科功课辅导</option>
+                            <option value="成人英语">成人英语特训</option>
+                            <option value="论文指导">论文指导</option>
+                            <option value="其他咨询">其他咨询</option>
+                        </select>
+                    </div>
+                    <button type="submit" id="book-submit-btn" class="w-full mt-4 py-4 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover hover:!bg-brand-primary shadow-lg border-none outline-none cursor-pointer flex justify-center items-center">
+                        <span>提交预约信息</span>
+                    </button>
+                </form>
+                
+                <!-- 成功提示区域 -->
+                <div id="booking-success" class="hidden flex-col items-center justify-center py-8">
+                    <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+                        <i data-lucide="check" class="w-8 h-8"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-brand-primary mb-2">预约成功！</h4>
+                    <p class="text-sm text-center text-brand-primary/70">感谢您的信任，我们的教务老师会尽快致电您。</p>
+                    <button onclick="closeBookingModal()" class="mt-6 px-8 py-3 bg-brand-bg border border-brand-primary/20 text-brand-primary font-medium rounded-lg hover:bg-brand-primary/5 transition-colors cursor-pointer border-none outline-none">
+                        关闭
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 错误提示 玻璃拟态弹窗 -->
+    <div id="error-modal" class="fixed inset-0 z-[110] flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none">
+        <!-- 弹窗背景蒙层 -->
+        <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeErrorModal()"></div>
+        
+        <!-- 弹窗内容 -->
+        <div class="modal-content relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden z-10 transform scale-95 transition-transform duration-300">
+            <div class="p-8 text-center">
+                <div class="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="alert-circle" class="w-8 h-8"></i>
+                </div>
+                <h3 class="text-xl font-bold text-brand-primary mb-2">提示</h3>
+                <p id="error-modal-message" class="text-sm text-brand-primary/70 mb-6">电话号码格式不正确，请重新输入。</p>
+                <button onclick="closeErrorModal()" class="w-full py-3 bg-brand-primary text-brand-bg font-medium rounded-xl btn-hover hover:!bg-brand-primary shadow-lg border-none outline-none cursor-pointer">
+                    我知道了
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        document.querySelectorAll('[data-current-year]').forEach((el) => {
+            el.textContent = new Date().getFullYear();
+        });
+
+        // 预约弹窗逻辑
+        const bookingModal = document.getElementById('booking-modal');
+        const courseSelect = document.getElementById('book-course');
+        
+        function openBookingModal(defaultCourse) {
+            if (defaultCourse) {
+                courseSelect.value = defaultCourse;
+            }
+            bookingModal.classList.remove('opacity-0', 'pointer-events-none');
+            bookingModal.querySelector('.modal-content').classList.remove('scale-95');
+            bookingModal.querySelector('.modal-content').classList.add('scale-100');
+            document.body.style.overflow = 'hidden'; // 防止背景滚动
+        }
+        
+        function closeBookingModal() {
+            bookingModal.classList.add('opacity-0', 'pointer-events-none');
+            bookingModal.querySelector('.modal-content').classList.add('scale-95');
+            bookingModal.querySelector('.modal-content').classList.remove('scale-100');
+            document.body.style.overflow = '';
+            
+            // 重置表单状态
+            setTimeout(() => {
+                document.getElementById('booking-form').reset();
+                document.getElementById('booking-form').style.display = 'block';
+                document.getElementById('booking-success').style.display = 'none';
+                document.getElementById('booking-success').classList.remove('flex');
+            }, 300);
+        }
+
+        // 错误弹窗逻辑
+        const errorModal = document.getElementById('error-modal');
+        function showErrorModal(message) {
+            document.getElementById('error-modal-message').innerText = message;
+            errorModal.classList.remove('opacity-0', 'pointer-events-none');
+            errorModal.querySelector('.modal-content').classList.remove('scale-95');
+            errorModal.querySelector('.modal-content').classList.add('scale-100');
+            lucide.createIcons(); // 确保新弹窗中的图标也能正确渲染
+        }
+        
+        function closeErrorModal() {
+            errorModal.classList.add('opacity-0', 'pointer-events-none');
+            errorModal.querySelector('.modal-content').classList.add('scale-95');
+            errorModal.querySelector('.modal-content').classList.remove('scale-100');
+        }
+        
+        // 提交预约表单
+        async function submitBooking(event) {
+            event.preventDefault();
+            
+            const btn = document.getElementById('book-submit-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> <span class="ml-2">提交中...</span>';
+            lucide.createIcons();
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+            
+            const payload = {
+                name: document.getElementById('book-name').value,
+                phone: document.getElementById('book-phone').value,
+                course: document.getElementById('book-course').value,
+            };
+            
+            try {
+                const response = await fetch('/api/appointment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (response.ok) {
+                    document.getElementById('booking-form').style.display = 'none';
+                    const successDiv = document.getElementById('booking-success');
+                    successDiv.style.display = 'flex';
+                    successDiv.classList.add('flex');
+                } else {
+                    let errorMsg = '提交失败，请稍后再试或直接电话联系我们。';
+                    try {
+                        const result = await response.json();
+                        if (result.error) errorMsg = result.error;
+                    } catch(e) {}
+                    showErrorModal(errorMsg);
+                }
+            } catch (error) {
+                console.error('Error submitting booking:', error);
+                showErrorModal('网络错误，请检查您的连接。');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            }
+        }
+    </script>
+</body>
+</html>

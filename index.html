@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -233,6 +233,10 @@
                                 <div class="text-sm font-bold text-brand-primary">K12教育</div>
                                 <div class="mt-1 text-xs text-brand-primary/50">提分与升学</div>
                             </a>
+                            <a href="/paper-guidance.html" class="rounded-2xl border border-brand-primary/5 bg-brand-bg px-4 py-4 hover:border-brand-accent/20 hover:-translate-y-1 transition-all decoration-transparent">
+                                <div class="text-sm font-bold text-brand-primary">论文指导</div>
+                                <div class="mt-1 text-xs text-brand-primary/50">专业学术辅导</div>
+                            </a>
                             <a href="/adult-education.html" class="rounded-2xl border border-brand-primary/5 bg-brand-bg px-4 py-4 hover:border-brand-accent/20 hover:-translate-y-1 transition-all decoration-transparent">
                                 <div class="text-sm font-bold text-brand-primary">成人教育</div>
                                 <div class="mt-1 text-xs text-brand-primary/50">口语与职场</div>
@@ -248,10 +252,6 @@
                             <a href="/ai-eval.html" class="rounded-2xl border border-brand-primary/5 bg-brand-bg px-4 py-4 hover:border-brand-accent/20 hover:-translate-y-1 transition-all decoration-transparent">
                                 <div class="text-sm font-bold text-brand-primary">AI评估</div>
                                 <div class="mt-1 text-xs text-brand-primary/50">家校协同分析</div>
-                            </a>
-                            <a href="#" onclick="openBookingModal('论文指导'); return false;" class="rounded-2xl border border-brand-primary/5 bg-brand-bg px-4 py-4 hover:border-brand-accent/20 hover:-translate-y-1 transition-all decoration-transparent">
-                                <div class="text-sm font-bold text-brand-primary">论文指导</div>
-                                <div class="mt-1 text-xs text-brand-primary/50">专业学术辅导</div>
                             </a>
                         </div>
                     </div>
@@ -289,11 +289,11 @@
             <div id="mobile-services-submenu" class="hidden mt-5 w-full max-w-xs glass rounded-[2rem] px-6 py-5">
                 <div class="flex flex-col items-center gap-4 text-lg">
                     <a href="/k12.html" onclick="toggleMobileMenu()" class="text-brand-primary hover:text-brand-accent transition-colors">K12教育</a>
+                    <a href="/paper-guidance.html" onclick="toggleMobileMenu()" class="text-brand-primary hover:text-brand-accent transition-colors">论文指导</a>
                     <a href="/adult-education.html" onclick="toggleMobileMenu()" class="text-brand-primary hover:text-brand-accent transition-colors">成人教育</a>
                     <a href="/tutor.html" onclick="toggleMobileMenu()" class="text-brand-primary hover:text-brand-accent transition-colors">家教兼职</a>
                     <a href="/study-room.html" onclick="toggleMobileMenu()" class="text-brand-primary hover:text-brand-accent transition-colors">自习室</a>
                     <a href="/ai-eval.html" onclick="toggleMobileMenu()" class="text-brand-primary hover:text-brand-accent transition-colors">AI评估</a>
-                    <a href="#" onclick="toggleMobileMenu(); openBookingModal('论文指导'); return false;" class="text-brand-primary hover:text-brand-accent transition-colors">论文指导</a>
                 </div>
             </div>
         </div>
@@ -380,6 +380,13 @@
                         <div class="text-base font-bold text-brand-primary">K12教育</div>
                         <div class="mt-1 text-sm text-brand-primary/55">同步辅导与提分</div>
                     </a>
+                    <a href="/paper-guidance.html" class="bg-white rounded-2xl px-5 py-5 border border-brand-primary/5 hover:border-brand-accent/25 hover:-translate-y-1 transition-all decoration-transparent">
+                        <div class="w-10 h-10 rounded-xl bg-brand-primary/10 text-brand-primary flex items-center justify-center mb-4">
+                            <i data-lucide="scroll-text" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-base font-bold text-brand-primary">论文指导</div>
+                        <div class="mt-1 text-sm text-brand-primary/55">专业学术辅导</div>
+                    </a>
                     <a href="/adult-education.html" class="bg-white rounded-2xl px-5 py-5 border border-brand-primary/5 hover:border-brand-accent/25 hover:-translate-y-1 transition-all decoration-transparent">
                         <div class="w-10 h-10 rounded-xl bg-brand-primary/10 text-brand-primary flex items-center justify-center mb-4">
                             <i data-lucide="message-circle" class="w-5 h-5"></i>
@@ -407,13 +414,6 @@
                         </div>
                         <div class="text-base font-bold text-brand-primary">AI评估</div>
                         <div class="mt-1 text-sm text-brand-primary/55">成绩分析与画像</div>
-                    </a>
-                    <a href="#" onclick="openBookingModal('论文指导'); return false;" class="bg-white rounded-2xl px-5 py-5 border border-brand-primary/5 hover:border-brand-accent/25 hover:-translate-y-1 transition-all decoration-transparent">
-                        <div class="w-10 h-10 rounded-xl bg-brand-primary/10 text-brand-primary flex items-center justify-center mb-4">
-                            <i data-lucide="scroll-text" class="w-5 h-5"></i>
-                        </div>
-                        <div class="text-base font-bold text-brand-primary">论文指导</div>
-                        <div class="mt-1 text-sm text-brand-primary/55">专业学术辅导</div>
                     </a>
                 </div>
             </div>

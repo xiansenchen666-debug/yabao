@@ -523,6 +523,16 @@ Deno.serve(async (req) => {
     }
   }
 
+  // 4.4 返回独立的论文指导页面
+  if (req.method === "GET" && url.pathname === "/paper-guidance.html") {
+    try {
+      const htmlContent = await Deno.readTextFile("./paper-guidance.html");
+      return new Response(htmlContent, { headers: { "content-type": "text/html; charset=utf-8" } });
+    } catch (error) {
+      return new Response("Error: paper-guidance.html not found.", { status: 500 });
+    }
+  }
+
   // 4.4 返回教务后台演示页面
   if (req.method === "GET" && url.pathname === "/teacher-dashboard.html") {
     try {
