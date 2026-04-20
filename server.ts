@@ -7,9 +7,18 @@ const JSON_HEADERS = {
 
 const MOBILE_PHONE_REGEX = /^1\d{10}$/;
 const LANDLINE_PHONE_REGEX = /^0\d{2,3}-?\d{7,8}$/;
+const textEncoder = new TextEncoder();
+const TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+const PASSWORD_HASH_PREFIX = "pbkdf2_sha256";
+const PASSWORD_HASH_ITERATIONS = 210000;
+const AUTH_CODE_SKIP_VERIFICATION = Deno.env.get("TUTOR_AUTH_SKIP_CODE") === "true";
 
 function normalizeText(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
+}
+
+function normalizeEmail(value: unknown) {
+  return normalizeText(value).toLowerCase();
 }
 
 function normalizePhone(value: unknown) {
@@ -18,6 +27,77 @@ function normalizePhone(value: unknown) {
 
 function isValidPhone(phone: string) {
   return MOBILE_PHONE_REGEX.test(phone) || LANDLINE_PHONE_REGEX.test(phone);
+}
+
+function bytesToHex(bytes: Uint8Array) {
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+function hexToBytes(hex: string) {
+  const normalized = normalizeText(hex);
+  if (!normalized || normalized.length % 2 !== 0) {
+    throw new Error("无效的十六进制字符串");
+  }
+
+  const bytes = new Uint8Array(normalized.length / 2);
+  for (let i = 0; i < normalized.length; i += 2) {
+    bytes[i / 2] = Number.parseInt(normalized.slice(i, i + 2), 16);
+  }
+  return bytes;
+}
+
+function timingSafeEqual(a: Uint8Array, b: Uint8Array) {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) {
+    diff |= a[i] ^ b[i];
+  }
+  return diff === 0;
+}
+
+async function derivePasswordBits(password: string, salt: Uint8Array, iterations: number) {
+  const keyMaterial = await crypto.subtle.importKey(
+    "raw",
+    textEncoder.encode(password),
+    "PBKDF2",
+    false,
+    ["deriveBits"],
+  );
+
+  const derivedBits = await crypto.subtle.deriveBits(
+    {
+      name: "PBKDF2",
+      salt,
+      iterations,
+      hash: "SHA-256",
+    },
+    keyMaterial,
+    256,
+  );
+
+  return new Uint8Array(derivedBits);
+}
+
+async function hashPassword(password: string) {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const derived = await derivePasswordBits(password, salt, PASSWORD_HASH_ITERATIONS);
+  return `${PASSWORD_HASH_PREFIX}$${PASSWORD_HASH_ITERATIONS}$${bytesToHex(salt)}$${bytesToHex(derived)}`;
+}
+
+async function verifyPassword(password: string, storedValue: unknown) {
+  if (typeof storedValue !== "string" || !storedValue) return false;
+
+  if (!storedValue.startsWith(`${PASSWORD_HASH_PREFIX}$`)) {
+    return storedValue === password;
+  }
+
+  const [, iterationsText, saltHex, digestHex] = storedValue.split("$");
+  const iterations = Number.parseInt(iterationsText, 10);
+  if (!iterations || !saltHex || !digestHex) return false;
+
+  const expectedDigest = hexToBytes(digestHex);
+  const actualDigest = await derivePasswordBits(password, hexToBytes(saltHex), iterations);
+  return timingSafeEqual(actualDigest, expectedDigest);
 }
 
 // 格式化为北京时间 (UTC+8)
@@ -139,6 +219,31 @@ async function sendTutorWeWorkNotification(type: 'post' | 'apply' | 'delete' | '
   }
 }
 
+async function sendStudyRoomWeWorkNotification(type: "reserve" | "cancel", data: any) {
+  const studyRoomWebhookUrl = Deno.env.get("STUDY_ROOM_WEWORK_WEBHOOK_URL");
+  if (!studyRoomWebhookUrl) {
+    console.warn("自习室通知已跳过：未配置 STUDY_ROOM_WEWORK_WEBHOOK_URL 环境变量。");
+    return;
+  }
+
+  const title = type === "reserve" ? "自习室新预约" : "自习室预约取消";
+  const icon = type === "reserve" ? "📚" : "🗑️";
+  const content = `${icon} **${title}**\n> 👤 姓名：<font color="info">${data.name}</font>\n> 📞 电话：<font color="info">${data.phone}</font>\n${data.timeSlotsStr}> ⏰ 操作时间：${formatToBeijingTime()}`;
+
+  const response = await fetch(studyRoomWebhookUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      msgtype: "markdown",
+      markdown: { content },
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`自习室企业微信通知发送失败: HTTP ${response.status} ${await response.text()}`);
+  }
+}
+
 let kv: Deno.Kv | null = null;
 try {
   // 检查当前环境是否支持 Deno.openKv
@@ -150,6 +255,45 @@ try {
   }
 } catch (e) {
   console.error("连接 Deno KV 失败:", e);
+}
+
+const TUTOR_ADMIN_EMAIL = normalizeEmail(Deno.env.get("TUTOR_ADMIN_EMAIL"));
+const TUTOR_ADMIN_PASSWORD_HASH = normalizeText(Deno.env.get("TUTOR_ADMIN_PASSWORD_HASH"));
+const TUTOR_ADMIN_PASSWORD = normalizeText(Deno.env.get("TUTOR_ADMIN_PASSWORD"));
+
+function isTutorAdminEmail(email: string | null) {
+  return Boolean(email && TUTOR_ADMIN_EMAIL && email === TUTOR_ADMIN_EMAIL);
+}
+
+async function verifyTutorAuthCode(email: string, code: string) {
+  if (AUTH_CODE_SKIP_VERIFICATION) {
+    return true;
+  }
+
+  if (!kv) return false;
+  const savedCodeRes = await kv.get(["tutor_auth_codes", email]);
+  const savedCode = savedCodeRes.value as { code?: string; expiresAt?: number } | null;
+  return Boolean(savedCode && savedCode.code === code && typeof savedCode.expiresAt === "number" && savedCode.expiresAt >= Date.now());
+}
+
+async function verifyAdminCredentials(email: string, password: string) {
+  if (!TUTOR_ADMIN_EMAIL || email !== TUTOR_ADMIN_EMAIL) return false;
+  if (TUTOR_ADMIN_PASSWORD_HASH) {
+    return await verifyPassword(password, TUTOR_ADMIN_PASSWORD_HASH);
+  }
+  return Boolean(TUTOR_ADMIN_PASSWORD) && password === TUTOR_ADMIN_PASSWORD;
+}
+
+async function createTutorToken(email: string) {
+  const token = crypto.randomUUID();
+  if (kv) {
+    await kv.set(
+      ["tutor_tokens", token],
+      { email, expiresAt: Date.now() + TOKEN_TTL_MS },
+      { expireIn: TOKEN_TTL_MS },
+    );
+  }
+  return token;
 }
 
 Deno.serve(async (req) => {
@@ -316,7 +460,23 @@ Deno.serve(async (req) => {
     const token = req.headers.get("Authorization")?.replace("Bearer ", "");
     if (!token || !kv) return null;
     const res = await kv.get(["tutor_tokens", token]);
-    return res.value as string | null;
+    const tokenRecord = res.value;
+    if (!tokenRecord) return null;
+
+    if (typeof tokenRecord === "string") {
+      return tokenRecord;
+    }
+
+    if (typeof tokenRecord === "object" && tokenRecord !== null && "email" in tokenRecord) {
+      const expiresAt = typeof tokenRecord.expiresAt === "number" ? tokenRecord.expiresAt : 0;
+      if (expiresAt && expiresAt < Date.now()) {
+        await kv.delete(["tutor_tokens", token]);
+        return null;
+      }
+      return typeof tokenRecord.email === "string" ? tokenRecord.email : null;
+    }
+
+    return null;
   }
 
   // 4. 返回独立的家教兼职平台页面
@@ -405,7 +565,8 @@ Deno.serve(async (req) => {
     // 发送验证码
     if (req.method === "POST" && url.pathname === "/api/tutor/send-code") {
       try {
-        const { email } = await req.json();
+        const body = await req.json();
+        const email = normalizeEmail(body.email);
         if (!email || !email.includes('@')) return new Response(JSON.stringify({ success: false, error: "邮箱格式不正确" }), { status: 400, headers: JSON_HEADERS });
         
         const code = Math.floor(100000 + Math.random() * 900000).toString();
@@ -445,19 +606,17 @@ Deno.serve(async (req) => {
     // 注册账号
     if (req.method === "POST" && url.pathname === "/api/tutor/register") {
       try {
-        const { email, code, password } = await req.json();
+        const body = await req.json();
+        const email = normalizeEmail(body.email);
+        const code = normalizeText(body.code);
+        const password = normalizeText(body.password);
         
         if (!email || !email.includes('@')) return new Response(JSON.stringify({ success: false, error: "邮箱格式不正确" }), { status: 400, headers: JSON_HEADERS });
         if (!code || code.length !== 6) return new Response(JSON.stringify({ success: false, error: "请输入6位验证码" }), { status: 400, headers: JSON_HEADERS });
         if (!password || password.length < 6) return new Response(JSON.stringify({ success: false, error: "密码长度不能少于6位" }), { status: 400, headers: JSON_HEADERS });
 
         if (kv) {
-          // 校验验证码 (测试模式允许直接通过)
-          const savedCodeRes = await kv.get(["tutor_auth_codes", email]);
-          const savedCode = savedCodeRes.value as any;
-          const isTestMode = true; // 保持你之前的测试模式逻辑
-          
-          if (!isTestMode && (!savedCode || savedCode.code !== code || savedCode.expiresAt < Date.now())) {
+          if (!(await verifyTutorAuthCode(email, code))) {
              return new Response(JSON.stringify({ success: false, error: "验证码无效或已过期" }), { status: 400, headers: JSON_HEADERS });
           }
 
@@ -467,15 +626,14 @@ Deno.serve(async (req) => {
              return new Response(JSON.stringify({ success: false, error: "该邮箱已注册，请直接登录" }), { status: 400, headers: JSON_HEADERS });
           }
 
-          // 存储用户和密码 (实际生产应使用 bcrypt/argon2，这里简单演示直接存)
-          await kv.set(["tutor_users", email], { password, createdAt: Date.now() });
+          const passwordHash = await hashPassword(password);
+          await kv.set(["tutor_users", email], { passwordHash, createdAt: Date.now(), updatedAt: Date.now() });
           
           // 清理验证码记录
           await kv.delete(["tutor_auth_codes", email]);
           
           // 自动登录
-          const token = crypto.randomUUID();
-          await kv.set(["tutor_tokens", token], email);
+          const token = await createTutorToken(email);
           return new Response(JSON.stringify({ success: true, token, email }), { headers: JSON_HEADERS });
         }
         return new Response(JSON.stringify({ success: false, error: "KV 数据库不可用" }), { status: 500, headers: JSON_HEADERS });
@@ -487,18 +645,17 @@ Deno.serve(async (req) => {
     // 重置密码
     if (req.method === "POST" && url.pathname === "/api/tutor/reset-password") {
       try {
-        const { email, code, password } = await req.json();
+        const body = await req.json();
+        const email = normalizeEmail(body.email);
+        const code = normalizeText(body.code);
+        const password = normalizeText(body.password);
         
         if (!email || !email.includes('@')) return new Response(JSON.stringify({ success: false, error: "邮箱格式不正确" }), { status: 400, headers: JSON_HEADERS });
         if (!code || code.length !== 6) return new Response(JSON.stringify({ success: false, error: "请输入6位验证码" }), { status: 400, headers: JSON_HEADERS });
         if (!password || password.length < 6) return new Response(JSON.stringify({ success: false, error: "密码长度不能少于6位" }), { status: 400, headers: JSON_HEADERS });
 
         if (kv) {
-          const savedCodeRes = await kv.get(["tutor_auth_codes", email]);
-          const savedCode = savedCodeRes.value as any;
-          const isTestMode = true; 
-          
-          if (!isTestMode && (!savedCode || savedCode.code !== code || savedCode.expiresAt < Date.now())) {
+          if (!(await verifyTutorAuthCode(email, code))) {
              return new Response(JSON.stringify({ success: false, error: "验证码无效或已过期" }), { status: 400, headers: JSON_HEADERS });
           }
 
@@ -508,7 +665,8 @@ Deno.serve(async (req) => {
           }
 
           // 更新密码
-          await kv.set(["tutor_users", email], { ...existingUser.value, password });
+          const passwordHash = await hashPassword(password);
+          await kv.set(["tutor_users", email], { ...existingUser.value, passwordHash, updatedAt: Date.now() });
           await kv.delete(["tutor_auth_codes", email]);
           
           return new Response(JSON.stringify({ success: true }), { headers: JSON_HEADERS });
@@ -522,7 +680,9 @@ Deno.serve(async (req) => {
     // 账号密码登录
     if (req.method === "POST" && url.pathname === "/api/tutor/login") {
       try {
-        const { email, password } = await req.json();
+        const body = await req.json();
+        const email = normalizeEmail(body.email);
+        const password = normalizeText(body.password);
         
         if (!email || !email.includes('@')) {
           return new Response(JSON.stringify({ success: false, error: "邮箱格式不正确" }), { status: 400, headers: JSON_HEADERS });
@@ -532,29 +692,37 @@ Deno.serve(async (req) => {
           return new Response(JSON.stringify({ success: false, error: "请输入密码" }), { status: 400, headers: JSON_HEADERS });
         }
 
-        // 测试模式：允许超级管理员直接登录
-        if (email === "admin@yabao.com" && password === "admin123") {
-          console.log(`[测试模式] 超级管理员 admin@yabao.com 登录成功`);
-          const token = crypto.randomUUID();
-          if (kv) await kv.set(["tutor_tokens", token], email);
+        if (await verifyAdminCredentials(email, password)) {
+          console.log(`[管理员登录成功] ${email}`);
+          const token = await createTutorToken(email);
           return new Response(JSON.stringify({ success: true, token, email }), { headers: JSON_HEADERS });
         }
 
         // 验证密码
         if (kv) {
           const userRes = await kv.get(["tutor_users", email]);
-          const user = userRes.value as any;
+          const user = userRes.value as Record<string, unknown> | null;
           
           if (!user) {
               return new Response(JSON.stringify({ success: false, error: "账号不存在，请先注册" }), { status: 400, headers: JSON_HEADERS });
           }
           
-          if (user.password !== password) {
+          const storedPassword = user.passwordHash ?? user.password;
+          const passwordMatched = await verifyPassword(password, storedPassword);
+          if (!passwordMatched) {
               return new Response(JSON.stringify({ success: false, error: "密码错误" }), { status: 400, headers: JSON_HEADERS });
           }
 
-          const token = crypto.randomUUID();
-          await kv.set(["tutor_tokens", token], email);
+          if (typeof user.password === "string" && typeof user.passwordHash !== "string") {
+            await kv.set(["tutor_users", email], {
+              ...user,
+              passwordHash: await hashPassword(password),
+              password: undefined,
+              updatedAt: Date.now(),
+            });
+          }
+
+          const token = await createTutorToken(email);
           return new Response(JSON.stringify({ success: true, token, email }), { headers: JSON_HEADERS });
         }
         
@@ -568,7 +736,7 @@ Deno.serve(async (req) => {
     if (req.method === "GET" && url.pathname === "/api/tutor/jobs") {
       const type = url.searchParams.get("type") || "open"; 
       const userEmail = await getUserEmail(req);
-      const isAdmin = userEmail === "admin@yabao.com";
+      const isAdmin = isTutorAdminEmail(userEmail);
       
       if ((type === "published" || type === "accepted") && !userEmail) {
         return new Response(JSON.stringify({ success: false, error: "未登录" }), { status: 401, headers: JSON_HEADERS });
@@ -597,7 +765,7 @@ Deno.serve(async (req) => {
     // 以下接口必须鉴权
     // ------------------------------------------
     const userEmail = await getUserEmail(req);
-    const isAdmin = userEmail === "admin@yabao.com";
+    const isAdmin = isTutorAdminEmail(userEmail);
 
     if (!userEmail) {
       return new Response(JSON.stringify({ success: false, error: "未登录或登录已过期" }), { status: 401, headers: JSON_HEADERS });

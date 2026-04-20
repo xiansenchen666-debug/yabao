@@ -523,6 +523,8 @@
         }
 
         // 获取并渲染列表
+        let isAdminUser = false;
+
         async function fetchJobs() {
             document.getElementById('jobs-container').innerHTML = '';
             document.getElementById('loading-spinner').style.display = 'block';
@@ -531,6 +533,7 @@
             try {
                 const res = await apiFetch(`/api/tutor/jobs?type=${currentTab}`);
                 const data = await res.json();
+                isAdminUser = Boolean(data.isAdmin);
                 document.getElementById('loading-spinner').style.display = 'none';
                 
                 if (data.data.length === 0) {
@@ -548,7 +551,7 @@
         function renderJobs(jobs) {
             const container = document.getElementById('jobs-container');
             const currentUser = getEmail();
-            const isAdmin = currentUser === 'admin@yabao.com';
+            const isAdmin = isAdminUser;
             
             jobs.forEach(job => {
                 let badge = '';

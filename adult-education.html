@@ -154,7 +154,7 @@
     </section>
 
     <footer class="py-10 bg-[#FDFBF7] border-t border-brand-primary/5 text-center px-6">
-        <p class="text-sm text-brand-primary/50">&copy; 2024 雅宝教育工作室 Yabao Education Studio. All rights reserved.</p>
+        <p class="text-sm text-brand-primary/50">&copy; <span data-current-year></span> 雅宝教育工作室 Yabao Education Studio. All rights reserved.</p>
     </footer>
 
     <!-- 预约表单 玻璃拟态弹窗 (从主页同步) -->
@@ -231,6 +231,9 @@
 
     <script>
         lucide.createIcons();
+        document.querySelectorAll('[data-current-year]').forEach((el) => {
+            el.textContent = new Date().getFullYear();
+        });
 
         // 预约弹窗逻辑
         const bookingModal = document.getElementById('booking-modal');

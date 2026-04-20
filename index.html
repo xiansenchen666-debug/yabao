@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -396,7 +396,7 @@
                         <div class="text-base font-bold text-brand-primary">自习室</div>
                         <div class="mt-1 text-sm text-brand-primary/55">安静舒适学习区</div>
                     </a>
-                    <a href="/student-eval.html" class="bg-white rounded-2xl px-5 py-5 border border-brand-primary/5 hover:border-brand-accent/25 hover:-translate-y-1 transition-all decoration-transparent">
+                    <a href="/ai-eval.html" class="bg-white rounded-2xl px-5 py-5 border border-brand-primary/5 hover:border-brand-accent/25 hover:-translate-y-1 transition-all decoration-transparent">
                         <div class="w-10 h-10 rounded-xl bg-brand-accent/10 text-brand-accent flex items-center justify-center mb-4">
                             <i data-lucide="scan-line" class="w-5 h-5"></i>
                         </div>
@@ -826,17 +826,17 @@
     <!-- Footer -->
     <footer class="py-10 bg-[#FDFBF7] border-t border-brand-primary/5 text-center px-6">
         <p class="text-sm text-brand-primary/50">
-            &copy; 2024 雅宝教育工作室 Yabao Education Studio. All rights reserved.
+            &copy; <span data-current-year></span> 雅宝教育工作室 Yabao Education Studio. All rights reserved.
         </p>
     </footer>
 
     <!-- 预约表单 玻璃拟态弹窗 (V2 新增) -->
-    <div id="booking-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div id="booking-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none">
         <!-- 弹窗背景蒙层 -->
         <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeBookingModal()"></div>
         
         <!-- 弹窗内容 -->
-        <div class="modal-content relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden z-10">
+        <div class="modal-content relative w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden z-10 transform scale-95 transition-transform duration-300">
             <div class="p-8">
                 <button onclick="closeBookingModal()" class="absolute top-6 right-6 text-brand-primary/50 hover:text-brand-primary transition-colors bg-transparent border-none outline-none cursor-pointer">
                     <i data-lucide="x" class="w-6 h-6"></i>
@@ -986,12 +986,12 @@
     </div>
 
     <!-- 错误提示 玻璃拟态弹窗 -->
-    <div id="error-modal" class="fixed inset-0 z-[110] flex items-center justify-center p-4">
+    <div id="error-modal" class="fixed inset-0 z-[110] flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none">
         <!-- 弹窗背景蒙层 -->
         <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeErrorModal()"></div>
         
         <!-- 弹窗内容 -->
-        <div class="modal-content relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden z-10">
+        <div class="modal-content relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden z-10 transform scale-95 transition-transform duration-300">
             <div class="p-8 text-center">
                 <div class="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
                     <i data-lucide="alert-circle" class="w-8 h-8"></i>
@@ -1031,6 +1031,9 @@
     <script>
         // 初始化 Lucide Icons
         lucide.createIcons();
+        document.querySelectorAll('[data-current-year]').forEach((el) => {
+            el.textContent = new Date().getFullYear();
+        });
 
         // Global Auth Logic
         function getToken() { return localStorage.getItem('tutor_token'); }
