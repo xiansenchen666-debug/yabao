@@ -603,7 +603,7 @@ Deno.serve(async (req) => {
               body: JSON.stringify({
                 from: `雅宝教育 <${notifyFrom}>`,
                 to: [email],
-                subject: "雅宝家教兼职平台 - 登录验证码",
+                subject: "雅宝教育 - 登录验证码",
                 html: `<p>您的登录验证码是：<strong>${code}</strong>，5分钟内有效。</p>`
               })
             });
@@ -722,7 +722,12 @@ Deno.serve(async (req) => {
           return new Response(JSON.stringify({ success: true, token, email }), { headers: JSON_HEADERS });
         }
 
-        // 验证密码
+        // 如果是管理员账号，但密码错误，应明确返回“密码错误”而不是“账号不存在”
+        if (TUTOR_ADMIN_EMAIL && email === TUTOR_ADMIN_EMAIL) {
+          return new Response(JSON.stringify({ success: false, error: "密码错误" }), { status: 400, headers: JSON_HEADERS });
+        }
+
+        // 验证普通用户密码
         if (kv) {
           const userRes = await kv.get(["tutor_users", email]);
           const user = userRes.value as Record<string, unknown> | null;
