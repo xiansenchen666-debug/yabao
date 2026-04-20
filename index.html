@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -241,13 +241,13 @@
             </div>
             <div class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center space-x-8 text-base font-medium">
                 <a href="#about" class="hover:text-brand-accent transition-colors">关于我们</a>
-                <div class="service-menu-group static">
+                <div class="service-menu-group relative">
                     <button type="button" id="desktop-services-trigger" class="flex items-center gap-1.5 hover:text-brand-accent transition-colors text-brand-primary border-none bg-transparent cursor-pointer outline-none p-0">
                         核心业务
                         <i data-lucide="chevron-down" id="desktop-services-icon" class="w-4 h-4 transition-transform"></i>
                     </button>
                     <!-- 竖向下拉菜单：窄宽度，单列布局 -->
-                    <div class="service-dropdown fixed left-1/2 top-[4.5rem] -translate-x-1/2 w-[20rem] rounded-[1.75rem] bg-white/95 backdrop-blur-xl border border-white/70 shadow-2xl shadow-brand-primary/10 p-4">
+                    <div class="service-dropdown absolute left-1/2 top-full mt-6 -translate-x-1/2 w-[20rem] rounded-[1.75rem] bg-white/95 backdrop-blur-xl border border-white/70 shadow-2xl shadow-brand-primary/10 p-4">
                         <div class="grid grid-cols-1 gap-2">
                             <a href="/k12.html" class="rounded-xl px-5 py-4 hover:bg-brand-primary/5 transition-all decoration-transparent flex items-center gap-4 group">
                                 <div class="w-10 h-10 rounded-full bg-brand-accent/10 text-brand-accent flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
