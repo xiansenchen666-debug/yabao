@@ -549,7 +549,7 @@
 
         function openReserveModal() {
             if (!getToken()) {
-                return customAlert('提示', '请先登录后再进行预约', 'info');
+                return goToLogin();
             }
             if (selectedCells.length === 0) return;
 

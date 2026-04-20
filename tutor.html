@@ -432,35 +432,8 @@
             return response;
         }
 
-        // 登录逻辑
-        
-        
+        // 登录弹窗逻辑在页面底部统一挂载（openAuthModal / submitAuth / sendAuthCode）
 
-        function showSendSuccessToast() {
-            const toast = document.getElementById('send-success-toast');
-            toast.style.top = '32px';
-            toast.style.opacity = '1';
-            
-            setTimeout(() => {
-                toast.style.top = '-100px';
-                toast.style.opacity = '0';
-            }, 3000);
-        }
-
-        , 1000);
-                } else {
-                    customAlert('发送失败', data.error || '无法发送验证码', 'error');
-                    btn.innerText = '获取验证码';
-                    btn.disabled = false;
-                }
-            } catch (e) {
-                customAlert('网络错误', '请检查您的网络连接', 'error');
-                btn.innerText = '获取验证码';
-                btn.disabled = false;
-            }
-        }
-
-        
 
         // Tab 切换
         function switchTab(tab) {
