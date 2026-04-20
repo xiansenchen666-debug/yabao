@@ -816,7 +816,7 @@
 
     
 <!-- 主页统一登录/注册弹窗 -->
-    <div id="auth-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4 transition-all duration-300 opacity-0 pointer-events-none">
+    <div id="auth-modal" class="modal fixed inset-0 z-[100] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-brand-primary/40 backdrop-blur-sm" onclick="closeAuthModal()"></div>
         <div class="modal-content relative w-full max-w-sm bg-white/90 backdrop-blur-xl border border-white/50 rounded-3xl shadow-2xl overflow-hidden z-10 transform scale-95 transition-transform duration-300">
             <!-- 装饰背景 -->
@@ -911,14 +911,12 @@
 <script>
 function openAuthModal() {
             const modal = document.getElementById('auth-modal');
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-            modal.classList.add('opacity-100');
+            modal.classList.add('active');
         }
 
         function closeAuthModal() {
             const modal = document.getElementById('auth-modal');
-            modal.classList.add('opacity-0', 'pointer-events-none');
-            modal.classList.remove('opacity-100');
+            modal.classList.remove('active');
             // 关闭弹窗时清空表单并重置状态
             setTimeout(() => {
                 document.getElementById('auth-form').reset();
