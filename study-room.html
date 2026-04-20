@@ -753,6 +753,20 @@ function openAuthModal() {
 
         let currentAuthMode = 'login';
 
+        function renderAuthSubmitButton(mode, isLoading = false) {
+            const btn = document.getElementById('auth-submit-btn');
+            if (!btn) return;
+
+            const defaultTextMap = { login: '确认登录', register: '免费注册', forgot: '重置密码' };
+            const loadingTextMap = { login: '登录中...', register: '注册中...', forgot: '重置中...' };
+            const text = isLoading ? loadingTextMap[mode] : defaultTextMap[mode];
+            const iconName = isLoading ? 'loader-2' : 'arrow-right';
+            const iconClass = isLoading ? 'w-4 h-4 animate-spin' : 'w-4 h-4';
+
+            btn.innerHTML = `<span id="auth-btn-text">${text}</span><i data-lucide="${iconName}" class="${iconClass}"></i>`;
+            lucide.createIcons();
+        }
+
         function togglePasswordVisibility(inputId, iconId) {
             const input = document.getElementById(inputId);
             const icon = document.getElementById(iconId);
@@ -771,7 +785,6 @@ function openAuthModal() {
             const loginTab = document.getElementById('auth-tab-login');
             const registerTab = document.getElementById('auth-tab-register');
             const authTitle = document.getElementById('auth-title');
-            const authBtnText = document.getElementById('auth-btn-text');
             
             const codeGroup = document.getElementById('auth-code-group');
             const codeInput = document.getElementById('auth-code');
@@ -789,7 +802,6 @@ function openAuthModal() {
                 loginTab.className = "flex-1 py-3 text-sm font-bold border-b-2 border-brand-accent text-brand-accent transition-colors outline-none cursor-pointer bg-transparent";
                 registerTab.className = "flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-primary/50 hover:text-brand-primary transition-colors outline-none cursor-pointer bg-transparent";
                 authTitle.innerText = "欢迎回到雅宝";
-                authBtnText.innerText = "确认登录";
                 
                 codeGroup.classList.add('hidden');
                 codeInput.required = false;
@@ -802,7 +814,6 @@ function openAuthModal() {
                 registerTab.className = "flex-1 py-3 text-sm font-bold border-b-2 border-brand-accent text-brand-accent transition-colors outline-none cursor-pointer bg-transparent";
                 loginTab.className = "flex-1 py-3 text-sm font-bold border-b-2 border-transparent text-brand-primary/50 hover:text-brand-primary transition-colors outline-none cursor-pointer bg-transparent";
                 authTitle.innerText = "注册雅宝通行证";
-                authBtnText.innerText = "免费注册";
                 
                 codeGroup.classList.remove('hidden');
                 codeInput.required = true;
@@ -813,7 +824,6 @@ function openAuthModal() {
                 backLoginBtn.classList.add('hidden');
             } else if (tab === 'forgot') {
                 authTitle.innerText = "找回密码";
-                authBtnText.innerText = "重置密码";
                 
                 codeGroup.classList.remove('hidden');
                 codeInput.required = true;
@@ -823,6 +833,8 @@ function openAuthModal() {
                 forgotGroup.classList.add('hidden');
                 backLoginBtn.classList.remove('hidden');
             }
+
+            renderAuthSubmitButton(tab);
         }
 
         function showSendSuccessToast() {
@@ -917,9 +929,7 @@ function openAuthModal() {
 
             const code = document.getElementById('auth-code').value;
             
-            let btnTextMap = { 'login': '登录中...', 'register': '注册中...', 'forgot': '重置中...' };
-            btn.innerHTML = `<span>${btnTextMap[currentAuthMode]}</span><i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>`;
-            lucide.createIcons();
+            renderAuthSubmitButton(currentAuthMode, true);
             
             try {
                 let url = '/api/tutor/login'; // default login
@@ -938,8 +948,10 @@ function openAuthModal() {
                 const data = await res.json();
                 if (res.ok && data.success) {
                     if (currentAuthMode === 'forgot') {
-                        customAlert('重置成功', '密码已重置，请使用新密码登录', 'success');
+                        const resetEmail = email;
                         switchAuthTab('login');
+                        document.getElementById('auth-email').value = resetEmail;
+                        customAlert('重置成功', '密码已重置，请直接使用新密码登录。', 'success');
                     } else {
                         localStorage.setItem('tutor_token', data.token);
                         localStorage.setItem('tutor_email', data.email);
@@ -958,11 +970,10 @@ function openAuthModal() {
                     customAlert('操作失败', data.error || '验证码或密码不正确', 'error');
                 }
             } catch (e) {
+                console.error('认证流程异常:', e);
                 customAlert('网络错误', '请检查您的网络连接', 'error');
             } finally {
-                let btnTextMapRevert = { 'login': '确认登录', 'register': '免费注册', 'forgot': '重置密码' };
-                btn.innerHTML = `<span id="auth-btn-text">${btnTextMapRevert[currentAuthMode]}</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
-                lucide.createIcons();
+                renderAuthSubmitButton(currentAuthMode);
             }
         }
 
