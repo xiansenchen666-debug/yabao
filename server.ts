@@ -484,7 +484,7 @@ Deno.serve(async (req) => {
   }
 
   // 4. 返回独立的家教兼职平台页面
-  if (req.method === "GET" && url.pathname === "/tutor") {
+  if (req.method === "GET" && (url.pathname === "/tutor" || url.pathname === "/tutor.html")) {
     try {
       const htmlContent = await Deno.readTextFile("./tutor.html");
       return new Response(htmlContent, { headers: { "content-type": "text/html; charset=utf-8" } });
