@@ -1037,6 +1037,14 @@
         </div>
     </div>
 
+    <!-- 专门用于显示发送成功的悬浮窗 Toast -->
+    <div id="send-success-toast" class="fixed bottom-[-100px] left-1/2 -translate-x-1/2 z-[9999] bg-white/95 backdrop-blur-md px-6 py-4 rounded-2xl shadow-2xl border border-green-500/20 flex items-center gap-3 transition-all duration-500 opacity-0 pointer-events-none">
+        <div class="w-8 h-8 rounded-full bg-green-100 text-green-500 flex items-center justify-center shrink-0">
+            <i data-lucide="check" class="w-5 h-5"></i>
+        </div>
+        <div class="text-sm font-medium text-brand-primary">验证码已发送到您的邮箱，请注意查收。</div>
+    </div>
+
     <!-- JavaScript -->
     <script>
         // 初始化 Lucide Icons
@@ -1219,6 +1227,17 @@
             }
         }
 
+        function showSendSuccessToast() {
+            const toast = document.getElementById('send-success-toast');
+            toast.style.bottom = '32px';
+            toast.style.opacity = '1';
+            
+            setTimeout(() => {
+                toast.style.bottom = '-100px';
+                toast.style.opacity = '0';
+            }, 3000);
+        }
+
         async function sendAuthCode() {
             const email = document.getElementById('auth-email').value;
             if (!email) return customAlert('提示', '请填写邮箱', 'error');
@@ -1239,7 +1258,8 @@
                     if (data.debugCode) {
                         customAlert('测试环境提示', `您的验证码是: <strong class="text-xl text-brand-accent tracking-widest">${data.debugCode}</strong>\n(线上环境配好邮件后不会弹出此提示)`, 'info');
                     } else {
-                        customAlert('发送成功', '验证码已发送到您的邮箱，请注意查收。', 'success');
+                        // 使用新的悬浮窗代替 customAlert
+                        showSendSuccessToast();
                     }
 
                     let sec = 60;
