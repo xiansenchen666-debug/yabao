@@ -183,7 +183,11 @@ async function sendWeWorkNotification(appointment: {
 // === 家教兼职专属企业微信机器人通知 ===
 async function sendTutorWeWorkNotification(type: 'post' | 'apply' | 'delete' | 'cancel_apply', data: any) {
   // 使用你新提供的兼职专属 webhook
-  const tutorWebhookUrl = Deno.env.get("TUTOR_WEWORK_WEBHOOK_URL") || "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=bc4c1d9b-864f-453b-be51-4ee023880a06";
+  const tutorWebhookUrl = Deno.env.get("TUTOR_WEWORK_WEBHOOK_URL");
+  if (!tutorWebhookUrl) {
+    console.warn("家教通知已跳过：未配置 TUTOR_WEWORK_WEBHOOK_URL 环境变量。");
+    return;
+  }
   
   let content = "";
   if (type === 'post') {
