@@ -494,7 +494,7 @@ Deno.serve(async (req) => {
   }
 
   // 4.1 返回独立的自习室预定页面
-  if (req.method === "GET" && url.pathname === "/study-room.html") {
+  if (req.method === "GET" && (url.pathname === "/study-room" || url.pathname === "/study-room.html")) {
     try {
       const htmlContent = await Deno.readTextFile("./study-room.html");
       return new Response(htmlContent, { headers: { "content-type": "text/html; charset=utf-8" } });
@@ -504,7 +504,7 @@ Deno.serve(async (req) => {
   }
 
   // 4.2 返回独立的智能评估页面
-  if (req.method === "GET" && url.pathname === "/student-eval.html") {
+  if (req.method === "GET" && (url.pathname === "/student-eval" || url.pathname === "/student-eval.html")) {
     try {
       const htmlContent = await Deno.readTextFile("./student-eval.html");
       return new Response(htmlContent, { headers: { "content-type": "text/html; charset=utf-8" } });
@@ -514,7 +514,7 @@ Deno.serve(async (req) => {
   }
 
   // 4.3 返回智能评估绑定页面
-  if (req.method === "GET" && url.pathname === "/student-bind.html") {
+  if (req.method === "GET" && (url.pathname === "/student-bind" || url.pathname === "/student-bind.html")) {
     try {
       const htmlContent = await Deno.readTextFile("./student-bind.html");
       return new Response(htmlContent, { headers: { "content-type": "text/html; charset=utf-8" } });
@@ -524,7 +524,7 @@ Deno.serve(async (req) => {
   }
 
   // 4.4 返回独立的论文指导页面
-  if (req.method === "GET" && url.pathname === "/paper-guidance.html") {
+  if (req.method === "GET" && (url.pathname === "/paper-guidance" || url.pathname === "/paper-guidance.html")) {
     try {
       const htmlContent = await Deno.readTextFile("./paper-guidance.html");
       return new Response(htmlContent, { headers: { "content-type": "text/html; charset=utf-8" } });
@@ -534,7 +534,7 @@ Deno.serve(async (req) => {
   }
 
   // 4.4 返回教务后台演示页面
-  if (req.method === "GET" && url.pathname === "/teacher-dashboard.html") {
+  if (req.method === "GET" && (url.pathname === "/teacher-dashboard" || url.pathname === "/teacher-dashboard.html")) {
     try {
       const htmlContent = await Deno.readTextFile("./teacher-dashboard.html");
       return new Response(htmlContent, { headers: { "content-type": "text/html; charset=utf-8" } });
@@ -544,7 +544,7 @@ Deno.serve(async (req) => {
   }
 
   // 4.5 返回 K12 独立页面
-  if (req.method === "GET" && url.pathname === "/k12.html") {
+  if (req.method === "GET" && (url.pathname === "/k12" || url.pathname === "/k12.html")) {
     try {
       const htmlContent = await Deno.readTextFile("./k12.html");
       return new Response(htmlContent, { headers: { "content-type": "text/html; charset=utf-8" } });
@@ -554,7 +554,7 @@ Deno.serve(async (req) => {
   }
 
   // 4.6 返回成人教育独立页面
-  if (req.method === "GET" && url.pathname === "/adult-education.html") {
+  if (req.method === "GET" && (url.pathname === "/adult-education" || url.pathname === "/adult-education.html")) {
     try {
       const htmlContent = await Deno.readTextFile("./adult-education.html");
       return new Response(htmlContent, { headers: { "content-type": "text/html; charset=utf-8" } });
@@ -564,7 +564,7 @@ Deno.serve(async (req) => {
   }
 
   // 4.7 返回 AI 评估独立页面
-  if (req.method === "GET" && url.pathname === "/ai-eval.html") {
+  if (req.method === "GET" && (url.pathname === "/ai-eval" || url.pathname === "/ai-eval.html")) {
     try {
       const htmlContent = await Deno.readTextFile("./ai-eval.html");
       return new Response(htmlContent, { headers: { "content-type": "text/html; charset=utf-8" } });
