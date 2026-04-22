@@ -1564,11 +1564,13 @@
             if (defaultCourse) {
                 courseSelect.value = defaultCourse;
             }
+            bookingModal.classList.remove('pointer-events-none');
             bookingModal.classList.add('active');
             document.body.style.overflow = 'hidden'; // 防止背景滚动
         }
         
         function closeBookingModal() {
+            bookingModal.classList.add('pointer-events-none');
             bookingModal.classList.remove('active');
             document.body.style.overflow = '';
             
