@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雅宝教育 | 初中英语教学方案</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#FDFBF7',
+                            primary: '#1A2B3C',
+                            accent: '#C5A059',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #FDFBF7; color: #1A2B3C; overflow-x: hidden; }
+        .glass { background: rgba(253, 251, 247, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        .fade-in-up { animation: fadeInUp 0.8s ease forwards; opacity: 0; transform: translateY(20px); }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+    </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="font-sans antialiased selection:bg-brand-accent selection:text-white">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 glass py-4 px-6 md:px-12 border-b border-brand-primary/5">
+        <div class="max-w-7xl mx-auto relative flex items-center justify-between min-h-[3rem]">
+            <a href="/" class="absolute left-0 top-1/2 -translate-y-1/2 flex items-center gap-2 text-base font-medium text-brand-primary/60 hover:text-brand-accent transition-colors decoration-transparent">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> 返回首页
+            </a>
+            <div class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center gap-8 text-lg font-medium text-brand-primary/70">
+                <a href="/k12" class="hover:text-brand-accent transition-colors decoration-transparent">K12教育</a>
+                <a href="/study-room" class="hover:text-brand-accent transition-colors decoration-transparent">普通自习室</a>
+                <a href="/ai-study-room.html" class="hover:text-brand-accent transition-colors decoration-transparent">AI 自习室</a>
+                <a href="/junior-english-plan.html" class="text-brand-accent transition-colors decoration-transparent font-bold">初中英语方案</a>
+            </div>
+            <a href="/" class="ml-auto text-2xl font-serif font-bold text-brand-primary tracking-tight decoration-transparent">
+                雅宝<span class="text-brand-accent">.</span>
+            </a>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-24 px-6 md:px-12 max-w-screen-md mx-auto w-full">
+        <div class="fade-in-up">
+            <h1 class="text-4xl md:text-5xl font-serif font-bold text-brand-primary mb-8 text-center">
+                初中英语<span class="italic text-brand-accent">培优教学方案</span>
+            </h1>
+            <p class="text-center text-brand-primary/70 text-lg mb-12">
+                基于中考考纲，结合AI智能评估，全面提升听、说、读、写综合能力。
+            </p>
+
+            <div class="space-y-10">
+                
+                <section class="bg-white p-8 rounded-3xl shadow-lg border border-brand-primary/5">
+                    <div class="flex items-center gap-4 mb-6 border-b border-brand-primary/10 pb-4">
+                        <div class="w-12 h-12 bg-brand-accent/10 rounded-full flex items-center justify-center text-brand-accent">
+                            <i data-lucide="target" class="w-6 h-6"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-brand-primary">一、教学目标</h2>
+                    </div>
+                    <ul class="space-y-3 text-brand-primary/80">
+                        <li class="flex gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-brand-accent shrink-0"></i> 掌握初中英语 1600+ 核心词汇及 300+ 重点短语。</li>
+                        <li class="flex gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-brand-accent shrink-0"></i> 攻克 8 大核心时态与 3 大从句（宾语从句、定语从句、状语从句）。</li>
+                        <li class="flex gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-brand-accent shrink-0"></i> 提升中考题型解题技巧（完形填空、阅读理解、书面表达）。</li>
+                        <li class="flex gap-2"><i data-lucide="check-circle-2" class="w-5 h-5 text-brand-accent shrink-0"></i> 培养英语母语思维，实现从“哑巴英语”到自信表达的蜕变。</li>
+                    </ul>
+                </section>
+
+                <section class="bg-white p-8 rounded-3xl shadow-lg border border-brand-primary/5">
+                    <div class="flex items-center gap-4 mb-6 border-b border-brand-primary/10 pb-4">
+                        <div class="w-12 h-12 bg-brand-accent/10 rounded-full flex items-center justify-center text-brand-accent">
+                            <i data-lucide="layers" class="w-6 h-6"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-brand-primary">二、分级进阶体系</h2>
+                    </div>
+                    <div class="space-y-6">
+                        <div class="bg-brand-primary/5 p-5 rounded-2xl">
+                            <h3 class="font-bold text-lg text-brand-primary mb-2">【七年级】夯实基础，培养兴趣</h3>
+                            <p class="text-sm text-brand-primary/70 leading-relaxed">
+                                重点：音标自然拼读复习，词汇积累习惯养成，一般现在时与一般过去时。<br>
+                                动作：情景对话演练，绘本阅读，趣味配音。
+                            </p>
+                        </div>
+                        <div class="bg-brand-primary/5 p-5 rounded-2xl">
+                            <h3 class="font-bold text-lg text-brand-primary mb-2">【八年级】承上启下，突破语法</h3>
+                            <p class="text-sm text-brand-primary/70 leading-relaxed">
+                                重点：现在完成时，形容词/副词比较级，非谓语动词初步。<br>
+                                动作：长难句结构分析，分级阅读训练（Lexile级别提升），基础写作逻辑训练。
+                            </p>
+                        </div>
+                        <div class="bg-brand-primary/5 p-5 rounded-2xl">
+                            <h3 class="font-bold text-lg text-brand-primary mb-2">【九年级】中考冲刺，实战演练</h3>
+                            <p class="text-sm text-brand-primary/70 leading-relaxed">
+                                重点：三大从句深度解析，中考词汇大串讲，真题模拟题限时训练。<br>
+                                动作：AI作文批改纠错，易错题本个性化定制，考前心理疏导与答题策略。
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="bg-white p-8 rounded-3xl shadow-lg border border-brand-primary/5">
+                    <div class="flex items-center gap-4 mb-6 border-b border-brand-primary/10 pb-4">
+                        <div class="w-12 h-12 bg-brand-accent/10 rounded-full flex items-center justify-center text-brand-accent">
+                            <i data-lucide="brain-circuit" class="w-6 h-6"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-brand-primary">三、AI 赋能教学特色</h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 border border-brand-primary/10 rounded-xl">
+                            <h4 class="font-bold text-brand-primary flex items-center gap-2 mb-2"><i data-lucide="mic" class="w-4 h-4 text-brand-accent"></i> 智能口语评测</h4>
+                            <p class="text-sm text-brand-primary/60">逐字发音打分，纠正连读、弱读等语音语调问题。</p>
+                        </div>
+                        <div class="p-4 border border-brand-primary/10 rounded-xl">
+                            <h4 class="font-bold text-brand-primary flex items-center gap-2 mb-2"><i data-lucide="file-pen-line" class="w-4 h-4 text-brand-accent"></i> 作文秒级批改</h4>
+                            <p class="text-sm text-brand-primary/60">从语法、词汇丰富度、篇章结构多维度打分，并提供高分润色建议。</p>
+                        </div>
+                        <div class="p-4 border border-brand-primary/10 rounded-xl">
+                            <h4 class="font-bold text-brand-primary flex items-center gap-2 mb-2"><i data-lucide="bar-chart" class="w-4 h-4 text-brand-accent"></i> 动态学习图谱</h4>
+                            <p class="text-sm text-brand-primary/60">记录每一次作业与测试数据，生成能力雷达图，家长随时掌控进度。</p>
+                        </div>
+                        <div class="p-4 border border-brand-primary/10 rounded-xl">
+                            <h4 class="font-bold text-brand-primary flex items-center gap-2 mb-2"><i data-lucide="repeat" class="w-4 h-4 text-brand-accent"></i> 弱项定向推题</h4>
+                            <p class="text-sm text-brand-primary/60">基于遗忘曲线与错题本，系统自动推送变式题，直到完全掌握。</p>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="text-center mt-12">
+                    <button onclick="alert('咨询通道已开启，请联系微信：YabaoEdu')" class="px-10 py-4 bg-brand-primary text-white font-bold rounded-full hover:bg-brand-primary/90 transition-colors shadow-lg hover:shadow-xl inline-flex items-center gap-2">
+                        获取完整 PDF 课件与排课表 <i data-lucide="download" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
