@@ -2,8 +2,530 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>AI 自习室</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雅宝 AI 智能自习室 - 学生端</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#FDFBF7',
+                            primary: '#1A2B3C',
+                            accent: '#C5A059',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #FDFBF7; color: #1A2B3C; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.5); }
+        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(26, 43, 60, 0.05); box-shadow: 0 8px 32px rgba(26, 43, 60, 0.04); }
+        
+        .chat-bubble { animation: popIn 0.3s ease-out forwards; opacity: 0; transform: translateY(10px) scale(0.95); }
+        @keyframes popIn { to { opacity: 1; transform: translateY(0) scale(1); } }
+        
+        .pulse-dot { animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #CBD5E1; }
+
+        .panel { display: none; animation: fadeIn 0.3s ease forwards; }
+        .panel.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .nav-item.active { background-color: #1A2B3C; color: white; }
+        .nav-item.active i { color: white !important; }
+    </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body>
+<body class="font-sans antialiased h-screen overflow-hidden flex">
+
+    <!-- Sidebar -->
+    <aside class="w-20 md:w-64 h-full glass border-r border-brand-primary/10 flex flex-col transition-all duration-300 z-20 relative shrink-0">
+        <div class="h-20 flex items-center justify-center md:justify-start md:px-8 border-b border-brand-primary/5">
+            <a href="/" class="text-2xl font-serif font-bold text-brand-primary tracking-tight decoration-transparent">
+                <span class="md:hidden">雅</span><span class="hidden md:inline">雅宝</span><span class="text-brand-accent">.</span>
+            </a>
+        </div>
+        
+        <nav class="flex-1 py-6 flex flex-col gap-2 px-3">
+            <a href="#" onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item active flex items-center gap-4 px-3 py-3 rounded-xl text-brand-primary/70 hover:bg-brand-primary/5 transition-colors group">
+                <i data-lucide="layout-dashboard" class="w-5 h-5 shrink-0 group-hover:text-brand-primary"></i>
+                <span class="font-medium hidden md:block">学习控制台</span>
+            </a>
+            <a href="#" onclick="switchTab('qa')" id="nav-qa" class="nav-item flex items-center gap-4 px-3 py-3 rounded-xl text-brand-primary/70 hover:bg-brand-primary/5 transition-colors group">
+                <i data-lucide="bot" class="w-5 h-5 shrink-0 group-hover:text-brand-primary"></i>
+                <span class="font-medium hidden md:block">AI 学伴答疑</span>
+            </a>
+            <a href="#" onclick="switchTab('homework')" id="nav-homework" class="nav-item flex items-center gap-4 px-3 py-3 rounded-xl text-brand-primary/70 hover:bg-brand-primary/5 transition-colors group">
+                <i data-lucide="file-check-2" class="w-5 h-5 shrink-0 group-hover:text-brand-primary"></i>
+                <span class="font-medium hidden md:block">智能作业批改</span>
+            </a>
+            <a href="#" onclick="switchTab('report')" id="nav-report" class="nav-item flex items-center gap-4 px-3 py-3 rounded-xl text-brand-primary/70 hover:bg-brand-primary/5 transition-colors group">
+                <i data-lucide="bar-chart-3" class="w-5 h-5 shrink-0 group-hover:text-brand-primary"></i>
+                <span class="font-medium hidden md:block">学习数据报告</span>
+            </a>
+            <div class="my-4 border-t border-brand-primary/10 mx-2"></div>
+            <a href="#" class="flex items-center gap-4 px-3 py-3 rounded-xl text-brand-primary/70 hover:bg-brand-primary/5 transition-colors group relative overflow-hidden">
+                <i data-lucide="sparkles" class="w-5 h-5 shrink-0 text-brand-accent"></i>
+                <span class="font-medium hidden md:block">AI 技能训练营</span>
+                <span class="hidden md:inline-flex absolute right-2 top-1/2 -translate-y-1/2 px-1.5 py-0.5 bg-brand-accent/10 text-brand-accent text-[10px] font-bold rounded">HOT</span>
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-brand-primary/5">
+            <div class="flex items-center justify-center md:justify-start gap-3">
+                <div class="w-10 h-10 rounded-full bg-brand-primary/10 flex items-center justify-center shrink-0">
+                    <i data-lucide="user" class="w-5 h-5 text-brand-primary"></i>
+                </div>
+                <div class="hidden md:block overflow-hidden">
+                    <div class="text-sm font-bold text-brand-primary truncate">学员 001</div>
+                    <div class="text-xs text-brand-primary/50 truncate">高中组 · 备考冲刺</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 h-full flex flex-col relative overflow-hidden bg-brand-bg">
+        <!-- Top Header -->
+        <header class="h-20 glass border-b border-brand-primary/5 flex items-center justify-between px-8 shrink-0 z-10">
+            <div>
+                <h2 id="header-title" class="text-xl font-bold text-brand-primary">学习控制台</h2>
+                <p class="text-xs text-brand-primary/50 mt-0.5">本地 AI 模型已连接 · 隐私保护中</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-emerald-50 border border-emerald-100 rounded-full">
+                    <div class="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></div>
+                    <span class="text-xs font-bold text-emerald-700">AI 摄像头督学中</span>
+                </div>
+                <button class="w-10 h-10 rounded-full bg-white border border-brand-primary/10 flex items-center justify-center text-brand-primary/70 hover:text-brand-primary hover:shadow-md transition-all">
+                    <i data-lucide="bell" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- PANEL 1: 学习控制台 Dashboard -->
+        <div id="panel-dashboard" class="panel active flex-1 overflow-y-auto p-6 md:p-8">
+            <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Left Column -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="glass-card rounded-3xl p-6 md:p-8 flex items-center gap-6 relative overflow-hidden">
+                        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-brand-accent/10 rounded-full blur-2xl pointer-events-none"></div>
+                        <div class="w-20 h-20 rounded-2xl bg-brand-primary/5 flex items-center justify-center shrink-0">
+                            <i data-lucide="bot" class="w-10 h-10 text-brand-accent"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-serif font-bold text-brand-primary mb-2">早上好，准备好攻克今天的目标了吗？</h3>
+                            <p class="text-sm text-brand-primary/70 leading-relaxed">
+                                你的专属 AI 学伴“小雅”已上线。检测到你昨天在“圆锥曲线”章节停留较久，今天为你准备了3道针对性靶向练习题，加油！
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Timer -->
+                        <div class="glass-card rounded-3xl p-6 text-center">
+                            <div class="text-sm font-bold text-brand-primary/50 uppercase tracking-widest mb-6">沉浸计时</div>
+                            <div class="text-6xl font-serif font-bold text-brand-primary mb-2 tracking-tight">45:00</div>
+                            <div class="text-sm text-brand-primary/60 mb-8">下一休息时段: 5分钟</div>
+                            <div class="flex justify-center gap-3">
+                                <button class="px-6 py-3 bg-brand-primary text-white font-medium rounded-full hover:bg-brand-primary/90 transition-colors shadow-lg">开始专注</button>
+                                <button class="w-12 h-12 rounded-full border-2 border-brand-primary/10 flex items-center justify-center text-brand-primary hover:bg-brand-primary/5 transition-colors">
+                                    <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Tasks -->
+                        <div class="glass-card rounded-3xl p-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="text-sm font-bold text-brand-primary/50 uppercase tracking-widest">今日任务</div>
+                                <span class="text-xs font-bold text-brand-accent bg-brand-accent/10 px-2 py-1 rounded">1/3 完成</span>
+                            </div>
+                            <div class="space-y-3">
+                                <label class="flex items-start gap-3 p-3 rounded-xl bg-brand-primary/5 cursor-pointer hover:bg-brand-primary/10 transition-colors">
+                                    <input type="checkbox" checked class="mt-1 w-4 h-4 text-brand-accent rounded border-gray-300">
+                                    <span class="text-sm font-medium text-brand-primary line-through opacity-50">完成英语阅读理解真题套卷</span>
+                                </label>
+                                <label class="flex items-start gap-3 p-3 rounded-xl border border-brand-primary/10 cursor-pointer hover:border-brand-primary/30 transition-colors">
+                                    <input type="checkbox" class="mt-1 w-4 h-4 text-brand-accent rounded border-gray-300">
+                                    <span class="text-sm font-medium text-brand-primary">整理物理电磁学错题本</span>
+                                </label>
+                                <label class="flex items-start gap-3 p-3 rounded-xl border border-brand-primary/10 cursor-pointer hover:border-brand-primary/30 transition-colors">
+                                    <input type="checkbox" class="mt-1 w-4 h-4 text-brand-accent rounded border-gray-300">
+                                    <span class="text-sm font-medium text-brand-primary">观看 AI 技能训练营 - 第一课</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Quick Chat -->
+                <div class="lg:col-span-1 h-[600px] lg:h-auto glass-card rounded-3xl flex flex-col overflow-hidden shadow-xl shadow-brand-primary/5">
+                    <div class="p-4 border-b border-brand-primary/5 bg-white/50 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-brand-accent/20 flex items-center justify-center relative">
+                                <i data-lucide="sparkles" class="w-4 h-4 text-brand-accent"></i>
+                                <span class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-green-500 border border-white"></span>
+                            </div>
+                            <div>
+                                <div class="text-sm font-bold text-brand-primary">快捷答疑</div>
+                                <div class="text-[10px] text-brand-primary/50">基于本地大模型</div>
+                            </div>
+                        </div>
+                        <button onclick="switchTab('qa')" class="text-xs text-brand-primary/50 hover:text-brand-primary flex items-center gap-1">
+                            全屏 <i data-lucide="maximize-2" class="w-3 h-3"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-brand-primary/[0.02]">
+                        <div class="text-center text-xs text-brand-primary/40 my-2">今天 14:30</div>
+                        <div class="flex gap-3 chat-bubble">
+                            <div class="w-8 h-8 rounded-full bg-brand-accent/10 flex items-center justify-center shrink-0">
+                                <i data-lucide="bot" class="w-4 h-4 text-brand-accent"></i>
+                            </div>
+                            <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border border-brand-primary/5 text-sm text-brand-primary/80 max-w-[85%] leading-relaxed">
+                                学习累了吗？可以随时向我提问哦。
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-white border-t border-brand-primary/5">
+                        <div class="flex items-center gap-2">
+                            <input type="text" placeholder="输入问题..." class="flex-1 bg-brand-primary/5 border-none rounded-full px-4 py-2.5 text-sm focus:outline-none text-brand-primary">
+                            <button class="w-10 h-10 flex items-center justify-center bg-brand-accent text-white rounded-full hover:bg-brand-accent/90 transition-colors shrink-0 shadow-md">
+                                <i data-lucide="send" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL 2: AI 学伴答疑 QA -->
+        <div id="panel-qa" class="panel flex-1 h-full flex overflow-hidden">
+            <!-- QA History Sidebar -->
+            <div class="w-64 border-r border-brand-primary/10 bg-white/40 flex flex-col shrink-0 hidden md:flex">
+                <div class="p-4 border-b border-brand-primary/5 flex items-center justify-between">
+                    <span class="font-bold text-sm text-brand-primary">历史对话</span>
+                    <button class="text-brand-accent hover:bg-brand-accent/10 p-1.5 rounded-lg transition-colors"><i data-lucide="plus" class="w-4 h-4"></i></button>
+                </div>
+                <div class="flex-1 overflow-y-auto p-2 space-y-1">
+                    <button class="w-full text-left px-3 py-2.5 rounded-xl bg-brand-primary/5 text-sm text-brand-primary font-medium flex items-center gap-3">
+                        <i data-lucide="message-square" class="w-4 h-4 text-brand-primary/40"></i> 物理电磁学难题解析
+                    </button>
+                    <button class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-brand-primary/5 text-sm text-brand-primary/60 font-medium flex items-center gap-3 transition-colors">
+                        <i data-lucide="message-square" class="w-4 h-4 text-brand-primary/40"></i> 英语短文改错指导
+                    </button>
+                    <button class="w-full text-left px-3 py-2.5 rounded-xl hover:bg-brand-primary/5 text-sm text-brand-primary/60 font-medium flex items-center gap-3 transition-colors">
+                        <i data-lucide="message-square" class="w-4 h-4 text-brand-primary/40"></i> 高考数学冲刺复习计划
+                    </button>
+                </div>
+            </div>
+            
+            <!-- QA Main Chat -->
+            <div class="flex-1 flex flex-col bg-white/60">
+                <div class="flex-1 overflow-y-auto p-6 md:p-10 space-y-6">
+                    <div class="flex gap-4 max-w-4xl mx-auto">
+                        <div class="w-10 h-10 rounded-full bg-brand-accent/10 flex items-center justify-center shrink-0 mt-1">
+                            <i data-lucide="bot" class="w-5 h-5 text-brand-accent"></i>
+                        </div>
+                        <div class="bg-white p-5 rounded-3xl rounded-tl-none shadow-sm border border-brand-primary/5 text-base text-brand-primary/80 leading-relaxed">
+                            <p>这是昨天物理试卷的最后一题解析。你可以看到，在电磁感应部分，我们需要先判断电流方向，再应用法拉第电磁感应定律：</p>
+                            <div class="bg-brand-primary/5 p-4 rounded-xl mt-3 font-mono text-sm text-brand-primary">
+                                E = B · l · v<br>
+                                I = E / (R + r)
+                            </div>
+                            <p class="mt-3">你明白这一步的推导过程了吗？如果需要，我可以为你找一道类似的靶向训练题。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4 max-w-4xl mx-auto flex-row-reverse">
+                        <div class="w-10 h-10 rounded-full bg-brand-primary flex items-center justify-center shrink-0 mt-1">
+                            <i data-lucide="user" class="w-5 h-5 text-white"></i>
+                        </div>
+                        <div class="bg-brand-primary text-white p-5 rounded-3xl rounded-tr-none shadow-sm text-base leading-relaxed">
+                            推导我懂了，但是计算的时候总是出错，能不能给我出一道类似的题练一下？
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="p-6 bg-white border-t border-brand-primary/5">
+                    <div class="max-w-4xl mx-auto flex items-end gap-3 glass-card rounded-2xl p-2 shadow-lg focus-within:ring-2 focus-within:ring-brand-accent/50 transition-all">
+                        <button class="p-3 text-brand-primary/40 hover:text-brand-primary hover:bg-brand-primary/5 rounded-xl transition-colors">
+                            <i data-lucide="paperclip" class="w-5 h-5"></i>
+                        </button>
+                        <textarea rows="1" placeholder="发送问题，支持图片或公式..." class="flex-1 bg-transparent border-none resize-none py-3 text-base focus:outline-none text-brand-primary max-h-32"></textarea>
+                        <button class="p-3 bg-brand-accent text-white rounded-xl hover:bg-brand-accent/90 transition-colors shadow-md">
+                            <i data-lucide="send" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                    <div class="max-w-4xl mx-auto text-center mt-3 text-xs text-brand-primary/40">
+                        AI生成内容仅供参考，请结合课本知识进行学习。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL 3: 智能作业批改 Homework -->
+        <div id="panel-homework" class="panel flex-1 overflow-y-auto p-6 md:p-8">
+            <div class="max-w-6xl mx-auto">
+                <div class="mb-8 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-2xl font-bold text-brand-primary">上传作业</h3>
+                        <p class="text-sm text-brand-primary/60 mt-1">支持中英文作文、数学、物理等理科试题拍照批改</p>
+                    </div>
+                    <button class="px-5 py-2.5 bg-brand-primary text-white font-medium rounded-xl hover:bg-brand-primary/90 transition-colors flex items-center gap-2 shadow-lg">
+                        <i data-lucide="upload-cloud" class="w-4 h-4"></i> 上传新图片
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Original Image -->
+                    <div class="glass-card rounded-3xl p-6 flex flex-col">
+                        <div class="text-sm font-bold text-brand-primary/50 uppercase tracking-widest mb-4">原卷识别区</div>
+                        <div class="flex-1 bg-brand-primary/5 rounded-2xl border-2 border-dashed border-brand-primary/10 flex flex-col items-center justify-center min-h-[400px] relative overflow-hidden group">
+                            <!-- Placeholder for an actual image -->
+                            <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?q=80&w=600&auto=format&fit=crop')] bg-cover bg-center opacity-40 mix-blend-multiply"></div>
+                            
+                            <!-- Scanning animation effect -->
+                            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-brand-accent/30 to-transparent h-20 w-full animate-[scan_3s_ease-in-out_infinite]"></div>
+                            
+                            <div class="relative z-10 text-center p-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl">
+                                <i data-lucide="scan" class="w-8 h-8 text-brand-accent mx-auto mb-3"></i>
+                                <span class="font-bold text-brand-primary block">AI 正在扫描卷面...</span>
+                                <span class="text-xs text-brand-primary/60 mt-1 block">正在识别手写体及题干信息</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Correction Result -->
+                    <div class="glass-card rounded-3xl p-6 flex flex-col">
+                        <div class="text-sm font-bold text-brand-primary/50 uppercase tracking-widest mb-4">批改分析报告</div>
+                        <div class="flex-1 overflow-y-auto pr-2 space-y-6">
+                            
+                            <div class="flex items-center justify-between p-5 bg-white rounded-2xl border border-brand-primary/5 shadow-sm">
+                                <div>
+                                    <div class="text-sm text-brand-primary/50 font-bold mb-1">综合得分</div>
+                                    <div class="text-3xl font-serif font-bold text-brand-primary">85<span class="text-base text-brand-primary/40 font-sans font-normal">/100</span></div>
+                                </div>
+                                <div class="w-16 h-16 rounded-full border-4 border-emerald-400 flex items-center justify-center text-emerald-500 font-bold text-lg bg-emerald-50">
+                                    良
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <h4 class="font-bold text-brand-primary flex items-center gap-2">
+                                    <i data-lucide="alert-circle" class="w-4 h-4 text-red-500"></i> 错误分析
+                                </h4>
+                                
+                                <div class="p-4 bg-red-50 rounded-2xl border border-red-100">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <span class="font-bold text-red-700 text-sm">第3题：动量守恒定律</span>
+                                        <span class="text-xs px-2 py-1 bg-red-100 text-red-600 rounded-md">扣5分</span>
+                                    </div>
+                                    <p class="text-sm text-red-600/80 leading-relaxed">
+                                        错误原因：在碰撞后未考虑能量损失。题目中明确指出是“非弹性碰撞”，因此不能使用机械能守恒公式。
+                                    </p>
+                                    <button class="mt-3 text-xs font-bold text-brand-primary bg-white px-3 py-1.5 rounded-lg shadow-sm hover:shadow-md transition-shadow">查看详细解析与视频</button>
+                                </div>
+
+                                <div class="p-4 bg-orange-50 rounded-2xl border border-orange-100">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <span class="font-bold text-orange-700 text-sm">第5题：电场力做功</span>
+                                        <span class="text-xs px-2 py-1 bg-orange-100 text-orange-600 rounded-md">扣10分</span>
+                                    </div>
+                                    <p class="text-sm text-orange-600/80 leading-relaxed">
+                                        错误原因：积分上限和下限弄反了，导致做功正负号错误。请注意电荷是从A点移动到B点。
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="p-5 bg-brand-accent/5 rounded-2xl border border-brand-accent/10">
+                                <h4 class="font-bold text-brand-primary flex items-center gap-2 mb-3">
+                                    <i data-lucide="target" class="w-4 h-4 text-brand-accent"></i> 靶向训练建议
+                                </h4>
+                                <p class="text-sm text-brand-primary/70 mb-3">基于本次错题，AI 为你生成了2道强化练习题，建议在今晚自习时完成。</p>
+                                <button class="w-full py-2.5 bg-brand-accent text-white font-medium rounded-xl hover:bg-brand-accent/90 transition-colors shadow-sm">
+                                    立即开始靶向训练
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL 4: 学习数据报告 Report -->
+        <div id="panel-report" class="panel flex-1 overflow-y-auto p-6 md:p-8">
+            <div class="max-w-6xl mx-auto">
+                <div class="mb-8">
+                    <h3 class="text-2xl font-bold text-brand-primary">学习数据报告</h3>
+                    <p class="text-sm text-brand-primary/60 mt-1">本周 (4月18日 - 4月24日) 学习轨迹统计</p>
+                </div>
+
+                <!-- Key Metrics -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                    <div class="glass-card p-5 rounded-2xl border border-brand-primary/5">
+                        <div class="text-xs font-bold text-brand-primary/50 mb-1">本周专注时长</div>
+                        <div class="text-3xl font-serif font-bold text-brand-primary">28<span class="text-sm text-brand-primary/50 font-sans ml-1">小时</span></div>
+                        <div class="text-xs text-emerald-500 font-bold mt-2 flex items-center gap-1"><i data-lucide="trending-up" class="w-3 h-3"></i> 比上周增长 12%</div>
+                    </div>
+                    <div class="glass-card p-5 rounded-2xl border border-brand-primary/5">
+                        <div class="text-xs font-bold text-brand-primary/50 mb-1">完成任务数</div>
+                        <div class="text-3xl font-serif font-bold text-brand-primary">45<span class="text-sm text-brand-primary/50 font-sans ml-1">项</span></div>
+                        <div class="text-xs text-emerald-500 font-bold mt-2 flex items-center gap-1"><i data-lucide="trending-up" class="w-3 h-3"></i> 达成率 92%</div>
+                    </div>
+                    <div class="glass-card p-5 rounded-2xl border border-brand-primary/5">
+                        <div class="text-xs font-bold text-brand-primary/50 mb-1">错题消灭率</div>
+                        <div class="text-3xl font-serif font-bold text-brand-primary">80<span class="text-sm text-brand-primary/50 font-sans ml-1">%</span></div>
+                        <div class="text-xs text-brand-accent font-bold mt-2 flex items-center gap-1"><i data-lucide="minus" class="w-3 h-3"></i> 与上周持平</div>
+                    </div>
+                    <div class="glass-card p-5 rounded-2xl border border-brand-primary/5">
+                        <div class="text-xs font-bold text-brand-primary/50 mb-1">AI 提问次数</div>
+                        <div class="text-3xl font-serif font-bold text-brand-primary">112<span class="text-sm text-brand-primary/50 font-sans ml-1">次</span></div>
+                        <div class="text-xs text-brand-primary/50 font-medium mt-2">积极利用AI辅助</div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Line Chart -->
+                    <div class="lg:col-span-2 glass-card p-6 rounded-3xl border border-brand-primary/5">
+                        <div class="text-sm font-bold text-brand-primary mb-6">每日学习时长趋势</div>
+                        <div class="relative h-64 w-full">
+                            <canvas id="timeChart"></canvas>
+                        </div>
+                    </div>
+                    <!-- Doughnut Chart -->
+                    <div class="lg:col-span-1 glass-card p-6 rounded-3xl border border-brand-primary/5">
+                        <div class="text-sm font-bold text-brand-primary mb-6">学科精力分布</div>
+                        <div class="relative h-64 w-full flex items-center justify-center">
+                            <canvas id="subjectChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <style>
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            50% { transform: translateY(400px); }
+            100% { transform: translateY(-100%); }
+        }
+    </style>
+
+    <script>
+        lucide.createIcons();
+
+        // 简单的 SPA 选项卡切换逻辑
+        const panels = ['dashboard', 'qa', 'homework', 'report'];
+        const titles = {
+            'dashboard': '学习控制台',
+            'qa': 'AI 学伴答疑',
+            'homework': '智能作业批改',
+            'report': '学习数据报告'
+        };
+
+        function switchTab(tabId) {
+            // 隐藏所有 panel
+            panels.forEach(id => {
+                document.getElementById('panel-' + id).classList.remove('active');
+                document.getElementById('nav-' + id).classList.remove('active');
+            });
+            // 显示目标 panel
+            document.getElementById('panel-' + tabId).classList.add('active');
+            document.getElementById('nav-' + tabId).classList.add('active');
+            
+            // 更新标题
+            document.getElementById('header-title').innerText = titles[tabId];
+
+            // 渲染图表 (仅在第一次切换到报表时渲染)
+            if (tabId === 'report' && !window.chartsRendered) {
+                renderCharts();
+                window.chartsRendered = true;
+            }
+        }
+
+        function renderCharts() {
+            // Line Chart
+            const ctxTime = document.getElementById('timeChart').getContext('2d');
+            new Chart(ctxTime, {
+                type: 'line',
+                data: {
+                    labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+                    datasets: [{
+                        label: '专注时长 (小时)',
+                        data: [3.5, 4.0, 3.8, 4.2, 5.5, 7.0, 6.5],
+                        borderColor: '#C5A059',
+                        backgroundColor: 'rgba(197, 160, 89, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#1A2B3C',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(26,43,60,0.05)' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // Doughnut Chart
+            const ctxSubject = document.getElementById('subjectChart').getContext('2d');
+            new Chart(ctxSubject, {
+                type: 'doughnut',
+                data: {
+                    labels: ['数学', '物理', '英语', '语文', '其他'],
+                    datasets: [{
+                        data: [35, 25, 20, 10, 10],
+                        backgroundColor: [
+                            '#1A2B3C', // Primary
+                            '#C5A059', // Accent
+                            '#3B82F6', // Blue
+                            '#10B981', // Emerald
+                            '#F1F5F9'  // Gray
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
+                    }
+                }
+            });
+        }
+    </script>
 </body>
 </html>
