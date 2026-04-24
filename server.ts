@@ -573,6 +573,16 @@ Deno.serve(async (req) => {
     }
   }
 
+  // 4.8 返回 AI 自习室页面
+  if (req.method === "GET" && (url.pathname === "/ai-study-room" || url.pathname === "/ai-study-room.html")) {
+    try {
+      const htmlContent = await Deno.readTextFile("./ai-study-room.html");
+      return new Response(htmlContent, { headers: { "content-type": "text/html; charset=utf-8" } });
+    } catch (error) {
+      return new Response("Error: ai-study-room.html not found.", { status: 500 });
+    }
+  }
+
   // 5. 兼职平台核心 API
   if (url.pathname.startsWith("/api/tutor/")) {
     

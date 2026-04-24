@@ -2,8 +2,249 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>AI 自习室</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雅宝 AI 智能自习室 - 学生端</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#FDFBF7',
+                            primary: '#1A2B3C',
+                            accent: '#C5A059',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #FDFBF7; color: #1A2B3C; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.5); }
+        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(26, 43, 60, 0.05); box-shadow: 0 8px 32px rgba(26, 43, 60, 0.04); }
+        
+        /* 聊天气泡动画 */
+        .chat-bubble { animation: popIn 0.3s ease-out forwards; opacity: 0; transform: translateY(10px) scale(0.95); }
+        @keyframes popIn { to { opacity: 1; transform: translateY(0) scale(1); } }
+        
+        /* 呼吸灯效果 (督学中) */
+        .pulse-dot { animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); } 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
+        
+        /* 隐藏滚动条 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #CBD5E1; }
+    </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body>
+<body class="font-sans antialiased h-screen overflow-hidden flex">
+
+    <!-- 侧边栏 Sidebar -->
+    <aside class="w-20 md:w-64 h-full glass border-r border-brand-primary/10 flex flex-col transition-all duration-300 z-20 relative">
+        <div class="h-20 flex items-center justify-center md:justify-start md:px-8 border-b border-brand-primary/5">
+            <a href="/" class="text-2xl font-serif font-bold text-brand-primary tracking-tight decoration-transparent">
+                <span class="md:hidden">雅</span><span class="hidden md:inline">雅宝</span><span class="text-brand-accent">.</span>
+            </a>
+        </div>
+        
+        <nav class="flex-1 py-6 flex flex-col gap-2 px-3">
+            <a href="#" class="flex items-center gap-4 px-3 py-3 rounded-xl bg-brand-primary text-white transition-colors group">
+                <i data-lucide="layout-dashboard" class="w-5 h-5 shrink-0"></i>
+                <span class="font-medium hidden md:block">学习控制台</span>
+            </a>
+            <a href="#" class="flex items-center gap-4 px-3 py-3 rounded-xl text-brand-primary/70 hover:bg-brand-primary/5 hover:text-brand-primary transition-colors group">
+                <i data-lucide="bot" class="w-5 h-5 shrink-0 group-hover:text-brand-accent transition-colors"></i>
+                <span class="font-medium hidden md:block">AI 学伴答疑</span>
+            </a>
+            <a href="#" class="flex items-center gap-4 px-3 py-3 rounded-xl text-brand-primary/70 hover:bg-brand-primary/5 hover:text-brand-primary transition-colors group">
+                <i data-lucide="file-check-2" class="w-5 h-5 shrink-0 group-hover:text-brand-accent transition-colors"></i>
+                <span class="font-medium hidden md:block">智能作业批改</span>
+            </a>
+            <a href="#" class="flex items-center gap-4 px-3 py-3 rounded-xl text-brand-primary/70 hover:bg-brand-primary/5 hover:text-brand-primary transition-colors group">
+                <i data-lucide="bar-chart-3" class="w-5 h-5 shrink-0 group-hover:text-brand-accent transition-colors"></i>
+                <span class="font-medium hidden md:block">学习数据报告</span>
+            </a>
+            <div class="my-4 border-t border-brand-primary/10 mx-2"></div>
+            <a href="#" class="flex items-center gap-4 px-3 py-3 rounded-xl text-brand-primary/70 hover:bg-brand-primary/5 hover:text-brand-primary transition-colors group relative overflow-hidden">
+                <i data-lucide="sparkles" class="w-5 h-5 shrink-0 text-brand-accent"></i>
+                <span class="font-medium hidden md:block">AI 技能训练营</span>
+                <span class="hidden md:inline-flex absolute right-2 top-1/2 -translate-y-1/2 px-1.5 py-0.5 bg-brand-accent/10 text-brand-accent text-[10px] font-bold rounded">HOT</span>
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-brand-primary/5">
+            <div class="flex items-center justify-center md:justify-start gap-3">
+                <div class="w-10 h-10 rounded-full bg-brand-primary/10 flex items-center justify-center shrink-0">
+                    <i data-lucide="user" class="w-5 h-5 text-brand-primary"></i>
+                </div>
+                <div class="hidden md:block overflow-hidden">
+                    <div class="text-sm font-bold text-brand-primary truncate">学员 001</div>
+                    <div class="text-xs text-brand-primary/50 truncate">高中组 · 备考冲刺</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 主内容区 Main Content -->
+    <main class="flex-1 h-full flex flex-col relative overflow-hidden">
+        <!-- 顶部导航 -->
+        <header class="h-20 glass border-b border-brand-primary/5 flex items-center justify-between px-8 shrink-0 z-10">
+            <div>
+                <h2 class="text-xl font-bold text-brand-primary">专注自习空间</h2>
+                <p class="text-xs text-brand-primary/50 mt-0.5">本地 AI 模型已连接 · 隐私保护中</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-emerald-50 border border-emerald-100 rounded-full">
+                    <div class="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></div>
+                    <span class="text-xs font-bold text-emerald-700">AI 摄像头督学中</span>
+                </div>
+                <button class="w-10 h-10 rounded-full bg-white border border-brand-primary/10 flex items-center justify-center text-brand-primary/70 hover:text-brand-primary hover:shadow-md transition-all">
+                    <i data-lucide="bell" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- 核心控制台 -->
+        <div class="flex-1 overflow-y-auto p-6 md:p-8">
+            <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- 左侧：学习状态与计时 (占2列) -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- 欢迎卡片 (学伴 IP 元素) -->
+                    <div class="glass-card rounded-3xl p-6 md:p-8 flex items-center gap-6 relative overflow-hidden">
+                        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-brand-accent/10 rounded-full blur-2xl pointer-events-none"></div>
+                        <div class="w-20 h-20 rounded-2xl bg-brand-primary/5 flex items-center justify-center shrink-0">
+                            <i data-lucide="bot" class="w-10 h-10 text-brand-accent"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-serif font-bold text-brand-primary mb-2">早上好，准备好攻克今天的目标了吗？</h3>
+                            <p class="text-sm text-brand-primary/70 leading-relaxed">
+                                你的专属 AI 学伴“小雅”已上线。检测到你昨天在“圆锥曲线”章节停留较久，今天为你准备了3道针对性靶向练习题，加油！
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 计时器与督学 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- 番茄钟 -->
+                        <div class="glass-card rounded-3xl p-6 text-center">
+                            <div class="text-sm font-bold text-brand-primary/50 uppercase tracking-widest mb-6">沉浸计时</div>
+                            <div class="text-6xl font-serif font-bold text-brand-primary mb-2 tracking-tight">45:00</div>
+                            <div class="text-sm text-brand-primary/60 mb-8">下一休息时段: 5分钟</div>
+                            <div class="flex justify-center gap-3">
+                                <button class="px-6 py-3 bg-brand-primary text-white font-medium rounded-full hover:bg-brand-primary/90 transition-colors shadow-lg">
+                                    开始专注
+                                </button>
+                                <button class="w-12 h-12 rounded-full border-2 border-brand-primary/10 flex items-center justify-center text-brand-primary hover:bg-brand-primary/5 transition-colors">
+                                    <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 学习目标与打卡 -->
+                        <div class="glass-card rounded-3xl p-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="text-sm font-bold text-brand-primary/50 uppercase tracking-widest">今日任务</div>
+                                <span class="text-xs font-bold text-brand-accent bg-brand-accent/10 px-2 py-1 rounded">1/3 完成</span>
+                            </div>
+                            <div class="space-y-3">
+                                <label class="flex items-start gap-3 p-3 rounded-xl bg-brand-primary/5 cursor-pointer hover:bg-brand-primary/10 transition-colors">
+                                    <input type="checkbox" checked class="mt-1 w-4 h-4 text-brand-accent rounded border-gray-300 focus:ring-brand-accent accent-brand-accent">
+                                    <span class="text-sm font-medium text-brand-primary line-through opacity-50">完成英语阅读理解真题套卷</span>
+                                </label>
+                                <label class="flex items-start gap-3 p-3 rounded-xl border border-brand-primary/10 cursor-pointer hover:border-brand-primary/30 transition-colors">
+                                    <input type="checkbox" class="mt-1 w-4 h-4 text-brand-accent rounded border-gray-300 focus:ring-brand-accent accent-brand-accent">
+                                    <span class="text-sm font-medium text-brand-primary">整理物理电磁学错题本</span>
+                                </label>
+                                <label class="flex items-start gap-3 p-3 rounded-xl border border-brand-primary/10 cursor-pointer hover:border-brand-primary/30 transition-colors">
+                                    <input type="checkbox" class="mt-1 w-4 h-4 text-brand-accent rounded border-gray-300 focus:ring-brand-accent accent-brand-accent">
+                                    <span class="text-sm font-medium text-brand-primary">观看 AI 技能训练营 - GPT写作第一课</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧：AI 实时答疑窗口 (占1列) -->
+                <div class="lg:col-span-1 h-[600px] lg:h-auto glass-card rounded-3xl flex flex-col overflow-hidden shadow-xl shadow-brand-primary/5">
+                    <!-- Chat Header -->
+                    <div class="p-4 border-b border-brand-primary/5 bg-white/50 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-brand-accent/20 flex items-center justify-center relative">
+                                <i data-lucide="sparkles" class="w-4 h-4 text-brand-accent"></i>
+                                <span class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-green-500 border border-white"></span>
+                            </div>
+                            <div>
+                                <div class="text-sm font-bold text-brand-primary">AI 实时答疑 / 批改</div>
+                                <div class="text-[10px] text-brand-primary/50">基于本地大模型</div>
+                            </div>
+                        </div>
+                        <button class="text-brand-primary/40 hover:text-brand-primary transition-colors">
+                            <i data-lucide="more-horizontal" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+
+                    <!-- Chat Messages -->
+                    <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-brand-primary/[0.02]">
+                        <div class="text-center text-xs text-brand-primary/40 my-2">今天 14:30</div>
+                        
+                        <!-- AI Message -->
+                        <div class="flex gap-3 chat-bubble">
+                            <div class="w-8 h-8 rounded-full bg-brand-accent/10 flex items-center justify-center shrink-0">
+                                <i data-lucide="bot" class="w-4 h-4 text-brand-accent"></i>
+                            </div>
+                            <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border border-brand-primary/5 text-sm text-brand-primary/80 max-w-[85%] leading-relaxed">
+                                你好！我是你的 AI 学习助手。遇到不会的题目、需要批改的中英文作文，或者只是学累了想聊聊天，都可以随时找我哦。<br><br>
+                                <span class="text-xs text-brand-accent font-medium mt-2 block">你可以这样问我：</span>
+                                <div class="mt-1 flex flex-wrap gap-2">
+                                    <span class="px-2 py-1 bg-brand-primary/5 rounded text-[11px] cursor-pointer hover:bg-brand-primary/10">帮我批改这篇英语作文</span>
+                                    <span class="px-2 py-1 bg-brand-primary/5 rounded text-[11px] cursor-pointer hover:bg-brand-primary/10">讲解一下牛顿第二定律</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- User Message -->
+                        <div class="flex gap-3 flex-row-reverse chat-bubble" style="animation-delay: 0.5s;">
+                            <div class="w-8 h-8 rounded-full bg-brand-primary/10 flex items-center justify-center shrink-0">
+                                <i data-lucide="user" class="w-4 h-4 text-brand-primary"></i>
+                            </div>
+                            <div class="bg-brand-primary text-white p-3 rounded-2xl rounded-tr-none shadow-sm text-sm max-w-[85%] leading-relaxed">
+                                帮我看一下这道数学题，我总是算错符号。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Input -->
+                    <div class="p-4 bg-white border-t border-brand-primary/5">
+                        <div class="flex items-center gap-2">
+                            <button class="w-10 h-10 flex items-center justify-center text-brand-primary/40 hover:text-brand-primary hover:bg-brand-primary/5 rounded-full transition-colors shrink-0">
+                                <i data-lucide="camera" class="w-5 h-5"></i>
+                            </button>
+                            <input type="text" placeholder="输入问题或上传题目照片..." class="flex-1 bg-brand-primary/5 border-none rounded-full px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-brand-accent text-brand-primary">
+                            <button class="w-10 h-10 flex items-center justify-center bg-brand-accent text-white rounded-full hover:bg-brand-accent/90 transition-colors shrink-0 shadow-md">
+                                <i data-lucide="send" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>
